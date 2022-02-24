@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="Top_TB_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="Top_TB" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="17600724667fs"></ZoomStartTime>
+      <ZoomEndTime time="17880224668fs"></ZoomEndTime>
+      <Cursor1Time time="18372308000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="174"></NameColumnWidth>
+      <ValueColumnWidth column_width="72"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="21" />
+   <wave_markers>
+      <marker time="3692063333000" label="" />
+      <marker time="32755050000000" label="" />
+      <marker time="26748423219000" label="" />
+   </wave_markers>
+   <wvobject type="divider" fp_name="divider45">
+      <obj_property name="label">Top signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Top_TB/top_entity/Sys_Clock" type="logic">
+      <obj_property name="ElementShortName">Sys_Clock</obj_property>
+      <obj_property name="ObjectShortName">Sys_Clock</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Top_TB/rst_signal" type="logic">
+      <obj_property name="ElementShortName">rst_signal</obj_property>
+      <obj_property name="ObjectShortName">rst_signal</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Top_TB/col_sync_signal" type="logic">
+      <obj_property name="ElementShortName">col_sync_signal</obj_property>
+      <obj_property name="ObjectShortName">col_sync_signal</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Top_TB/b_coefficients_signal" type="array">
+      <obj_property name="ElementShortName">b_coefficients_signal[0:3][15:0]</obj_property>
+      <obj_property name="ObjectShortName">b_coefficients_signal[0:3][15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Top_TB/a_coefficients_signal" type="array">
+      <obj_property name="ElementShortName">a_coefficients_signal[0:3][15:0]</obj_property>
+      <obj_property name="ObjectShortName">a_coefficients_signal[0:3][15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="group51" type="group">
+      <obj_property name="label">CLOCK DISTRIBUTION</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/clock_distr/clock_in" type="logic">
+         <obj_property name="ElementShortName">clock_in</obj_property>
+         <obj_property name="ObjectShortName">clock_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/clock_distr/clock_005" type="logic">
+         <obj_property name="ElementShortName">clock_005</obj_property>
+         <obj_property name="ObjectShortName">clock_005</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/clock_distr/clock_100" type="logic">
+         <obj_property name="ElementShortName">clock_100</obj_property>
+         <obj_property name="ObjectShortName">clock_100</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/clock_distr/locked" type="logic">
+         <obj_property name="ElementShortName">locked</obj_property>
+         <obj_property name="ObjectShortName">locked</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/clock_distr/mmcm_clock_in" type="logic">
+         <obj_property name="ElementShortName">mmcm_clock_in</obj_property>
+         <obj_property name="ObjectShortName">mmcm_clock_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/clock_distr/mmcm_feedback_in" type="logic">
+         <obj_property name="ElementShortName">mmcm_feedback_in</obj_property>
+         <obj_property name="ObjectShortName">mmcm_feedback_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/clock_distr/mmcm_feedback_out" type="logic">
+         <obj_property name="ElementShortName">mmcm_feedback_out</obj_property>
+         <obj_property name="ObjectShortName">mmcm_feedback_out</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/clock_distr/mmcm_clock_out0" type="logic">
+         <obj_property name="ElementShortName">mmcm_clock_out0</obj_property>
+         <obj_property name="ObjectShortName">mmcm_clock_out0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/clock_distr/mmcm_clock_out1" type="logic">
+         <obj_property name="ElementShortName">mmcm_clock_out1</obj_property>
+         <obj_property name="ObjectShortName">mmcm_clock_out1</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/clk_signal_100mhz" type="logic">
+         <obj_property name="ElementShortName">clk_signal_100mhz</obj_property>
+         <obj_property name="ObjectShortName">clk_signal_100mhz</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group1235" type="group">
+      <obj_property name="label">COLUMN 1</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="divider" fp_name="divider554">
+         <obj_property name="label">IIR filter (Column 1)</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="BkColor">#E0FFFF</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/Sys_Clock_100mhz" type="logic">
+         <obj_property name="ElementShortName">Sys_Clock_100mhz</obj_property>
+         <obj_property name="ObjectShortName">Sys_Clock_100mhz</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/IIR_in_m2s" type="array">
+         <obj_property name="ElementShortName">IIR_in_m2s</obj_property>
+         <obj_property name="ObjectShortName">IIR_in_m2s</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/row_num" type="array">
+         <obj_property name="ElementShortName">row_num[7:0]</obj_property>
+         <obj_property name="ObjectShortName">row_num[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/IIR_out_m2s" type="array">
+         <obj_property name="ElementShortName">IIR_out_m2s</obj_property>
+         <obj_property name="ObjectShortName">IIR_out_m2s</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/input_buf" type="array">
+         <obj_property name="ElementShortName">input_buf[15:0]</obj_property>
+         <obj_property name="ObjectShortName">input_buf[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/input_valid" type="logic">
+         <obj_property name="ElementShortName">input_valid</obj_property>
+         <obj_property name="ObjectShortName">input_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/delay_buffer_in" type="array">
+         <obj_property name="ElementShortName">delay_buffer_in[1:4][15:0]</obj_property>
+         <obj_property name="ObjectShortName">delay_buffer_in[1:4][15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/delay_buffer_out" type="array">
+         <obj_property name="ElementShortName">delay_buffer_out[1:4][15:0]</obj_property>
+         <obj_property name="ObjectShortName">delay_buffer_out[1:4][15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/buffer_address" type="array">
+         <obj_property name="ElementShortName">buffer_address[7:0]</obj_property>
+         <obj_property name="ObjectShortName">buffer_address[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/x_n" type="array">
+         <obj_property name="ElementShortName">x_n[15:0]</obj_property>
+         <obj_property name="ObjectShortName">x_n[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/y_n" type="array">
+         <obj_property name="ElementShortName">y_n[15:0]</obj_property>
+         <obj_property name="ObjectShortName">y_n[15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/filter_shift" type="logic">
+         <obj_property name="ElementShortName">filter_shift</obj_property>
+         <obj_property name="ObjectShortName">filter_shift</obj_property>
+      </wvobject>
+      <wvobject type="divider" fp_name="divider129">
+         <obj_property name="label">Block RAM access (Column 1)</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="BkColor">#E0FFFF</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/\delay_buf_gen(1)\/delay_buffer_out_slv" type="array">
+         <obj_property name="ElementShortName">delay_buffer_out_slv[15:0]</obj_property>
+         <obj_property name="ObjectShortName">delay_buffer_out_slv[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/\delay_buf_gen(1)\/buffer_address_slv" type="array">
+         <obj_property name="ElementShortName">buffer_address_slv[9:0]</obj_property>
+         <obj_property name="ObjectShortName">buffer_address_slv[9:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/\delay_buf_gen(1)\/write_enable" type="array">
+         <obj_property name="ElementShortName">write_enable[1:0]</obj_property>
+         <obj_property name="ObjectShortName">write_enable[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/IIR_inst/delay_buffer_in" type="array">
+         <obj_property name="ElementShortName">delay_buffer_in[1:4][15:0]</obj_property>
+         <obj_property name="ObjectShortName">delay_buffer_in[1:4][15:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group1250" type="group">
+      <obj_property name="label">COLUMN 2</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="divider" fp_name="divider1251">
+         <obj_property name="label">IIR filter (Column 2)</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="BkColor">#E0FFFF</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/IIR_in_m2s" type="array">
+         <obj_property name="ElementShortName">IIR_in_m2s</obj_property>
+         <obj_property name="ObjectShortName">IIR_in_m2s</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/IIR_out_m2s" type="array">
+         <obj_property name="ElementShortName">IIR_out_m2s</obj_property>
+         <obj_property name="ObjectShortName">IIR_out_m2s</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/input_buf" type="array">
+         <obj_property name="ElementShortName">input_buf[15:0]</obj_property>
+         <obj_property name="ObjectShortName">input_buf[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/input_valid" type="logic">
+         <obj_property name="ElementShortName">input_valid</obj_property>
+         <obj_property name="ObjectShortName">input_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/delay_buffer_in" type="array">
+         <obj_property name="ElementShortName">delay_buffer_in[1:4][15:0]</obj_property>
+         <obj_property name="ObjectShortName">delay_buffer_in[1:4][15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/delay_buffer_out" type="array">
+         <obj_property name="ElementShortName">delay_buffer_out[1:4][15:0]</obj_property>
+         <obj_property name="ObjectShortName">delay_buffer_out[1:4][15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/buffer_address" type="array">
+         <obj_property name="ElementShortName">buffer_address[7:0]</obj_property>
+         <obj_property name="ObjectShortName">buffer_address[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/x_n" type="array">
+         <obj_property name="ElementShortName">x_n[15:0]</obj_property>
+         <obj_property name="ObjectShortName">x_n[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/y_n" type="array">
+         <obj_property name="ElementShortName">y_n[15:0]</obj_property>
+         <obj_property name="ObjectShortName">y_n[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/filter_shift" type="logic">
+         <obj_property name="ElementShortName">filter_shift</obj_property>
+         <obj_property name="ObjectShortName">filter_shift</obj_property>
+      </wvobject>
+      <wvobject type="divider" fp_name="divider1252">
+         <obj_property name="label">Block RAM access (Column 2)</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="BkColor">#E0FFFF</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/\delay_buf_gen(1)\/delay_buffer_out_slv" type="array">
+         <obj_property name="ElementShortName">delay_buffer_out_slv[15:0]</obj_property>
+         <obj_property name="ObjectShortName">delay_buffer_out_slv[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/\delay_buf_gen(1)\/buffer_address_slv" type="array">
+         <obj_property name="ElementShortName">buffer_address_slv[9:0]</obj_property>
+         <obj_property name="ObjectShortName">buffer_address_slv[9:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/\delay_buf_gen(1)\/write_enable" type="array">
+         <obj_property name="ElementShortName">write_enable[1:0]</obj_property>
+         <obj_property name="ObjectShortName">write_enable[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/IIR_inst/delay_buffer_in" type="array">
+         <obj_property name="ElementShortName">delay_buffer_in[1:4][15:0]</obj_property>
+         <obj_property name="ObjectShortName">delay_buffer_in[1:4][15:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group1428" type="group">
+      <obj_property name="label">ADC CHANNEL</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/Serial_CLK_GATES_GEN_CH_ADC/Clock" type="logic">
+         <obj_property name="ElementShortName">Clock</obj_property>
+         <obj_property name="ObjectShortName">Clock</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/Serial_CLK_GATES_GEN_CH_ADC/Reset" type="logic">
+         <obj_property name="ElementShortName">Reset</obj_property>
+         <obj_property name="ObjectShortName">Reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/Serial_CLK_GATES_GEN_CH_ADC/CNV" type="logic">
+         <obj_property name="ElementShortName">CNV</obj_property>
+         <obj_property name="ObjectShortName">CNV</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/Serial_CLK_GATES_GEN_CH_ADC/SERIAL_CLK" type="logic">
+         <obj_property name="ElementShortName">SERIAL_CLK</obj_property>
+         <obj_property name="ObjectShortName">SERIAL_CLK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/Serial_CLK_GATES_GEN_CH_ADC/START_CONV_PULSE" type="logic">
+         <obj_property name="ElementShortName">START_CONV_PULSE</obj_property>
+         <obj_property name="ObjectShortName">START_CONV_PULSE</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/Serial_CLK_GATES_GEN_CH_ADC/CNV_reg" type="logic">
+         <obj_property name="ElementShortName">CNV_reg</obj_property>
+         <obj_property name="ObjectShortName">CNV_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/Serial_CLK_GATES_GEN_CH_ADC/CNV_counter" type="array">
+         <obj_property name="ElementShortName">CNV_counter[4:0]</obj_property>
+         <obj_property name="ObjectShortName">CNV_counter[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group190" type="group">
+      <obj_property name="label">DAC CHANNEL</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject fp_name="group163" type="group">
+      <obj_property name="label">DDR_INPUT_CH1</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/ddr_input/clock" type="logic">
+         <obj_property name="ElementShortName">clock</obj_property>
+         <obj_property name="ObjectShortName">clock</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/ddr_input/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/ddr_input/output_en" type="logic">
+         <obj_property name="ElementShortName">output_en</obj_property>
+         <obj_property name="ObjectShortName">output_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/ddr_input/ddr_in" type="logic">
+         <obj_property name="ElementShortName">ddr_in</obj_property>
+         <obj_property name="ObjectShortName">ddr_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/ddr_input/parallel_out" type="array">
+         <obj_property name="ElementShortName">parallel_out[1:0]</obj_property>
+         <obj_property name="ObjectShortName">parallel_out[1:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group164" type="group">
+      <obj_property name="label">DDR_INPUT_CH2</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/ddr_input/clock" type="logic">
+         <obj_property name="ElementShortName">clock</obj_property>
+         <obj_property name="ObjectShortName">clock</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/ddr_input/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/ddr_input/output_en" type="logic">
+         <obj_property name="ElementShortName">output_en</obj_property>
+         <obj_property name="ObjectShortName">output_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/ddr_input/ddr_in" type="logic">
+         <obj_property name="ElementShortName">ddr_in</obj_property>
+         <obj_property name="ObjectShortName">ddr_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(2)\/ddr_input/parallel_out" type="array">
+         <obj_property name="ElementShortName">parallel_out[1:0]</obj_property>
+         <obj_property name="ObjectShortName">parallel_out[1:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group165" type="group">
+      <obj_property name="label">DDR_INPUT_CH3</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(3)\/ddr_input/clock" type="logic">
+         <obj_property name="ElementShortName">clock</obj_property>
+         <obj_property name="ObjectShortName">clock</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(3)\/ddr_input/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(3)\/ddr_input/output_en" type="logic">
+         <obj_property name="ElementShortName">output_en</obj_property>
+         <obj_property name="ObjectShortName">output_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(3)\/ddr_input/ddr_in" type="logic">
+         <obj_property name="ElementShortName">ddr_in</obj_property>
+         <obj_property name="ObjectShortName">ddr_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(3)\/ddr_input/parallel_out" type="array">
+         <obj_property name="ElementShortName">parallel_out[1:0]</obj_property>
+         <obj_property name="ObjectShortName">parallel_out[1:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group166" type="group">
+      <obj_property name="label">DDR_INPUT_CH4</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(4)\/ddr_input/clock" type="logic">
+         <obj_property name="ElementShortName">clock</obj_property>
+         <obj_property name="ObjectShortName">clock</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(4)\/ddr_input/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(4)\/ddr_input/output_en" type="logic">
+         <obj_property name="ElementShortName">output_en</obj_property>
+         <obj_property name="ObjectShortName">output_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(4)\/ddr_input/ddr_in" type="logic">
+         <obj_property name="ElementShortName">ddr_in</obj_property>
+         <obj_property name="ObjectShortName">ddr_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(4)\/ddr_input/parallel_out" type="array">
+         <obj_property name="ElementShortName">parallel_out[1:0]</obj_property>
+         <obj_property name="ObjectShortName">parallel_out[1:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group167" type="group">
+      <obj_property name="label">DDR_INPUT_CH5</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(5)\/ddr_input/clock" type="logic">
+         <obj_property name="ElementShortName">clock</obj_property>
+         <obj_property name="ObjectShortName">clock</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(5)\/ddr_input/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(5)\/ddr_input/output_en" type="logic">
+         <obj_property name="ElementShortName">output_en</obj_property>
+         <obj_property name="ObjectShortName">output_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(5)\/ddr_input/ddr_in" type="logic">
+         <obj_property name="ElementShortName">ddr_in</obj_property>
+         <obj_property name="ObjectShortName">ddr_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(5)\/ddr_input/parallel_out" type="array">
+         <obj_property name="ElementShortName">parallel_out[1:0]</obj_property>
+         <obj_property name="ObjectShortName">parallel_out[1:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group168" type="group">
+      <obj_property name="label">DDR_INPUT_CH6</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(6)\/ddr_input/clock" type="logic">
+         <obj_property name="ElementShortName">clock</obj_property>
+         <obj_property name="ObjectShortName">clock</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(6)\/ddr_input/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(6)\/ddr_input/output_en" type="logic">
+         <obj_property name="ElementShortName">output_en</obj_property>
+         <obj_property name="ObjectShortName">output_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(6)\/ddr_input/ddr_in" type="logic">
+         <obj_property name="ElementShortName">ddr_in</obj_property>
+         <obj_property name="ObjectShortName">ddr_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(6)\/ddr_input/parallel_out" type="array">
+         <obj_property name="ElementShortName">parallel_out[1:0]</obj_property>
+         <obj_property name="ObjectShortName">parallel_out[1:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group169" type="group">
+      <obj_property name="label">DDR_INPUT_CH7</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(7)\/ddr_input/clock" type="logic">
+         <obj_property name="ElementShortName">clock</obj_property>
+         <obj_property name="ObjectShortName">clock</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(7)\/ddr_input/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(7)\/ddr_input/output_en" type="logic">
+         <obj_property name="ElementShortName">output_en</obj_property>
+         <obj_property name="ObjectShortName">output_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(7)\/ddr_input/ddr_in" type="logic">
+         <obj_property name="ElementShortName">ddr_in</obj_property>
+         <obj_property name="ObjectShortName">ddr_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(7)\/ddr_input/parallel_out" type="array">
+         <obj_property name="ElementShortName">parallel_out[1:0]</obj_property>
+         <obj_property name="ObjectShortName">parallel_out[1:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group170" type="group">
+      <obj_property name="label">DDR_INPUT_CH8</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(8)\/ddr_input/clock" type="logic">
+         <obj_property name="ElementShortName">clock</obj_property>
+         <obj_property name="ObjectShortName">clock</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(8)\/ddr_input/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(8)\/ddr_input/output_en" type="logic">
+         <obj_property name="ElementShortName">output_en</obj_property>
+         <obj_property name="ObjectShortName">output_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(8)\/ddr_input/ddr_in" type="logic">
+         <obj_property name="ElementShortName">ddr_in</obj_property>
+         <obj_property name="ObjectShortName">ddr_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(8)\/ddr_input/parallel_out" type="array">
+         <obj_property name="ElementShortName">parallel_out[1:0]</obj_property>
+         <obj_property name="ObjectShortName">parallel_out[1:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group1854" type="group">
+      <obj_property name="label">SHIFTING REGISTER_CH1</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/parallel_out_iddr" type="array">
+         <obj_property name="ElementShortName">parallel_out_iddr[8:1][1:0]</obj_property>
+         <obj_property name="ObjectShortName">parallel_out_iddr[8:1][1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/valid_bit_IDDR" type="array">
+         <obj_property name="ElementShortName">valid_bit_IDDR[8:1]</obj_property>
+         <obj_property name="ObjectShortName">valid_bit_IDDR[8:1]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/valid_word_IDDR" type="array">
+         <obj_property name="ElementShortName">valid_word_IDDR[8:1]</obj_property>
+         <obj_property name="ObjectShortName">valid_word_IDDR[8:1]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/input_word_iddr" type="array">
+         <obj_property name="ElementShortName">input_word_iddr[8:1][15:0]</obj_property>
+         <obj_property name="ObjectShortName">input_word_iddr[8:1][15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/SCK_IO1_signal" type="logic">
+         <obj_property name="ElementShortName">SCK_IO1_signal</obj_property>
+         <obj_property name="ObjectShortName">SCK_IO1_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/bits_counter" type="array">
+         <obj_property name="ElementShortName">bits_counter[8:1][4:0]</obj_property>
+         <obj_property name="ObjectShortName">bits_counter[8:1][4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group397" type="group">
+      <obj_property name="label">FRAME BUILDER</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/Sys_Clock_100mhz" type="logic">
+         <obj_property name="ElementShortName">Sys_Clock_100mhz</obj_property>
+         <obj_property name="ObjectShortName">Sys_Clock_100mhz</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/Sys_Reset" type="logic">
+         <obj_property name="ElementShortName">Sys_Reset</obj_property>
+         <obj_property name="ObjectShortName">Sys_Reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/row_num" type="array">
+         <obj_property name="ElementShortName">row_num[7:0]</obj_property>
+         <obj_property name="ObjectShortName">row_num[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/cycle_num" type="array">
+         <obj_property name="ElementShortName">cycle_num[7:0]</obj_property>
+         <obj_property name="ObjectShortName">cycle_num[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_STATUS_BIT4_ACTIVECLOCK" type="logic">
+         <obj_property name="ElementShortName">FRAME_STATUS_BIT4_ACTIVECLOCK</obj_property>
+         <obj_property name="ObjectShortName">FRAME_STATUS_BIT4_ACTIVECLOCK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_STATUS_BIT16TO19_NUMCOLS" type="array">
+         <obj_property name="ElementShortName">FRAME_STATUS_BIT16TO19_NUMCOLS[3:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_STATUS_BIT16TO19_NUMCOLS[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_STATUS_BIT20_DATATIMINGERROR" type="logic">
+         <obj_property name="ElementShortName">FRAME_STATUS_BIT20_DATATIMINGERROR</obj_property>
+         <obj_property name="ObjectShortName">FRAME_STATUS_BIT20_DATATIMINGERROR</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_HEADER_WORD2_ROWLEN" type="array">
+         <obj_property name="ElementShortName">FRAME_HEADER_WORD2_ROWLEN[31:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_HEADER_WORD2_ROWLEN[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_HEADER_WORD3AND9_NUMROWS" type="array">
+         <obj_property name="ElementShortName">FRAME_HEADER_WORD3AND9_NUMROWS[31:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_HEADER_WORD3AND9_NUMROWS[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_HEADER_WORD4_DATARATE" type="array">
+         <obj_property name="ElementShortName">FRAME_HEADER_WORD4_DATARATE[31:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_HEADER_WORD4_DATARATE[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_HEADER_WORD6_HEADERVERSION" type="array">
+         <obj_property name="ElementShortName">FRAME_HEADER_WORD6_HEADERVERSION[31:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_HEADER_WORD6_HEADERVERSION[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_HEADER_WORD7_RAMPVALUE" type="array">
+         <obj_property name="ElementShortName">FRAME_HEADER_WORD7_RAMPVALUE[31:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_HEADER_WORD7_RAMPVALUE[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_HEADER_WORD8_RAMPCARD_ADDR" type="array">
+         <obj_property name="ElementShortName">FRAME_HEADER_WORD8_RAMPCARD_ADDR[31:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_HEADER_WORD8_RAMPCARD_ADDR[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_HEADER_WORD12_USER_WORD" type="array">
+         <obj_property name="ElementShortName">FRAME_HEADER_WORD12_USER_WORD[31:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_HEADER_WORD12_USER_WORD[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_HEADER_ERRNO_1" type="array">
+         <obj_property name="ElementShortName">FRAME_HEADER_ERRNO_1[31:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_HEADER_ERRNO_1[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_FPGA_TEMP" type="array">
+         <obj_property name="ElementShortName">FRAME_FPGA_TEMP[31:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_FPGA_TEMP[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_FIELDS_VALID" type="logic">
+         <obj_property name="ElementShortName">FRAME_FIELDS_VALID</obj_property>
+         <obj_property name="ObjectShortName">FRAME_FIELDS_VALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/DATA" type="array">
+         <obj_property name="ElementShortName">DATA[7:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/DATA_VALID" type="logic">
+         <obj_property name="ElementShortName">DATA_VALID</obj_property>
+         <obj_property name="ObjectShortName">DATA_VALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/READY" type="logic">
+         <obj_property name="ElementShortName">READY</obj_property>
+         <obj_property name="ObjectShortName">READY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/CHECKSUM" type="array">
+         <obj_property name="ElementShortName">CHECKSUM[31:0]</obj_property>
+         <obj_property name="ObjectShortName">CHECKSUM[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_HEADER_signal" type="array">
+         <obj_property name="ElementShortName">FRAME_HEADER_signal[0:42][31:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_HEADER_signal[0:42][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/FRAME_DATA_signal" type="array">
+         <obj_property name="ElementShortName">FRAME_DATA_signal[0:7][0:255][31:0]</obj_property>
+         <obj_property name="ObjectShortName">FRAME_DATA_signal[0:7][0:255][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/CC_Frame_counter" type="array">
+         <obj_property name="ElementShortName">CC_Frame_counter[31:0]</obj_property>
+         <obj_property name="ObjectShortName">CC_Frame_counter[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/START_UART_DATA_TX" type="logic">
+         <obj_property name="ElementShortName">START_UART_DATA_TX</obj_property>
+         <obj_property name="ObjectShortName">START_UART_DATA_TX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/UART_TRANSMITTING" type="logic">
+         <obj_property name="ElementShortName">UART_TRANSMITTING</obj_property>
+         <obj_property name="ObjectShortName">UART_TRANSMITTING</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/CLOCK_BIT_COUNTER" type="array">
+         <obj_property name="ElementShortName">CLOCK_BIT_COUNTER[3:0]</obj_property>
+         <obj_property name="ObjectShortName">CLOCK_BIT_COUNTER[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/DATA_UART_WORD_COUNTER" type="array">
+         <obj_property name="ElementShortName">DATA_UART_WORD_COUNTER[2:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_UART_WORD_COUNTER[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/DATA_FRAME_WORD_COUNTER" type="array">
+         <obj_property name="ElementShortName">DATA_FRAME_WORD_COUNTER[8:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_FRAME_WORD_COUNTER[8:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/DATA_VALID_signal" type="logic">
+         <obj_property name="ElementShortName">DATA_VALID_signal</obj_property>
+         <obj_property name="ObjectShortName">DATA_VALID_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/DATA_signal" type="array">
+         <obj_property name="ElementShortName">DATA_signal[7:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_signal[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/DATA_COLUMN_COUNTER" type="array">
+         <obj_property name="ElementShortName">DATA_COLUMN_COUNTER[3:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_COLUMN_COUNTER[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/DATA_ROW_COUNTER" type="array">
+         <obj_property name="ElementShortName">DATA_ROW_COUNTER[8:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_ROW_COUNTER[8:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/TRANSMITTING_CHECKSUM" type="logic">
+         <obj_property name="ElementShortName">TRANSMITTING_CHECKSUM</obj_property>
+         <obj_property name="ObjectShortName">TRANSMITTING_CHECKSUM</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/FRAME_BUILDER/CHECKSUM" type="array">
+         <obj_property name="ElementShortName">CHECKSUM[31:0]</obj_property>
+         <obj_property name="ObjectShortName">CHECKSUM[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

@@ -1,0 +1,1 @@
+C:\Xilinx19\Vivado\2019.1\bin\vivado.bat -mode batch -source project_script.tcl
