@@ -241,7 +241,7 @@ begin
     
 	--data_DAC_signal <= "001111111111111111"; --1
 	--data_DAC_signal <= "000111111111111111"; --1/2
-	-- data_DAC_signal <= "011001100000110111"; --1 --1/8 and 1st DAC
+	data_DAC_signal <= "101001100000110111"; --1 --1/8 and 1st DAC
 	
 	busy_flag_signal <= '0';
     
@@ -477,8 +477,8 @@ begin
         port map(
             Clock              => Sys_Clock_100mhz,
             Reset              => Sys_Reset,
-            CS			       => CS_ROWSELECT,
-            CLK     	       => CK_ROWSELECT,
+            CS                 => CS_ROWSELECT,
+            CLK                => CK_ROWSELECT,
             LD                 => LD_ROWSELECT,
             START_CONV_PULSE   => START_CONV_DAC_CH_PULSE_ROWSELECT_reg
         );
@@ -487,8 +487,8 @@ begin
         port map(
             Clock              => Sys_Clock_100mhz,
             Reset              => Sys_Reset,
-            CS			       => CS_TESBIAS,
-            CLK     	       => CK_TESBIAS,
+            CS                 => CS_TESBIAS,
+            CLK                => CK_TESBIAS,
             LD                 => LD_TESBIAS,
             START_CONV_PULSE   => START_CONV_DAC_CH_PULSE_TESBIAS_reg
         );      
@@ -496,61 +496,61 @@ begin
      Serial_DAC_MemoryLoad_CHANNEL0: entity concept.MemoryLoad_Main_18bit
         --GENERIC(<generic_const>	: <generic_type>);
         port map(	
-            clk					=> Sys_Clock_100mhz,
-            rst					=> Sys_Reset,
-            gateRead			=> CS_CHANNELS,
-            dataClkOut			=> CK_CHANNELS,
-            valid				=> valid_DAC_CHANNELS,
-            dataParallel		=> data_DAC_signal,
+            clk                 => Sys_Clock_100mhz,
+            rst                 => Sys_Reset,
+            gate_read           => CS_CHANNELS,
+            data_clk            => CK_CHANNELS,
+            valid               => valid_DAC_CHANNELS,
+            parallel_data       => data_DAC_signal,
                 
-            ready				=> ready_DAC_signal_CHANNELS,
-            dataIn				=> SDI_CH_signal(1),
+            ready               => ready_DAC_signal_CHANNELS,
+            serial_data         => SDI_CH_signal(1),
             busy_flag           => busy_flag_signal
             );
             
      Serial_DAC_MemoryLoad_CHANNEL1: entity concept.MemoryLoad_Main_18bit
         --GENERIC(<generic_const>	: <generic_type>);
-        port map(	
-            clk					=> Sys_Clock_100mhz,
-            rst					=> Sys_Reset,
-            gateRead			=> CS_CHANNELS,
-            dataClkOut			=> CK_CHANNELS,
-            valid				=> valid_DAC_CHANNELS,
-            dataParallel		=> data_DAC_signal,
+        port map(
+            clk                 => Sys_Clock_100mhz,
+            rst                 => Sys_Reset,
+            gate_read           => CS_CHANNELS,
+            data_clk            => CK_CHANNELS,
+            valid               => valid_DAC_CHANNELS,
+            parallel_data       => data_DAC_signal,
                 
-            ready				=> ready_DAC_signal_CHANNELS,
-            dataIn				=> SDI_CH_signal(2),
+            ready               => ready_DAC_signal_CHANNELS,
+            serial_data         => SDI_CH_signal(2),
             busy_flag           => busy_flag_signal
-            );       
+            );
             
       Serial_DAC_MemoryLoad_ROWSELECT: entity concept.MemoryLoad_Main_18bit
         --GENERIC(<generic_const>	: <generic_type>);
-        port map(	
-            clk					=> Sys_Clock_100mhz,
-            rst					=> Sys_Reset,
-            gateRead			=> CS_ROWSELECT,
-            dataClkOut			=> CK_ROWSELECT,
-            valid				=> valid_DAC_ROWSELECT,
-            dataParallel		=> data_DAC_signal,
+        port map(
+            clk                 => Sys_Clock_100mhz,
+            rst                 => Sys_Reset,
+            gate_read           => CS_ROWSELECT,
+            data_clk            => CK_ROWSELECT,
+            valid               => valid_DAC_ROWSELECT,
+            parallel_data       => data_DAC_signal,
                 
-            ready				=> ready_DAC_signal_ROWSELECT,
-            dataIn				=> SDI_IO12_signal,
+            ready               => ready_DAC_signal_ROWSELECT,
+            serial_data         => SDI_IO12_signal,
             busy_flag           => busy_flag_signal
             );
             
       Serial_DAC_MemoryLoad_TESBIAS: entity concept.MemoryLoad_Main_18bit
         --GENERIC(<generic_const>	: <generic_type>);
-        port map(	
-            clk					=> Sys_Clock_100mhz,
-            rst					=> Sys_Reset,
-            gateRead			=> CS_TESBIAS,
-            dataClkOut			=> CK_TESBIAS,
-            valid				=> valid_DAC_TESBIAS,
-            dataParallel		=> data_DAC_signal,
+        port map(
+            clk                 => Sys_Clock_100mhz,
+            rst                 => Sys_Reset,
+            gate_read           => CS_TESBIAS,
+            data_clk            => CK_TESBIAS,
+            valid               => valid_DAC_TESBIAS,
+            parallel_data       => data_DAC_signal,
+            busy_flag           => busy_flag_signal,
                 
-            ready				=> ready_DAC_signal_TESBIAS,
-            dataIn				=> SDI_IO28_signal,
-            busy_flag           => busy_flag_signal
+            ready               => ready_DAC_signal_TESBIAS,
+            serial_data              => SDI_IO28_signal
             );      
             
             

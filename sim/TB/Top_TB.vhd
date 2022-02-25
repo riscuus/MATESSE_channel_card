@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: NASA Goddard Space Flight Center
+-- Engineer: Albert Risco
 -- 
 -- Create Date: 04/23/2020 07:15:51 PM
 -- Design Name: 

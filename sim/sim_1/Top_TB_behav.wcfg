@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="17600724667fs"></ZoomStartTime>
-      <ZoomEndTime time="17880224668fs"></ZoomEndTime>
-      <Cursor1Time time="18372308000fs"></Cursor1Time>
+      <ZoomStartTime time="2236233000fs"></ZoomStartTime>
+      <ZoomEndTime time="3644233001fs"></ZoomEndTime>
+      <Cursor1Time time="2294233000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="174"></NameColumnWidth>
-      <ValueColumnWidth column_width="72"></ValueColumnWidth>
+      <NameColumnWidth column_width="296"></NameColumnWidth>
+      <ValueColumnWidth column_width="103"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="21" />
+   <WVObjectSize size="22" />
    <wave_markers>
       <marker time="3692063333000" label="" />
       <marker time="32755050000000" label="" />
@@ -279,6 +279,63 @@
    <wvobject fp_name="group190" type="group">
       <obj_property name="label">DAC CHANNEL</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/Sys_Clock_100mhz" type="logic">
+         <obj_property name="ElementShortName">Sys_Clock_100mhz</obj_property>
+         <obj_property name="ObjectShortName">Sys_Clock_100mhz</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/Sys_Reset" type="logic">
+         <obj_property name="ElementShortName">Sys_Reset</obj_property>
+         <obj_property name="ObjectShortName">Sys_Reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/CS_CHANNELS" type="logic">
+         <obj_property name="ElementShortName">CS_CHANNELS</obj_property>
+         <obj_property name="ObjectShortName">CS_CHANNELS</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/CK_CHANNELS" type="logic">
+         <obj_property name="ElementShortName">CK_CHANNELS</obj_property>
+         <obj_property name="ObjectShortName">CK_CHANNELS</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/LD_CHANNELS" type="logic">
+         <obj_property name="ElementShortName">LD_CHANNELS</obj_property>
+         <obj_property name="ObjectShortName">LD_CHANNELS</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/START_CONV_DAC_CH_PULSE_CHANNELS_reg" type="logic">
+         <obj_property name="ElementShortName">START_CONV_DAC_CH_PULSE_CHANNELS_reg</obj_property>
+         <obj_property name="ObjectShortName">START_CONV_DAC_CH_PULSE_CHANNELS_reg</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group751" type="group">
+      <obj_property name="label">SERIAL_DAC_MemoryLoad_CH0</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/valid_DAC_CHANNELS" type="logic">
+         <obj_property name="ElementShortName">valid_DAC_CHANNELS</obj_property>
+         <obj_property name="ObjectShortName">valid_DAC_CHANNELS</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/ready_DAC_signal_CHANNELS" type="logic">
+         <obj_property name="ElementShortName">ready_DAC_signal_CHANNELS</obj_property>
+         <obj_property name="ObjectShortName">ready_DAC_signal_CHANNELS</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/data_DAC_signal" type="array">
+         <obj_property name="ElementShortName">data_DAC_signal[17:0]</obj_property>
+         <obj_property name="ObjectShortName">data_DAC_signal[17:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/SDI_CH_signal[1]" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">[1]</obj_property>
+         <obj_property name="label">SDI_CH_signal[1]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/busy_flag_signal" type="logic">
+         <obj_property name="ElementShortName">busy_flag_signal</obj_property>
+         <obj_property name="ObjectShortName">busy_flag_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Top_TB/top_entity/Serial_DAC_MemoryLoad_CHANNEL0/stateMachineMemoryLoad/State" type="other">
+         <obj_property name="ElementShortName">State</obj_property>
+         <obj_property name="ObjectShortName">State</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject fp_name="group163" type="group">
       <obj_property name="label">DDR_INPUT_CH1</obj_property>
