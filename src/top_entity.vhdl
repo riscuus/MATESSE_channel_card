@@ -6,99 +6,99 @@ library concept;
 use concept.utils.all;
 
 entity top_entity is
-	generic (
-		COLUMS_NUM     : positive := 8;
-		ROWS_NUM       : positive := 25
-	);
-	port (
-		Sys_Clock      : in  std_logic;
-		Sys_Reset_in   : in  std_logic;
+    generic (
+        COLUMS_NUM     : positive := 8;
+        ROWS_NUM       : positive := 25
+    );
+    port (
+        Sys_Clock      : in  std_logic;
+        Sys_Reset_in   : in  std_logic;
         
-		row_sync        : in  std_logic;
+        row_sync        : in  std_logic;
 
 --		b_coefficients  : in T_SIGNED_ARRAY_COEFFICIENTS;
 --		a_coefficients  : in  T_SIGNED_ARRAY_COEFFICIENTS;
-		
-		--- Channel Operations ---
-		CNV_IO0 : out std_logic; -- A->D conversion, normally high, pull for 30 ns to start conversion
-		SCK_IO1 : out std_logic; -- A->D clock, 16 counts for 16 bits
-		SDO_CH : in std_logic_vector(1 to COLUMS_NUM); -- A->D Data Input Channel 1 to 8
-		
-		LD_IO3: out std_logic; -- D->A conversion, time critical as it defines the new pixels must match D
-		CS_IO4: out std_logic; -- D->A Chip Select. Active Low
+        
+        --- Channel Operations ---
+        CNV_IO0 : out std_logic; -- A->D conversion, normally high, pull for 30 ns to start conversion
+        SCK_IO1 : out std_logic; -- A->D clock, 16 counts for 16 bits
+        SDO_CH : in std_logic_vector(1 to COLUMS_NUM); -- A->D Data Input Channel 1 to 8
+        
+        LD_IO3: out std_logic; -- D->A conversion, time critical as it defines the new pixels must match D
+        CS_IO4: out std_logic; -- D->A Chip Select. Active Low
         CK_IO5: out std_logic; -- D->A Clock. Active low, 18 pulses for 18 bits		
-		SDI_CH: out std_logic_vector(1 to COLUMS_NUM); -- D->A Data Output Channel 1 to 8
-		
-		--- Row Operations --- 
-		LD_IO7: out std_logic; -- D->A, time critical as it defines the new pixel must match D 
-		CS_IO8: out std_logic; -- D->A, Chip Select active low (chip 1)
-		CS_IO9: out std_logic; -- D->A, Chip Select active low (chip 2)
-		CS_IO10: out std_logic; -- D->A, Chip Select active low (chip 3)
-		CK_IO11: out std_logic; -- D->A Clock. 18 pulses for 18 bits
-		SDI_IO12: out std_logic; -- D->A Data
-		
-		--- Bias Operations ---
-		LD_IO13: out std_logic; -- D->A, time critical as it defines the new pixel
-		CK_IO27: out std_logic; -- D->A, Chip Select active low
-		CS_IO26: out std_logic; -- D->A Chip Clock for the channel D->A active low
-		SDI_IO28: out std_logic; -- D->A Data
-		
-		START_CONV_ADC_CH_PULSE: in std_logic;
-		START_CONV_DAC_CH_PULSE: in std_logic;
-		
-		valid_DAC: in std_logic;
-		--DAC_data_Parallel: in std_logic_vector(17 downto 0);
-		
-		sw: in std_logic_vector(3 downto 0);
-		LED: in std_logic_vector(5 downto 0);
-		
-		START_CONV_ADC_CH_PULSE_emulation: out std_logic;
-		
-		Clock_5mhz: out std_logic;
-		Clock_100mhz: out std_logic;
-		
+        SDI_CH: out std_logic_vector(1 to COLUMS_NUM); -- D->A Data Output Channel 1 to 8
+        
+        --- Row Operations --- 
+        LD_IO7: out std_logic; -- D->A, time critical as it defines the new pixel must match D 
+        CS_IO8: out std_logic; -- D->A, Chip Select active low (chip 1)
+        CS_IO9: out std_logic; -- D->A, Chip Select active low (chip 2)
+        CS_IO10: out std_logic; -- D->A, Chip Select active low (chip 3)
+        CK_IO11: out std_logic; -- D->A Clock. 18 pulses for 18 bits
+        SDI_IO12: out std_logic; -- D->A Data
+        
+        --- Bias Operations ---
+        LD_IO13: out std_logic; -- D->A, time critical as it defines the new pixel
+        CK_IO27: out std_logic; -- D->A, Chip Select active low
+        CS_IO26: out std_logic; -- D->A Chip Clock for the channel D->A active low
+        SDI_IO28: out std_logic; -- D->A Data
+        
+        START_CONV_ADC_CH_PULSE: in std_logic;
+        START_CONV_DAC_CH_PULSE: in std_logic;
+        
+        valid_DAC: in std_logic;
+        --DAC_data_Parallel: in std_logic_vector(17 downto 0);
+        
+        sw: in std_logic_vector(3 downto 0);
+        LED: in std_logic_vector(5 downto 0);
+        
+        START_CONV_ADC_CH_PULSE_emulation: out std_logic;
+        
+        Clock_5mhz: out std_logic;
+        Clock_100mhz: out std_logic;
+        
         UART_TX: out std_logic		
-	 );
+     );
 end entity;
 
 
 architecture RTL of top_entity is
-	
-	signal row_num     : unsigned(7 downto 0) := (others => '0'); -- TODO FIXIT make width based on ROWS_NUM!
-	signal cycle_num   : unsigned(7 downto 0);
+    
+    signal row_num     : unsigned(7 downto 0) := (others => '0'); -- TODO FIXIT make width based on ROWS_NUM!
+    signal cycle_num   : unsigned(7 downto 0);
 
-	signal IIR_in_m2s  : T_AXIS_signed_m2s_ARRAY_COLUMNS;
-	signal IIR_out_m2s : T_AXIS_signed_m2s_ARRAY_COLUMNS;
-	signal START_CONV_ADC_CH_PULSE_reg : std_logic;
-	
-	signal START_CONV_DAC_CH_PULSE_CHANNELS_reg : std_logic;
-	signal START_CONV_DAC_CH_PULSE_ROWSELECT_reg : std_logic;
-	signal row_select : std_logic_vector(1 downto 0);
-	signal START_CONV_DAC_CH_PULSE_TESBIAS_reg : std_logic;
-	signal START_CONV_DAC_CH_PULSE_reg : std_logic;
-	
-	signal Sys_Clock_5mhz: std_logic;
-	signal Sys_Clock_100mhz: std_logic;
-	signal Sys_Clock_locked: std_logic;
-	
-	--- Channel Operations --- 
-	signal CNV_IO0_signal : std_logic;   -- A->D conversion, normally high, pull for 30 ns to start conversion
-	signal SCK_IO1_signal : std_logic;   -- A->D clock, 16 counts for 16 bits                                 
-	signal SDO_CH_signal : std_logic_vector(1 to COLUMS_NUM);  -- A->D Data Output Channel                                
-	                                                                 
-	signal CS_CHANNELS:  std_logic; -- D->A Chip Select. Active Low
+    signal IIR_in_m2s  : T_AXIS_signed_m2s_ARRAY_COLUMNS;
+    signal IIR_out_m2s : T_AXIS_signed_m2s_ARRAY_COLUMNS;
+    signal START_CONV_ADC_CH_PULSE_reg : std_logic;
+    
+    signal START_CONV_DAC_CH_PULSE_CHANNELS_reg : std_logic;
+    signal START_CONV_DAC_CH_PULSE_ROWSELECT_reg : std_logic;
+    signal row_select : std_logic_vector(1 downto 0);
+    signal START_CONV_DAC_CH_PULSE_TESBIAS_reg : std_logic;
+    signal START_CONV_DAC_CH_PULSE_reg : std_logic;
+    
+    signal Sys_Clock_5mhz: std_logic;
+    signal Sys_Clock_100mhz: std_logic;
+    signal Sys_Clock_locked: std_logic;
+    
+    --- Channel Operations --- 
+    signal CNV_IO0_signal : std_logic;   -- A->D conversion, normally high, pull for 30 ns to start conversion
+    signal SCK_IO1_signal : std_logic;   -- A->D clock, 16 counts for 16 bits                                 
+    signal SDO_CH_signal : std_logic_vector(1 to COLUMS_NUM);  -- A->D Data Output Channel                                
+                                                                     
+    signal CS_CHANNELS:  std_logic; -- D->A Chip Select. Active Low
     signal CK_CHANNELS:  std_logic; -- D->A Clock. Active low, 18 pulses for 18 bits	
     signal LD_CHANNELS:  std_logic;-- D->A conversion, time critical as it defines the new pixels must match D
     
-	signal SDI_CH_signal: std_logic_vector(1 to COLUMS_NUM);  -- A->D Data Input Channel
-	
-	--- Row Operations --- 
+    signal SDI_CH_signal: std_logic_vector(1 to COLUMS_NUM);  -- A->D Data Input Channel
+    
+    --- Row Operations --- 
     signal CS_ROWSELECT:  std_logic; -- D->A Chip Select. Active Low
     signal CK_ROWSELECT:  std_logic; -- D->A Clock. Active low, 18 pulses for 18 bits	
     signal LD_ROWSELECT:  std_logic;-- D->A conversion, time critical as it defines the new pixels must match D	                  
-	signal SDI_IO12_signal: std_logic; -- D->A Data
-	
-	--- Bias Operations ---
+    signal SDI_IO12_signal: std_logic; -- D->A Data
+    
+    --- Bias Operations ---
     signal CS_TESBIAS:  std_logic; -- D->A Chip Select. Active Low
     signal CK_TESBIAS:  std_logic; -- D->A Clock. Active low, 18 pulses for 18 bits	
     signal LD_TESBIAS:  std_logic;-- D->A conversion, time critical as it defines the new pixels must match D  
@@ -164,6 +164,8 @@ architecture RTL of top_entity is
     signal Sys_Reset : std_logic;
     
     signal first_bit : std_logic_vector(COLUMS_NUM downto 1);
+
+    signal ADC_sim_SDO : std_logic;
                 
     attribute mark_debug : string;
     attribute mark_debug of CNV_IO0_signal 		        : signal is "true";
@@ -173,7 +175,7 @@ architecture RTL of top_entity is
     attribute mark_debug of START_CONV_DAC_CH_PULSE_CHANNELS_reg : signal is "true";
     attribute mark_debug of START_CONV_DAC_CH_PULSE_ROWSELECT_reg : signal is "true";
     attribute mark_debug of START_CONV_DAC_CH_PULSE_TESBIAS_reg : signal is "true";
-		                                            
+                                                    
     --attribute mark_debug of SDI_CH_signal               : signal is "true";
     --attribute mark_debug of SDO_CH_signal               : signal is "true";
     
@@ -221,29 +223,29 @@ begin
     LD_IO7 <= LD_CHANNELS;
 
     LD_IO3 <= LD_CHANNELS;
-	CS_IO4 <= CS_CHANNELS;
+    CS_IO4 <= CS_CHANNELS;
     CK_IO5 <= CK_CHANNELS;		
-	SDI_CH <= SDI_CH_signal;
-	
-	LD_IO13 <= LD_TESBIAS;
-	CK_IO27 <= CK_TESBIAS;
-	CS_IO26 <= CS_TESBIAS;
-	SDI_IO28 <= SDI_IO28_signal;
-	
-	START_CONV_DAC_CH_PULSE_CHANNELS_reg <= START_CONV_DAC_CH_PULSE_reg;
-	START_CONV_DAC_CH_PULSE_ROWSELECT_reg <= START_CONV_DAC_CH_PULSE_reg;
-	START_CONV_DAC_CH_PULSE_TESBIAS_reg <= START_CONV_DAC_CH_PULSE_reg;
-	
-	sw_signal <= sw;
+    SDI_CH <= SDI_CH_signal;
+    
+    LD_IO13 <= LD_TESBIAS;
+    CK_IO27 <= CK_TESBIAS;
+    CS_IO26 <= CS_TESBIAS;
+    SDI_IO28 <= SDI_IO28_signal;
+    
+    START_CONV_DAC_CH_PULSE_CHANNELS_reg <= START_CONV_DAC_CH_PULSE_reg;
+    START_CONV_DAC_CH_PULSE_ROWSELECT_reg <= START_CONV_DAC_CH_PULSE_reg;
+    START_CONV_DAC_CH_PULSE_TESBIAS_reg <= START_CONV_DAC_CH_PULSE_reg;
+    
+    sw_signal <= sw;
     valid_DAC_CHANNELS <= valid_DAC;
     valid_DAC_ROWSELECT <= valid_DAC;
     valid_DAC_TESBIAS <= valid_DAC;
     
-	--data_DAC_signal <= "001111111111111111"; --1
-	--data_DAC_signal <= "000111111111111111"; --1/2
-	data_DAC_signal <= "101001100000110111"; --1 --1/8 and 1st DAC
-	
-	busy_flag_signal <= '0';
+    --data_DAC_signal <= "001111111111111111"; --1
+    --data_DAC_signal <= "000111111111111111"; --1/2
+    data_DAC_signal <= "101001100000110111"; --1 --1/8 and 1st DAC
+    
+    busy_flag_signal <= '0';
     
  ---------------------------------------------------------------------
  -------------- FRAME ------------------------------------------------
@@ -266,7 +268,7 @@ begin
  ----------------- Clocked Reset -------------------------------------
  ---------------------------------------------------------------------
     process(Sys_Clock_100mhz) is
-	begin
+    begin
         if rising_edge(Sys_Clock_100mhz) then
             Sys_Reset_buf <= Sys_Reset_in;
             Sys_Reset <= Sys_Reset_buf;
@@ -274,11 +276,11 @@ begin
     end process;
 
 
-	
+    
  ---------------------------------------------------------------------
  ----------------- Loopback Emulation signals ------------------------
  ---------------------------------------------------------------------
- 	
+     
 --	process(Sys_Clock_100mhz) is
 --	begin
 --        if (Sys_Reset = '1') then
@@ -300,33 +302,33 @@ begin
 ----------------------------------------------------------------------
 
  process(Sys_Clock_100mhz) is
-	begin
-		if rising_edge(Sys_Clock_100mhz) then
-			if (Sys_Reset = '1') then
-				row_num <= (others => '0');
-				cycle_num <= (others => '0');
-				FRAME_FIELDS_VALID_signal <= '0';
-			else
-				-- shift upon sync
-				if (row_sync = '1') then
-					if (row_num >= ROWS_NUM - 1) then
-						row_num <= (others => '0');
-						cycle_num <= cycle_num + 1;
-						if cycle_num = 20 then
-						  FRAME_FIELDS_VALID_signal <= '1';
-						end if;
-					else
-						row_num <= row_num + 1;						
-					end if;
-				end if;
-		    
-		    if FRAME_FIELDS_VALID_signal = '1' then
-		      FRAME_FIELDS_VALID_signal <= '0';
-		    end if;
-			
-			end if;
-		end if;
-	end process;
+    begin
+        if rising_edge(Sys_Clock_100mhz) then
+            if (Sys_Reset = '1') then
+                row_num <= (others => '0');
+                cycle_num <= (others => '0');
+                FRAME_FIELDS_VALID_signal <= '0';
+            else
+                -- shift upon sync
+                if (row_sync = '1') then
+                    if (row_num >= ROWS_NUM - 1) then
+                        row_num <= (others => '0');
+                        cycle_num <= cycle_num + 1;
+                        if cycle_num = 20 then
+                            FRAME_FIELDS_VALID_signal <= '1';
+                        end if;
+                    else
+                        row_num <= row_num + 1;
+                    end if;
+                end if;
+            
+            if FRAME_FIELDS_VALID_signal = '1' then
+                FRAME_FIELDS_VALID_signal <= '0';
+            end if;
+            
+            end if;
+        end if;
+    end process;
 
 ---------------------------------------------------------------------
 ---------------- Clock Distribution ---------------------------------
@@ -344,86 +346,95 @@ begin
 ---------------- 8 CHANNELS ------------------------------------------
 ----------------------------------------------------------------------
 
-	colums_loop : for i in 1 to COLUMS_NUM generate
+    ADC_simulator : entity concept.ADC_simulator
+        port map(
+            nCNV    => CNV_IO0_signal,
+            SCK     => SCK_IO1_signal,
+            SDO     => ADC_sim_SDO
+        );
 
-            ddr_input : entity concept.ddr_input
-                port map (
-                    clock           => SCK_IO1_signal,
-                    reset           => Sys_Reset,
-                    output_en       => open,
-                    ddr_in          => SDO_CH_signal(i),
-                    parallel_out    => parallel_out_iddr(i)(1 downto 0)
-                );
-                
-            fall_edge_detector_SCLK : entity concept.FallEdgeDetector
-                port map (
-                    clk             => Sys_Clock_100mhz,
-                    rst             => Sys_Reset,
-                    signal_in       => SCK_IO1_signal,
-                    signal_out      => valid_bit_IDDR(i)
-                );
-            fall_edge_detector_CNV : entity concept.FallEdgeDetector
-                port map (
-                    clk             => Sys_Clock_100mhz,
-                    rst             => Sys_Reset,
-                    signal_in       => CNV_IO0_signal,
-                    signal_out      => first_bit(i)
-                );
-             
-             -- shifting register preparation:   
-             process(Sys_Clock_100mhz) is
-                begin
-                    if Sys_Reset = '1' then
-                        input_word_iddr(i) <= (others => '0');
+    colums_loop : for i in 1 to COLUMS_NUM generate
+
+        ddr_input : entity concept.ddr_input
+            port map (
+                clock           => SCK_IO1_signal,
+                reset           => Sys_Reset,
+                output_en       => open,
+                -- ddr_in          => SDO_CH_signal(i),
+                ddr_in          => ADC_sim_SDO,
+                parallel_out    => parallel_out_iddr(i)(1 downto 0)
+            );
+            
+        fall_edge_detector_SCLK : entity concept.FallEdgeDetector
+            port map (
+                clk             => Sys_Clock_100mhz,
+                rst             => Sys_Reset,
+                signal_in       => SCK_IO1_signal,
+                signal_out      => valid_bit_IDDR(i)
+            );
+        fall_edge_detector_CNV : entity concept.FallEdgeDetector
+            port map (
+                clk             => Sys_Clock_100mhz,
+                rst             => Sys_Reset,
+                signal_in       => CNV_IO0_signal,
+                signal_out      => first_bit(i)
+            );
+            
+            -- shifting register preparation:   
+            process(Sys_Clock_100mhz) is
+            begin
+                if Sys_Reset = '1' then
+                    input_word_iddr(i) <= (others => '0');
+                    bits_counter(i) <= (others => '0');
+                    valid_word_IDDR(i) <= '0';
+                    parallel_out_iddr_buffered(i) <= (others => '0');
+                elsif rising_edge(Sys_Clock_100mhz) then
+                        parallel_out_iddr_buffered(i) <= parallel_out_iddr(i);
+                        if first_bit(i) = '1' then
+                        --input_word_iddr(i)(0) <= SDO_CH_signal(i);
+                        input_word_iddr(i)(0) <= ADC_sim_SDO;
+                        bits_counter(i) <= bits_counter(i) + 1;
+                        end if;
+                        if valid_bit_IDDR(i) = '1' then
+                        
+                        if bits_counter(i) < 17 then
+                            input_word_iddr(i)(15 downto 2) <= input_word_iddr(i)(13 downto 0); 
+                            input_word_iddr(i)(1 downto 0) <= parallel_out_iddr_buffered(i)(1 downto 0);
+                        elsif bits_counter(i) = 17 then
+                            input_word_iddr(i)(15 downto 1) <= input_word_iddr(i)(14 downto 0);
+                            input_word_iddr(i)(0) <= parallel_out_iddr_buffered(i)(0);
+                        end if;
+                        bits_counter(i) <= bits_counter(i) + 2;
+                        
+                        end if;
+                        if bits_counter(i) > 16 then
+                        valid_word_IDDR(i) <= '1';
                         bits_counter(i) <= (others => '0');
+                        end if;
+                        if valid_word_IDDR(i) = '1' then
                         valid_word_IDDR(i) <= '0';
-                        parallel_out_iddr_buffered(i) <= (others => '0');
-                    elsif rising_edge(Sys_Clock_100mhz) then
-                         parallel_out_iddr_buffered(i) <= parallel_out_iddr(i);
-                         if first_bit(i) = '1' then
-                            input_word_iddr(i)(0) <= SDO_CH_signal(i);
-                            bits_counter(i) <= bits_counter(i) + 1;
-                         end if;
-                         if valid_bit_IDDR(i) = '1' then
-                            
-                            if bits_counter(i) < 17 then
-                                input_word_iddr(i)(15 downto 2) <= input_word_iddr(i)(13 downto 0); 
-                                input_word_iddr(i)(1 downto 0) <= parallel_out_iddr_buffered(i)(1 downto 0);
-                            elsif bits_counter(i) = 17 then
-                                input_word_iddr(i)(15 downto 1) <= input_word_iddr(i)(14 downto 0);
-                                input_word_iddr(i)(0) <= parallel_out_iddr_buffered(i)(0);
-                            end if;
-                            bits_counter(i) <= bits_counter(i) + 2;
-                            
-                         end if;
-                         if bits_counter(i) > 16 then
-                            valid_word_IDDR(i) <= '1';
-                            bits_counter(i) <= (others => '0');
-                         end if;
-                         if valid_word_IDDR(i) = '1' then
-                            valid_word_IDDR(i) <= '0';
-                         end if;
-                    end if;
-                end process;           
-                           
-            IIR_in_m2s(i).Data  <= signed(input_word_iddr(i));
-            IIR_in_m2s(i).Valid <= valid_word_IDDR(i);
-            IIR_in_m2s(i).User  <= row_num;
-        
-            IIR_inst : entity concept.IIR_transposed
-                generic map(
-                    BUFF_ELEMENTS  => ROWS_NUM
-                )
-                port map(
-                    Clock          => Sys_Clock_5mhz,
-                    Reset          => Sys_Reset,
-                    IIR_in_m2s     => IIR_in_m2s(i),
-                    IIR_out_m2s    => IIR_out_m2s(i),
-                    b_coefficients => b_coefficients,
-                    a_coefficients => a_coefficients
-                );
-	end generate;
-	
+                        end if;
+                end if;
+            end process;           
+                        
+        IIR_in_m2s(i).Data  <= signed(input_word_iddr(i));
+        IIR_in_m2s(i).Valid <= valid_word_IDDR(i);
+        IIR_in_m2s(i).User  <= row_num;
+
+        IIR_inst : entity concept.IIR_transposed
+            generic map(
+                BUFF_ELEMENTS  => ROWS_NUM
+            )
+            port map(
+                Clock          => Sys_Clock_5mhz,
+                Reset          => Sys_Reset,
+                IIR_in_m2s     => IIR_in_m2s(i),
+                IIR_out_m2s    => IIR_out_m2s(i),
+                b_coefficients => b_coefficients,
+                a_coefficients => a_coefficients
+            );
+    end generate;
+    
 ----------------------------------------------------------------------	
 -----------------  SPI DACs and ADCs ---------------------------------
 ----------------------------------------------------------------------
@@ -432,11 +443,11 @@ begin
         port map(
             Clock              => Sys_Clock_100mhz,
             Reset              => Sys_Reset,
-            CNV			       => CNV_IO0_signal,
-            SERIAL_CLK	       => SCK_IO1_signal,
+            CNV                => CNV_IO0_signal,
+            SERIAL_CLK         => SCK_IO1_signal,
             START_CONV_PULSE   => START_CONV_ADC_CH_PULSE_reg
-	    );
-		
+        );
+        
     Serial_CLK_GATES_GEN_CH_DAC_CHANNELS: entity concept.SM_SERIAL_DAC_CLK_GATES_GEN
         port map(
             Clock              => Sys_Clock_100mhz,
@@ -448,7 +459,7 @@ begin
         );
         
     row_select <= "11";
-    	process(Sys_Clock_100mhz) is
+        process(Sys_Clock_100mhz) is
             begin
                 if (Sys_Reset = '1') then
                 elsif rising_edge(Sys_Clock_100mhz) then
