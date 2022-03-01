@@ -348,6 +348,8 @@ begin
 
     ADC_simulator : entity concept.ADC_simulator
         port map(
+            clk     => Sys_Clock_100mhz,
+            nrst    => Sys_Reset,
             nCNV    => CNV_IO0_signal,
             SCK     => SCK_IO1_signal,
             SDO     => ADC_sim_SDO
@@ -439,21 +441,21 @@ begin
 -----------------  SPI DACs and ADCs ---------------------------------
 ----------------------------------------------------------------------
     
-    Serial_CLK_GATES_GEN_CH_ADC: entity concept.SM_SERIAL_ADC_CLK_GATES_GEN
+    ADC_controller : entity concept.ADC_controller
         port map(
-            Clock              => Sys_Clock_100mhz,
-            Reset              => Sys_Reset,
-            CNV                => CNV_IO0_signal,
-            SERIAL_CLK         => SCK_IO1_signal,
-            START_CONV_PULSE   => START_CONV_ADC_CH_PULSE_reg
+            clk             => Sys_Clock_100mhz,
+            nrst            => Sys_Reset,
+            CNV             => CNV_IO0_signal,
+            SCLK            => SCK_IO1_signal,
+            start_pulse     => START_CONV_ADC_CH_PULSE_reg
         );
         
     Serial_CLK_GATES_GEN_CH_DAC_CHANNELS: entity concept.SM_SERIAL_DAC_CLK_GATES_GEN
         port map(
             Clock              => Sys_Clock_100mhz,
             Reset              => Sys_Reset,
-            CS			       => CS_CHANNELS,
-            CLK     	       => CK_CHANNELS,
+            CS                 => CS_CHANNELS,
+            CLK                => CK_CHANNELS,
             LD                 => LD_CHANNELS,
             START_CONV_PULSE   => START_CONV_DAC_CH_PULSE_CHANNELS_reg
         );

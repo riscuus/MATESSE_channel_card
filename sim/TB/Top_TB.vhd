@@ -202,63 +202,11 @@ BEGIN
     for i in 0 to 30000 loop
         START_CONV_ADC_CH_PULSE_signal <= '1';
         SDO_CH_signal(1) <= '1';
-        wait for 5 ns;
-
-        SDO_CH_signal(1) <= '0';
-        wait for 5 ns;
+        wait for 10 ns;
 
         START_CONV_ADC_CH_PULSE_signal <= '0';
-        wait for 35 ns;
+        wait for 390 ns;
 
-        SDO_CH_signal(1) <= '1';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '1';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '0';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '1';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '0';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '1';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '1';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '1';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '0';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '0';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '0';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '0';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '1';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '1';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '0';
-        wait for 10 ns;
-
-        SDO_CH_signal(1) <= '1';
-        wait for 5 ns;
-
---        START_CONV_ADC_CH_PULSE_signal <= '1';
     end loop;
 
 END PROCESS ADC_CH_conv_trigger;
