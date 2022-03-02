@@ -34,7 +34,7 @@ end ADC_simulator;
 
 architecture Behavioral of ADC_simulator is
     -- Data that will be sent through the serial output
-    signal data : std_logic_vector(15 downto 0) := "1001101010111001";
+    signal data : std_logic_vector(15 downto 0) := "1001101010111000";
     -- Keeps track of the bit that has to be sent
     signal counter : integer range 0 to 15 := 15;
     -- Register that allows us to know if currently we are in a conversion

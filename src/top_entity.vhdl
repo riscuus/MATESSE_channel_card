@@ -163,7 +163,7 @@ architecture RTL of top_entity is
     signal Sys_Reset_buf : std_logic;
     signal Sys_Reset : std_logic;
     
-    signal first_bit : std_logic_vector(COLUMS_NUM downto 1);
+    signal conv_started : std_logic_vector(COLUMS_NUM downto 1);
 
     signal ADC_sim_SDO : std_logic;
                 
@@ -379,46 +379,20 @@ begin
                 clk             => Sys_Clock_100mhz,
                 rst             => Sys_Reset,
                 signal_in       => CNV_IO0_signal,
-                signal_out      => first_bit(i)
+                signal_out      => conv_started(i)
+            );
+
+        input_shift_register : entity concept.input_shift_register
+            port map(
+                clk                     => Sys_Clock_100mhz,
+                nrst                    => Sys_Reset,
+                serial_clk              => SCK_IO1_signal,
+                iddr_parallel_output    => parallel_out_iddr(i),
+                conv_started            => conv_started(i),
+                valid_word              => valid_word_IDDR(i),
+                parallel_data           => input_word_iddr(i)
             );
             
-            -- shifting register preparation:   
-            process(Sys_Clock_100mhz) is
-            begin
-                if Sys_Reset = '1' then
-                    input_word_iddr(i) <= (others => '0');
-                    bits_counter(i) <= (others => '0');
-                    valid_word_IDDR(i) <= '0';
-                    parallel_out_iddr_buffered(i) <= (others => '0');
-                elsif rising_edge(Sys_Clock_100mhz) then
-                        parallel_out_iddr_buffered(i) <= parallel_out_iddr(i);
-                        if first_bit(i) = '1' then
-                        --input_word_iddr(i)(0) <= SDO_CH_signal(i);
-                        input_word_iddr(i)(0) <= ADC_sim_SDO;
-                        bits_counter(i) <= bits_counter(i) + 1;
-                        end if;
-                        if valid_bit_IDDR(i) = '1' then
-                        
-                        if bits_counter(i) < 17 then
-                            input_word_iddr(i)(15 downto 2) <= input_word_iddr(i)(13 downto 0); 
-                            input_word_iddr(i)(1 downto 0) <= parallel_out_iddr_buffered(i)(1 downto 0);
-                        elsif bits_counter(i) = 17 then
-                            input_word_iddr(i)(15 downto 1) <= input_word_iddr(i)(14 downto 0);
-                            input_word_iddr(i)(0) <= parallel_out_iddr_buffered(i)(0);
-                        end if;
-                        bits_counter(i) <= bits_counter(i) + 2;
-                        
-                        end if;
-                        if bits_counter(i) > 16 then
-                        valid_word_IDDR(i) <= '1';
-                        bits_counter(i) <= (others => '0');
-                        end if;
-                        if valid_word_IDDR(i) = '1' then
-                        valid_word_IDDR(i) <= '0';
-                        end if;
-                end if;
-            end process;           
-                        
         IIR_in_m2s(i).Data  <= signed(input_word_iddr(i));
         IIR_in_m2s(i).Valid <= valid_word_IDDR(i);
         IIR_in_m2s(i).User  <= row_num;
