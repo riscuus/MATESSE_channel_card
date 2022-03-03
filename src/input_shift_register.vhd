@@ -44,13 +44,15 @@ architecture Behavioral of input_shift_register is
     signal valid_bits : std_logic := '0';
     -- Bits counter
     signal counter : natural range 0 to 16 := 0;
+    -- Register to be able to read valid_word output
+    signal valid_word_reg : std_logic;
 begin
 
     process(clk, nrst) is
     begin
         if nrst = '1' then
             input_word_iddr <= (others => '0');
-            valid_word <= '0';
+            valid_word_reg <= '0';
             shift_on <= '0';
             counter <= 0;
             valid_bits <= '0';
@@ -79,15 +81,16 @@ begin
             -- next cycle
             if (counter = 14) then
                 shift_on <= '0';
-                valid_word <= '1';
+                valid_word_reg <= '1';
             end if;
 
-            if (valid_word = '1') then
-                valid_word = '0';
+            if (valid_word_reg = '1') then
+                valid_word_reg <= '0';
             end if;
         end if;
     end process;
 
+    valid_word <= valid_word_reg;
     parallel_data <= input_word_iddr;
 
 end Behavioral;

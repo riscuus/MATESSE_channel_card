@@ -11,9 +11,9 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1396450000fs"></ZoomStartTime>
-      <ZoomEndTime time="1602450001fs"></ZoomEndTime>
-      <Cursor1Time time="1516450000fs"></Cursor1Time>
+      <ZoomStartTime time="1313966667fs"></ZoomStartTime>
+      <ZoomEndTime time="1590166668fs"></ZoomEndTime>
+      <Cursor1Time time="1490000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="296"></NameColumnWidth>
@@ -24,7 +24,7 @@
       <marker time="3692063333000" label="" />
       <marker time="32755050000000" label="" />
       <marker time="26748423219000" label="" />
-      <marker time="1150000000" label="" />
+      <marker time="1330000000" label="" />
    </wave_markers>
    <wvobject type="divider" fp_name="divider45">
       <obj_property name="label">Top signals</obj_property>
@@ -355,9 +355,9 @@
          <obj_property name="ElementShortName">nrst</obj_property>
          <obj_property name="ObjectShortName">nrst</obj_property>
       </wvobject>
-      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/input_shift_register/first_bit" type="logic">
-         <obj_property name="ElementShortName">first_bit</obj_property>
-         <obj_property name="ObjectShortName">first_bit</obj_property>
+      <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/input_shift_register/conv_started" type="logic">
+         <obj_property name="ElementShortName">conv_started</obj_property>
+         <obj_property name="ObjectShortName">conv_started</obj_property>
       </wvobject>
       <wvobject fp_name="/Top_TB/top_entity/\colums_loop(1)\/input_shift_register/shift_on" type="logic">
          <obj_property name="ElementShortName">shift_on</obj_property>
