@@ -16,3 +16,7 @@ C:/<YOUR PATH>/vivado.bat -mode batch -source project_script.tcl
 ## Requirements
 
 - Xilinx Vivado 2019.1
+
+## Links of interest
+
+- MCE wiki: https://e-mode.phas.ubc.ca/mcewiki/index.php/Main_Page
