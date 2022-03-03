@@ -480,9 +480,8 @@ begin
             LDAC                => LD_TESBIAS
         );
         
-     Serial_DAC_MemoryLoad_CHANNEL0: entity concept.MemoryLoad_Main_18bit
-        --GENERIC(<generic_const>	: <generic_type>);
-        port map(	
+     data_serializer_wrapper_channel1: entity concept.data_serializer_wrapper
+        port map(
             clk                 => Sys_Clock_100mhz,
             rst                 => Sys_Reset,
             gate_read           => CS_CHANNELS,
@@ -495,8 +494,7 @@ begin
             busy_flag           => busy_flag_signal
             );
             
-     Serial_DAC_MemoryLoad_CHANNEL1: entity concept.MemoryLoad_Main_18bit
-        --GENERIC(<generic_const>	: <generic_type>);
+     data_serializer_wrapper_channel2: entity concept.data_serializer_wrapper
         port map(
             clk                 => Sys_Clock_100mhz,
             rst                 => Sys_Reset,
@@ -510,8 +508,7 @@ begin
             busy_flag           => busy_flag_signal
             );
             
-      Serial_DAC_MemoryLoad_ROWSELECT: entity concept.MemoryLoad_Main_18bit
-        --GENERIC(<generic_const>	: <generic_type>);
+      data_serializer_wrapper_row_select: entity concept.data_serializer_wrapper
         port map(
             clk                 => Sys_Clock_100mhz,
             rst                 => Sys_Reset,
@@ -525,8 +522,7 @@ begin
             busy_flag           => busy_flag_signal
             );
             
-      Serial_DAC_MemoryLoad_TESBIAS: entity concept.MemoryLoad_Main_18bit
-        --GENERIC(<generic_const>	: <generic_type>);
+      data_serializer_wrapper_tesbias: entity concept.data_serializer_wrapper
         port map(
             clk                 => Sys_Clock_100mhz,
             rst                 => Sys_Reset,
