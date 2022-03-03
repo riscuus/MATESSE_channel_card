@@ -113,7 +113,7 @@ architecture RTL of top_entity is
     type input_word_iddr_type is array(COLUMS_NUM downto 1) of std_logic_vector(15 downto 0);
     signal input_word_iddr: input_word_iddr_type; 
     type bits_counter_type is array(COLUMS_NUM downto 1) of unsigned(4 downto 0);
-    SIGNAL bits_counter : bits_counter_type;
+    signal bits_counter : bits_counter_type;
     
     signal b_coefficients : T_SIGNED_ARRAY_COEFFICIENTS;
     signal a_coefficients : T_SIGNED_ARRAY_COEFFICIENTS;
@@ -167,36 +167,36 @@ architecture RTL of top_entity is
 
     signal ADC_sim_SDO : std_logic;
                 
-    attribute mark_debug : string;
-    attribute mark_debug of CNV_IO0_signal 		        : signal is "true";
-    attribute mark_debug of SCK_IO1_signal 		        : signal is "true";
-    attribute mark_debug of SDO_CH_signal 		        : signal is "true";
-    attribute mark_debug of START_CONV_ADC_CH_PULSE_reg : signal is "true";
-    attribute mark_debug of START_CONV_DAC_CH_PULSE_CHANNELS_reg : signal is "true";
-    attribute mark_debug of START_CONV_DAC_CH_PULSE_ROWSELECT_reg : signal is "true";
-    attribute mark_debug of START_CONV_DAC_CH_PULSE_TESBIAS_reg : signal is "true";
+--    attribute mark_debug : string;
+--    attribute mark_debug of CNV_IO0_signal 		        : signal is "true";
+--    attribute mark_debug of SCK_IO1_signal 		        : signal is "true";
+--    attribute mark_debug of SDO_CH_signal 		        : signal is "true";
+--    attribute mark_debug of START_CONV_ADC_CH_PULSE_reg : signal is "true";
+--    attribute mark_debug of START_CONV_DAC_CH_PULSE_CHANNELS_reg : signal is "true";
+--    attribute mark_debug of START_CONV_DAC_CH_PULSE_ROWSELECT_reg : signal is "true";
+--    attribute mark_debug of START_CONV_DAC_CH_PULSE_TESBIAS_reg : signal is "true";
                                                     
-    --attribute mark_debug of SDI_CH_signal               : signal is "true";
-    --attribute mark_debug of SDO_CH_signal               : signal is "true";
+--    --attribute mark_debug of SDI_CH_signal               : signal is "true";
+--    --attribute mark_debug of SDO_CH_signal               : signal is "true";
     
-    attribute mark_debug of parallel_out_iddr           : signal is "true";
-    attribute mark_debug of parallel_out_iddr_buffered  : signal is "true";
+--    attribute mark_debug of parallel_out_iddr           : signal is "true";
+--    attribute mark_debug of parallel_out_iddr_buffered  : signal is "true";
     
-    attribute mark_debug of input_word_iddr             : signal is "true";
-    attribute mark_debug of bits_counter                : signal is "true";
-    attribute mark_debug of valid_word_IDDR             : signal is "true";
-    attribute mark_debug of valid_bit_IDDR              : signal is "true";
+--    attribute mark_debug of input_word_iddr             : signal is "true";
+--    attribute mark_debug of bits_counter                : signal is "true";
+--    attribute mark_debug of valid_word_IDDR             : signal is "true";
+--    attribute mark_debug of valid_bit_IDDR              : signal is "true";
     
-    attribute mark_debug of IIR_in_m2s                  : signal is "true";
-    attribute mark_debug of IIR_out_m2s                 : signal is "true";
-    attribute mark_debug of Sys_Clock_100mhz            : signal is "true";
-    attribute mark_debug of Sys_Clock_5mhz              : signal is "true";
-    attribute mark_debug of row_num                     : signal is "true";
+--    attribute mark_debug of IIR_in_m2s                  : signal is "true";
+--    attribute mark_debug of IIR_out_m2s                 : signal is "true";
+--    attribute mark_debug of Sys_Clock_100mhz            : signal is "true";
+--    attribute mark_debug of Sys_Clock_5mhz              : signal is "true";
+--    attribute mark_debug of row_num                     : signal is "true";
     
-    attribute mark_debug of SEND_UART_signal            : signal is "true";
-    attribute mark_debug of DATA_UART_signal            : signal is "true";
-    attribute mark_debug of READY_UART_signal           : signal is "true";
-    attribute mark_debug of UART_TX_UART_signal         : signal is "true";
+--    attribute mark_debug of SEND_UART_signal            : signal is "true";
+--    attribute mark_debug of DATA_UART_signal            : signal is "true";
+--    attribute mark_debug of READY_UART_signal           : signal is "true";
+--    attribute mark_debug of UART_TX_UART_signal         : signal is "true";
     
 --    COMPONENT vio_DAC IS
 --        PORT (
@@ -424,14 +424,14 @@ begin
             start_pulse     => START_CONV_ADC_CH_PULSE_reg
         );
         
-    Serial_CLK_GATES_GEN_CH_DAC_CHANNELS: entity concept.SM_SERIAL_DAC_CLK_GATES_GEN
+    DAC_controller_channels: entity concept.DAC_controller
         port map(
-            Clock              => Sys_Clock_100mhz,
-            Reset              => Sys_Reset,
-            CS                 => CS_CHANNELS,
-            CLK                => CK_CHANNELS,
-            LD                 => LD_CHANNELS,
-            START_CONV_PULSE   => START_CONV_DAC_CH_PULSE_CHANNELS_reg
+            clock               => Sys_Clock_100mhz,
+            rst                 => Sys_Reset,
+            start_conv_pulse    => START_CONV_DAC_CH_PULSE_CHANNELS_reg,
+            CS                  => CS_CHANNELS,
+            CLK                 => CK_CHANNELS,
+            LDAC                => LD_CHANNELS
         );
         
     row_select <= "11";
@@ -460,25 +460,25 @@ begin
         end process;
     
         
-    Serial_CLK_GATES_GEN_CH_DAC_ROWSELECT: entity concept.SM_SERIAL_DAC_CLK_GATES_GEN
+    DAC_controller_row_select: entity concept.DAC_controller
         port map(
-            Clock              => Sys_Clock_100mhz,
-            Reset              => Sys_Reset,
-            CS                 => CS_ROWSELECT,
-            CLK                => CK_ROWSELECT,
-            LD                 => LD_ROWSELECT,
-            START_CONV_PULSE   => START_CONV_DAC_CH_PULSE_ROWSELECT_reg
+            clock               => Sys_Clock_100mhz,
+            rst                 => Sys_Reset,
+            start_conv_pulse    => START_CONV_DAC_CH_PULSE_ROWSELECT_reg,
+            CS                  => CS_ROWSELECT,
+            CLK                 => CK_ROWSELECT,
+            LDAC                => LD_ROWSELECT
         );
         
-     Serial_CLK_GATES_GEN_CH_DAC_TESBIAS: entity concept.SM_SERIAL_DAC_CLK_GATES_GEN
+     DAC_controller_tesbias: entity concept.DAC_controller
         port map(
-            Clock              => Sys_Clock_100mhz,
-            Reset              => Sys_Reset,
-            CS                 => CS_TESBIAS,
-            CLK                => CK_TESBIAS,
-            LD                 => LD_TESBIAS,
-            START_CONV_PULSE   => START_CONV_DAC_CH_PULSE_TESBIAS_reg
-        );      
+            clock               => Sys_Clock_100mhz,
+            rst                 => Sys_Reset,
+            start_conv_pulse    => START_CONV_DAC_CH_PULSE_TESBIAS_reg,
+            CS                  => CS_TESBIAS,
+            CLK                 => CK_TESBIAS,
+            LDAC                => LD_TESBIAS
+        );
         
      Serial_DAC_MemoryLoad_CHANNEL0: entity concept.MemoryLoad_Main_18bit
         --GENERIC(<generic_const>	: <generic_type>);
