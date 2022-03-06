@@ -77,7 +77,7 @@ data_clk_fall_pulse_not_busy <= data_clk_fall_pulse_int and (not busy_flag);
             signal_out  => data_clk_fall_pulse_int
         );
 
-    stateMachineMemoryLoad : entity concept.SM_MemoryLoad_18bit 
+    stateMachineMemoryLoad : entity concept.data_serializer 
         port map ( 
             clk                     => clk,
             rst                     => rst,

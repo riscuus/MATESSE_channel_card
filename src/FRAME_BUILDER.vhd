@@ -54,7 +54,7 @@ entity FRAME_BUILDER is
            FRAME_HEADER_ERRNO_1: in std_logic_vector(31 downto 0);
            FRAME_FPGA_TEMP: in std_logic_vector(31 downto 0);
            FRAME_FIELDS_VALID : in std_logic;
-           FRAME_DATA: T_FRAME_DATA;
+           FRAME_DATA: in T_FRAME_DATA;
            
            -- DATA WORD VALID --
            DATA : out  STD_LOGIC_VECTOR (7 downto 0);
@@ -91,7 +91,7 @@ begin
     DATA <= DATA_signal;
     READY <= not UART_TRANSMITTING;
  	
-	process(Sys_Clock_100mhz) is
+	process(Sys_Clock_100mhz, Sys_Reset) is
 	begin
         if (Sys_Reset = '1') then
             FRAME_HEADER_signal <= (others => (others => '0'));
