@@ -115,31 +115,31 @@ architecture RTL of top_entity is
     type bits_counter_type is array(COLUMS_NUM downto 1) of unsigned(4 downto 0);
     signal bits_counter : bits_counter_type;
     
-    signal b_coefficients : T_SIGNED_ARRAY_COEFFICIENTS;
-    signal a_coefficients : T_SIGNED_ARRAY_COEFFICIENTS;
+--    signal b_coefficients : T_SIGNED_ARRAY_COEFFICIENTS;
+--    signal a_coefficients : T_SIGNED_ARRAY_COEFFICIENTS;
     
     signal counter_clocks : unsigned(7 downto 0);
     
-    signal SEND_UART_signal: std_logic;    
-    signal DATA_UART_signal: std_logic_vector(7 downto 0);     
-    signal READY_UART_signal: std_logic;  
-    signal UART_TX_UART_signal: std_logic;
+--    signal SEND_UART_signal: std_logic;    
+--    signal DATA_UART_signal: std_logic_vector(7 downto 0);     
+--    signal READY_UART_signal: std_logic;  
+--    signal UART_TX_UART_signal: std_logic;
     
-    signal FRAME_STATUS_BIT4_ACTIVECLOCK_signal: std_logic;
-    signal FRAME_STATUS_BIT16TO19_NUMCOLS_signal: std_logic_vector(3 downto 0);
-    signal FRAME_STATUS_BIT20_DATATIMINGERROR_signal: std_logic;
-    signal FRAME_HEADER_WORD2_ROWLEN_signal: std_logic_vector(31 downto 0);
-    signal FRAME_HEADER_WORD3AND9_NUMROWS_signal: std_logic_vector(31 downto 0);
-    signal FRAME_HEADER_WORD4_DATARATE_signal: std_logic_vector(31 downto 0);
-    signal FRAME_HEADER_WORD5_CCARZCOUNTER_signal: std_logic_vector(31 downto 0);
-    signal FRAME_HEADER_WORD6_HEADERVERSION_signal: std_logic_vector(31 downto 0);
-    signal FRAME_HEADER_WORD7_RAMPVALUE_signal: std_logic_vector(31 downto 0);
-    signal FRAME_HEADER_WORD8_RAMPCARD_ADDR_signal: std_logic_vector(31 downto 0);
-    signal FRAME_HEADER_WORD12_USER_WORD_signal: std_logic_vector(31 downto 0);
-    signal FRAME_HEADER_ERRNO_1_signal: std_logic_vector(31 downto 0);
-    signal FRAME_FPGA_TEMP_signal: std_logic_vector(31 downto 0);
-    signal FRAME_FIELDS_VALID_signal: std_logic;
-    signal FRAME_DATA_signal: T_FRAME_DATA;   
+--    signal FRAME_STATUS_BIT4_ACTIVECLOCK_signal: std_logic;
+--    signal FRAME_STATUS_BIT16TO19_NUMCOLS_signal: std_logic_vector(3 downto 0);
+--    signal FRAME_STATUS_BIT20_DATATIMINGERROR_signal: std_logic;
+--    signal FRAME_HEADER_WORD2_ROWLEN_signal: std_logic_vector(31 downto 0);
+--    signal FRAME_HEADER_WORD3AND9_NUMROWS_signal: std_logic_vector(31 downto 0);
+--    signal FRAME_HEADER_WORD4_DATARATE_signal: std_logic_vector(31 downto 0);
+--    signal FRAME_HEADER_WORD5_CCARZCOUNTER_signal: std_logic_vector(31 downto 0);
+--    signal FRAME_HEADER_WORD6_HEADERVERSION_signal: std_logic_vector(31 downto 0);
+--    signal FRAME_HEADER_WORD7_RAMPVALUE_signal: std_logic_vector(31 downto 0);
+--    signal FRAME_HEADER_WORD8_RAMPCARD_ADDR_signal: std_logic_vector(31 downto 0);
+--    signal FRAME_HEADER_WORD12_USER_WORD_signal: std_logic_vector(31 downto 0);
+--    signal FRAME_HEADER_ERRNO_1_signal: std_logic_vector(31 downto 0);
+--    signal FRAME_FPGA_TEMP_signal: std_logic_vector(31 downto 0);
+--    signal FRAME_FIELDS_VALID_signal: std_logic;
+--    signal FRAME_DATA_signal: T_FRAME_DATA;   
     
     signal READY_signal: std_logic;
     
@@ -152,7 +152,8 @@ architecture RTL of top_entity is
     signal busy_flag_signal: std_logic;
     
     signal data_DAC_signal : std_logic_vector(17 downto 0);
-    signal ready_DAC_signal_CHANNELS: std_logic;
+    signal ready_DAC_signal_ch1: std_logic;
+    signal ready_DAC_signal_ch2: std_logic;
     signal ready_DAC_signal_ROWSELECT: std_logic;
     signal ready_DAC_signal_TESBIAS: std_logic;       
     
@@ -212,7 +213,7 @@ begin
     SCK_IO1 <= SCK_IO1_signal;
     Clock_5mhz <= Sys_Clock_5mhz;
     Clock_100mhz <= Sys_Clock_100mhz;
-    UART_TX <= UART_TX_UART_signal;
+--    UART_TX <= UART_TX_UART_signal;
     
     CS_IO8 <= CS_ROWSELECTED1;
     CS_IO9 <= CS_ROWSELECTED2;
@@ -250,18 +251,18 @@ begin
  ---------------------------------------------------------------------
  -------------- FRAME ------------------------------------------------
  ---------------------------------------------------------------------
-   FRAME_STATUS_BIT4_ACTIVECLOCK_signal <= '0';
-   FRAME_STATUS_BIT16TO19_NUMCOLS_signal <= "1000";
-   FRAME_STATUS_BIT20_DATATIMINGERROR_signal <= '0';
-   FRAME_HEADER_WORD2_ROWLEN_signal <= X"00000000"; -- DEPENDS ON J AND I. TO BE LATER ADJUSTED.
-   FRAME_HEADER_WORD3AND9_NUMROWS_signal <= X"00000100"; -- 256 rows
-   FRAME_HEADER_WORD4_DATARATE_signal <= X"00000014"; -- 20 CYCLES. TO BE CONFIRMED LATER.
-   FRAME_HEADER_WORD6_HEADERVERSION_signal <= (others => '0'); -- TO BE DEFINED
-   FRAME_HEADER_WORD7_RAMPVALUE_signal <= (others => '0'); -- TO BE DEFINED
-   FRAME_HEADER_WORD8_RAMPCARD_ADDR_signal <= (others => '0'); -- TO BE DEFINED
-   FRAME_HEADER_WORD12_USER_WORD_signal <= (others => '0'); -- TO BE DEFINED
-   FRAME_HEADER_ERRNO_1_signal <= (others => '0'); -- TO BE DEFINED
-   FRAME_FPGA_TEMP_signal <= (others => '0'); -- TO BE DEFINED
+--   FRAME_STATUS_BIT4_ACTIVECLOCK_signal <= '0';
+--   FRAME_STATUS_BIT16TO19_NUMCOLS_signal <= "1000";
+--   FRAME_STATUS_BIT20_DATATIMINGERROR_signal <= '0';
+--   FRAME_HEADER_WORD2_ROWLEN_signal <= X"00000000"; -- DEPENDS ON J AND I. TO BE LATER ADJUSTED.
+--   FRAME_HEADER_WORD3AND9_NUMROWS_signal <= X"00000100"; -- 256 rows
+--   FRAME_HEADER_WORD4_DATARATE_signal <= X"00000014"; -- 20 CYCLES. TO BE CONFIRMED LATER.
+--   FRAME_HEADER_WORD6_HEADERVERSION_signal <= (others => '0'); -- TO BE DEFINED
+--   FRAME_HEADER_WORD7_RAMPVALUE_signal <= (others => '0'); -- TO BE DEFINED
+--   FRAME_HEADER_WORD8_RAMPCARD_ADDR_signal <= (others => '0'); -- TO BE DEFINED
+--   FRAME_HEADER_WORD12_USER_WORD_signal <= (others => '0'); -- TO BE DEFINED
+--   FRAME_HEADER_ERRNO_1_signal <= (others => '0'); -- TO BE DEFINED
+--   FRAME_FPGA_TEMP_signal <= (others => '0'); -- TO BE DEFINED
 
 
  ---------------------------------------------------------------------
@@ -301,34 +302,34 @@ begin
 ------------------ Row select ----------------------------------------
 ----------------------------------------------------------------------
 
- process(Sys_Clock_100mhz) is
-    begin
-        if rising_edge(Sys_Clock_100mhz) then
-            if (Sys_Reset = '1') then
-                row_num <= (others => '0');
-                cycle_num <= (others => '0');
-                FRAME_FIELDS_VALID_signal <= '0';
-            else
-                -- shift upon sync
-                if (row_sync = '1') then
-                    if (row_num >= ROWS_NUM - 1) then
-                        row_num <= (others => '0');
-                        cycle_num <= cycle_num + 1;
-                        if cycle_num = 20 then
-                            FRAME_FIELDS_VALID_signal <= '1';
-                        end if;
-                    else
-                        row_num <= row_num + 1;
-                    end if;
-                end if;
+-- process(Sys_Clock_100mhz) is
+--    begin
+--        if rising_edge(Sys_Clock_100mhz) then
+--            if (Sys_Reset = '1') then
+--                row_num <= (others => '0');
+--                cycle_num <= (others => '0');
+--                FRAME_FIELDS_VALID_signal <= '0';
+--            else
+--                -- shift upon sync
+--                if (row_sync = '1') then
+--                    if (row_num >= ROWS_NUM - 1) then
+--                        row_num <= (others => '0');
+--                        cycle_num <= cycle_num + 1;
+--                        if cycle_num = 20 then
+--                            FRAME_FIELDS_VALID_signal <= '1';
+--                        end if;
+--                    else
+--                        row_num <= row_num + 1;
+--                    end if;
+--                end if;
             
-            if FRAME_FIELDS_VALID_signal = '1' then
-                FRAME_FIELDS_VALID_signal <= '0';
-            end if;
+--            if FRAME_FIELDS_VALID_signal = '1' then
+--                FRAME_FIELDS_VALID_signal <= '0';
+--            end if;
             
-            end if;
-        end if;
-    end process;
+--            end if;
+--        end if;
+--    end process;
 
 ---------------------------------------------------------------------
 ---------------- Clock Distribution ---------------------------------
@@ -393,22 +394,22 @@ begin
                 parallel_data           => input_word_iddr(i)
             );
             
-        IIR_in_m2s(i).Data  <= signed(input_word_iddr(i));
-        IIR_in_m2s(i).Valid <= valid_word_IDDR(i);
-        IIR_in_m2s(i).User  <= row_num;
+--        IIR_in_m2s(i).Data  <= signed(input_word_iddr(i));
+--        IIR_in_m2s(i).Valid <= valid_word_IDDR(i);
+--        IIR_in_m2s(i).User  <= row_num;
 
-        IIR_inst : entity concept.IIR_transposed
-            generic map(
-                BUFF_ELEMENTS  => ROWS_NUM
-            )
-            port map(
-                Clock          => Sys_Clock_5mhz,
-                Reset          => Sys_Reset,
-                IIR_in_m2s     => IIR_in_m2s(i),
-                IIR_out_m2s    => IIR_out_m2s(i),
-                b_coefficients => b_coefficients,
-                a_coefficients => a_coefficients
-            );
+--        IIR_inst : entity concept.IIR_transposed
+--            generic map(
+--                BUFF_ELEMENTS  => ROWS_NUM
+--            )
+--            port map(
+--                Clock          => Sys_Clock_5mhz,
+--                Reset          => Sys_Reset,
+--                IIR_in_m2s     => IIR_in_m2s(i),
+--                IIR_out_m2s    => IIR_out_m2s(i),
+--                b_coefficients => b_coefficients,
+--                a_coefficients => a_coefficients
+--            );
     end generate;
     
 ----------------------------------------------------------------------	
@@ -435,7 +436,7 @@ begin
         );
         
     row_select <= "11";
-        process(Sys_Clock_100mhz) is
+        process(Sys_Clock_100mhz, Sys_Reset) is
             begin
                 if (Sys_Reset = '1') then
                 elsif rising_edge(Sys_Clock_100mhz) then
@@ -460,25 +461,25 @@ begin
         end process;
     
         
-    DAC_controller_row_select: entity concept.DAC_controller
-        port map(
-            clock               => Sys_Clock_100mhz,
-            rst                 => Sys_Reset,
-            start_conv_pulse    => START_CONV_DAC_CH_PULSE_ROWSELECT_reg,
-            CS                  => CS_ROWSELECT,
-            CLK                 => CK_ROWSELECT,
-            LDAC                => LD_ROWSELECT
-        );
+--    DAC_controller_row_select: entity concept.DAC_controller
+--        port map(
+--            clock               => Sys_Clock_100mhz,
+--            rst                 => Sys_Reset,
+--            start_conv_pulse    => START_CONV_DAC_CH_PULSE_ROWSELECT_reg,
+--            CS                  => CS_ROWSELECT,
+--            CLK                 => CK_ROWSELECT,
+--            LDAC                => LD_ROWSELECT
+--        );
         
-     DAC_controller_tesbias: entity concept.DAC_controller
-        port map(
-            clock               => Sys_Clock_100mhz,
-            rst                 => Sys_Reset,
-            start_conv_pulse    => START_CONV_DAC_CH_PULSE_TESBIAS_reg,
-            CS                  => CS_TESBIAS,
-            CLK                 => CK_TESBIAS,
-            LDAC                => LD_TESBIAS
-        );
+--     DAC_controller_tesbias: entity concept.DAC_controller
+--        port map(
+--            clock               => Sys_Clock_100mhz,
+--            rst                 => Sys_Reset,
+--            start_conv_pulse    => START_CONV_DAC_CH_PULSE_TESBIAS_reg,
+--            CS                  => CS_TESBIAS,
+--            CLK                 => CK_TESBIAS,
+--            LDAC                => LD_TESBIAS
+--        );
         
      data_serializer_wrapper_channel1: entity concept.data_serializer_wrapper
         port map(
@@ -488,10 +489,9 @@ begin
             data_clk            => CK_CHANNELS,
             valid               => valid_DAC_CHANNELS,
             parallel_data       => data_DAC_signal,
-                
-            ready               => ready_DAC_signal_CHANNELS,
-            serial_data         => SDI_CH_signal(1),
-            busy_flag           => busy_flag_signal
+            busy_flag           => busy_flag_signal,
+            ready               => ready_DAC_signal_ch1,
+            serial_data         => SDI_CH_signal(1)
             );
             
      data_serializer_wrapper_channel2: entity concept.data_serializer_wrapper
@@ -502,10 +502,9 @@ begin
             data_clk            => CK_CHANNELS,
             valid               => valid_DAC_CHANNELS,
             parallel_data       => data_DAC_signal,
-                
-            ready               => ready_DAC_signal_CHANNELS,
-            serial_data         => SDI_CH_signal(2),
-            busy_flag           => busy_flag_signal
+            busy_flag           => busy_flag_signal,
+            ready               => ready_DAC_signal_ch2,
+            serial_data         => SDI_CH_signal(2)
             );
             
       data_serializer_wrapper_row_select: entity concept.data_serializer_wrapper
@@ -516,10 +515,9 @@ begin
             data_clk            => CK_ROWSELECT,
             valid               => valid_DAC_ROWSELECT,
             parallel_data       => data_DAC_signal,
-                
+            busy_flag           => busy_flag_signal,
             ready               => ready_DAC_signal_ROWSELECT,
-            serial_data         => SDI_IO12_signal,
-            busy_flag           => busy_flag_signal
+            serial_data         => SDI_IO12_signal
             );
             
       data_serializer_wrapper_tesbias: entity concept.data_serializer_wrapper
@@ -531,9 +529,8 @@ begin
             valid               => valid_DAC_TESBIAS,
             parallel_data       => data_DAC_signal,
             busy_flag           => busy_flag_signal,
-                
             ready               => ready_DAC_signal_TESBIAS,
-            serial_data              => SDI_IO28_signal
+            serial_data         => SDI_IO28_signal
             );      
             
             
@@ -557,44 +554,44 @@ begin
 ---------------- FRAME BUILDER ---------------------------------------
 ----------------------------------------------------------------------
 
-FRAME_BUILDER: entity concept.FRAME_BUILDER
-    port map(
-           Sys_Clock_100mhz => Sys_Clock_100mhz,
-           Sys_Reset => Sys_Reset,
+--FRAME_BUILDER: entity concept.FRAME_BUILDER
+--    port map(
+--           Sys_Clock_100mhz => Sys_Clock_100mhz,
+--           Sys_Reset => Sys_Reset,
            
-           FRAME_STATUS_BIT4_ACTIVECLOCK => FRAME_STATUS_BIT4_ACTIVECLOCK_signal,
-           FRAME_STATUS_BIT16TO19_NUMCOLS => FRAME_STATUS_BIT16TO19_NUMCOLS_signal,
-           FRAME_STATUS_BIT20_DATATIMINGERROR => FRAME_STATUS_BIT20_DATATIMINGERROR_signal, 
-           FRAME_HEADER_WORD2_ROWLEN => FRAME_HEADER_WORD2_ROWLEN_signal,
-           FRAME_HEADER_WORD3AND9_NUMROWS => FRAME_HEADER_WORD3AND9_NUMROWS_signal,
-           FRAME_HEADER_WORD4_DATARATE => FRAME_HEADER_WORD4_DATARATE_signal,
-           FRAME_HEADER_WORD6_HEADERVERSION => FRAME_HEADER_WORD6_HEADERVERSION_signal,
-           FRAME_HEADER_WORD7_RAMPVALUE => FRAME_HEADER_WORD7_RAMPVALUE_signal,
-           FRAME_HEADER_WORD8_RAMPCARD_ADDR => FRAME_HEADER_WORD8_RAMPCARD_ADDR_signal,
-           FRAME_HEADER_WORD12_USER_WORD => FRAME_HEADER_WORD12_USER_WORD_signal,
-           FRAME_HEADER_ERRNO_1 => FRAME_HEADER_ERRNO_1_signal,
-           FRAME_FPGA_TEMP => FRAME_FPGA_TEMP_signal,
-           FRAME_FIELDS_VALID => FRAME_FIELDS_VALID_signal,
-           FRAME_DATA => FRAME_DATA_signal,
+--           FRAME_STATUS_BIT4_ACTIVECLOCK => FRAME_STATUS_BIT4_ACTIVECLOCK_signal,
+--           FRAME_STATUS_BIT16TO19_NUMCOLS => FRAME_STATUS_BIT16TO19_NUMCOLS_signal,
+--           FRAME_STATUS_BIT20_DATATIMINGERROR => FRAME_STATUS_BIT20_DATATIMINGERROR_signal, 
+--           FRAME_HEADER_WORD2_ROWLEN => FRAME_HEADER_WORD2_ROWLEN_signal,
+--           FRAME_HEADER_WORD3AND9_NUMROWS => FRAME_HEADER_WORD3AND9_NUMROWS_signal,
+--           FRAME_HEADER_WORD4_DATARATE => FRAME_HEADER_WORD4_DATARATE_signal,
+--           FRAME_HEADER_WORD6_HEADERVERSION => FRAME_HEADER_WORD6_HEADERVERSION_signal,
+--           FRAME_HEADER_WORD7_RAMPVALUE => FRAME_HEADER_WORD7_RAMPVALUE_signal,
+--           FRAME_HEADER_WORD8_RAMPCARD_ADDR => FRAME_HEADER_WORD8_RAMPCARD_ADDR_signal,
+--           FRAME_HEADER_WORD12_USER_WORD => FRAME_HEADER_WORD12_USER_WORD_signal,
+--           FRAME_HEADER_ERRNO_1 => FRAME_HEADER_ERRNO_1_signal,
+--           FRAME_FPGA_TEMP => FRAME_FPGA_TEMP_signal,
+--           FRAME_FIELDS_VALID => FRAME_FIELDS_VALID_signal,
+--           FRAME_DATA => FRAME_DATA_signal,
            
-           DATA => DATA_UART_signal,
-           DATA_VALID => SEND_UART_signal,
+--           DATA => DATA_UART_signal,
+--           DATA_VALID => SEND_UART_signal,
            
-           -- READY FLAG --
-           READY => READY_signal
-     );
+--           -- READY FLAG --
+--           READY => READY_signal
+--     );
      
 ----------------------------------------------------------------------
 ---------------- UART TX ---------------------------------------------
         
-UART_TX_CTRL: entity concept.UART_TX_CTRL
-    port map(
-           SEND => SEND_UART_signal,
-           DATA => DATA_UART_signal,
-           CLK => Sys_Clock_100mhz,
-           READY => READY_UART_signal,
-           UART_TX => UART_TX_UART_signal
-    );
+--UART_TX_CTRL: entity concept.UART_TX_CTRL
+--    port map(
+--           SEND => SEND_UART_signal,
+--           DATA => DATA_UART_signal,
+--           CLK => Sys_Clock_100mhz,
+--           READY => READY_UART_signal,
+--           UART_TX => UART_TX_UART_signal
+--    );
     
 --vio_DAC1: vio_DAC
 --    port map(
