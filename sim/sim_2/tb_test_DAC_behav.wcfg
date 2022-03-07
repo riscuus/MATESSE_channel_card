@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_test_DAC_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_test_DAC" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="3465000001fs"></ZoomEndTime>
+      <Cursor1Time time="486800000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="296"></NameColumnWidth>
+      <ValueColumnWidth column_width="110"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="9" />
+   <wvobject fp_name="/tb_test_DAC/test_DAC_module/sys_clk_100mhz" type="logic">
+      <obj_property name="ElementShortName">sys_clk_100mhz</obj_property>
+      <obj_property name="ObjectShortName">sys_clk_100mhz</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_DAC/test_DAC_module/sys_rst" type="logic">
+      <obj_property name="ElementShortName">sys_rst</obj_property>
+      <obj_property name="ObjectShortName">sys_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_DAC/start_pulse" type="logic">
+      <obj_property name="ElementShortName">start_pulse</obj_property>
+      <obj_property name="ObjectShortName">start_pulse</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_DAC/test_DAC_module/parallel_data" type="array">
+      <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
+      <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_DAC/test_DAC_module/SDI_IO28" type="logic">
+      <obj_property name="ElementShortName">SDI_IO28</obj_property>
+      <obj_property name="ObjectShortName">SDI_IO28</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_DAC/test_DAC_module/LD_IO13" type="logic">
+      <obj_property name="ElementShortName">LD_IO13</obj_property>
+      <obj_property name="ObjectShortName">LD_IO13</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_DAC/test_DAC_module/CS_IO26" type="logic">
+      <obj_property name="ElementShortName">CS_IO26</obj_property>
+      <obj_property name="ObjectShortName">CS_IO26</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_DAC/test_DAC_module/CK_IO27" type="logic">
+      <obj_property name="ElementShortName">CK_IO27</obj_property>
+      <obj_property name="ObjectShortName">CK_IO27</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_DAC/test_DAC_module/serializer_ready" type="logic">
+      <obj_property name="ElementShortName">serializer_ready</obj_property>
+      <obj_property name="ObjectShortName">serializer_ready</obj_property>
+   </wvobject>
+</wave_config>
