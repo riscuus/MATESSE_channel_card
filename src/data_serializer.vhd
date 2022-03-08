@@ -29,13 +29,11 @@ entity data_serializer is
     port(
         clk                     : in std_logic; -- 100mhz clock                                                                           
         rst                     : in std_logic; -- asynchronous reset
-        gate_fall_pulse         : in std_logic; -- input signal that specifies when the CS signal for the DAC has been activated
         data_clk_fall_pulse     : in std_logic; -- input signal that specifies when the output clock falls
         valid                   : in std_logic; -- input signal that indicates that the parallel data is already valid
         parallel_data           : in std_logic_vector(17 downto 0); -- input vector with the data to be serialized. 
                                                                     -- MSB are sent first. The first 2 bits must indicate the DAC address
 
-        busy_flag               : in std_logic; --input signal that must be not active for the component to work
         ready                   : out std_logic; --output signal that indicates that the component is ready to receive data
         serial_data             : out std_logic --output signal containing the serialized data
     );
@@ -68,7 +66,7 @@ architecture behave of data_serializer is
 
 begin
 
-combinational: process (State, valid, count, gate_fall_pulse, data_clk_fall_pulse, gatearrived, ready_signal)
+combinational: process (State, valid, count, data_clk_fall_pulse, gatearrived, ready_signal)
 -- Combinational logic describing machine states
 begin
     NextState <= INIT;

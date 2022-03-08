@@ -148,6 +148,8 @@ set_property -dict {PACKAGE_PIN R2 IOSTANDARD SSTL135} [get_ports sys_clk]
 create_clock -period 10.000 -name sys_clk_pin -waveform {0.000 5.000} -add [get_ports sys_clk]
 
 # Switches
+## We set the sw[0] as the reset signal
+set_property -dict {PACKAGE_PIN H14 IOSTANDARD LVCMOS33} [get_ports sys_rst]
 #set_property -dict {PACKAGE_PIN H14 IOSTANDARD LVCMOS33} [get_ports {sw[0]}]
 #set_property -dict {PACKAGE_PIN H18 IOSTANDARD LVCMOS33} [get_ports {sw[1]}]
 #set_property -dict {PACKAGE_PIN G18 IOSTANDARD LVCMOS33} [get_ports {sw[2]}]
@@ -327,8 +329,8 @@ set_property -dict {PACKAGE_PIN R11 IOSTANDARD LVCMOS33} [get_ports SDI_IO28]
 #set_property -dict {PACKAGE_PIN U16 IOSTANDARD LVCMOS33} [get_ports START_CONV_ADC_CH_PULSE_emulation]
 #set_property -dict {PACKAGE_PIN U18 IOSTANDARD LVCMOS33} [get_ports START_CONV_ADC_CH_PULSE]
 #set_property -dict {PACKAGE_PIN U17 IOSTANDARD LVCMOS33} [get_ports START_CONV_DAC_CH_PULSE]
-set_property -dict {PACKAGE_PIN V16 IOSTANDARD LVCMOS33} [get_ports clk_5mhz]
-set_property -dict {PACKAGE_PIN U15 IOSTANDARD LVCMOS33} [get_ports clk_100mhz]
+#set_property -dict {PACKAGE_PIN V16 IOSTANDARD LVCMOS33} [get_ports clk_5mhz]
+#set_property -dict {PACKAGE_PIN U15 IOSTANDARD LVCMOS33} [get_ports clk_100mhz]
 
 
 
@@ -347,7 +349,7 @@ set_property -dict {PACKAGE_PIN U15 IOSTANDARD LVCMOS33} [get_ports clk_100mhz]
 
 ## Misc. ChipKit signals
 #set_property -dict {PACKAGE_PIN K13 IOSTANDARD LVCMOS33} [get_ports { ck_ioa }] #IO_25_15 Sch=ck_ioa
-set_property -dict {PACKAGE_PIN C18 IOSTANDARD LVCMOS33} [get_ports sys_rst]
+#set_property -dict {PACKAGE_PIN C18 IOSTANDARD LVCMOS33} [get_ports sys_rst]
 #set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets {Sys_Reset_IBUF}]
 
 ## Quad SPI Flash
@@ -465,4 +467,44 @@ set_property INTERNAL_VREF 0.675 [get_iobanks 34]
 #set_property C_CLK_INPUT_FREQ_HZ 300000000 [get_debug_cores dbg_hub]
 #set_property C_ENABLE_CLK_DIVIDER false [get_debug_cores dbg_hub]
 #set_property C_USER_SCAN_CHAIN 1 [get_debug_cores dbg_hub]
-#connect_debug_port dbg_hub/clk [get_nets Sys_Clock_100mhz]
+#connect_debug_port dbg_hub/clk [get_nets sys_clk]
+
+
+create_debug_core u_ila_0 ila
+set_property ALL_PROBE_SAME_MU true [get_debug_cores u_ila_0]
+set_property ALL_PROBE_SAME_MU_CNT 1 [get_debug_cores u_ila_0]
+set_property C_ADV_TRIGGER false [get_debug_cores u_ila_0]
+set_property C_DATA_DEPTH 1024 [get_debug_cores u_ila_0]
+set_property C_EN_STRG_QUAL false [get_debug_cores u_ila_0]
+set_property C_INPUT_PIPE_STAGES 0 [get_debug_cores u_ila_0]
+set_property C_TRIGIN_EN false [get_debug_cores u_ila_0]
+set_property C_TRIGOUT_EN false [get_debug_cores u_ila_0]
+set_property port_width 1 [get_debug_ports u_ila_0/clk]
+connect_debug_port u_ila_0/clk [get_nets [list sys_clk_IBUF_BUFG]]
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe0]
+set_property port_width 1 [get_debug_ports u_ila_0/probe0]
+connect_debug_port u_ila_0/probe0 [get_nets [list CK_IO27_OBUF]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe1]
+set_property port_width 1 [get_debug_ports u_ila_0/probe1]
+connect_debug_port u_ila_0/probe1 [get_nets [list CS_IO26_OBUF]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe2]
+set_property port_width 1 [get_debug_ports u_ila_0/probe2]
+connect_debug_port u_ila_0/probe2 [get_nets [list DAC_start_pulse_IBUF]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe3]
+set_property port_width 1 [get_debug_ports u_ila_0/probe3]
+connect_debug_port u_ila_0/probe3 [get_nets [list LD_IO13_OBUF]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe4]
+set_property port_width 1 [get_debug_ports u_ila_0/probe4]
+connect_debug_port u_ila_0/probe4 [get_nets [list SDI_IO28_OBUF]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe5]
+set_property port_width 1 [get_debug_ports u_ila_0/probe5]
+connect_debug_port u_ila_0/probe5 [get_nets [list sys_rst_IBUF]]
+set_property C_CLK_INPUT_FREQ_HZ 300000000 [get_debug_cores dbg_hub]
+set_property C_ENABLE_CLK_DIVIDER false [get_debug_cores dbg_hub]
+set_property C_USER_SCAN_CHAIN 1 [get_debug_cores dbg_hub]
+connect_debug_port dbg_hub/clk [get_nets sys_clk_IBUF_BUFG]

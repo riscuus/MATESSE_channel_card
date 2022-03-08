@@ -34,9 +34,9 @@ entity test_DAC is
         SDI_IO28             : out std_logic;
         LD_IO13              : out std_logic;
         CS_IO26              : out std_logic;
-        CK_IO27              : out std_logic;
-        clk_5mhz             : out std_logic;
-        clk_100mhz           : out std_logic
+        CK_IO27              : out std_logic
+        --clk_5mhz             : out std_logic;
+        --clk_100mhz           : out std_logic
 
     );
 end test_DAC;
@@ -45,9 +45,9 @@ architecture Behavioral of test_DAC is
 
     -- Clocks output
 
-    signal sys_clk_100mhz   : std_logic;
-    signal sys_clk_5mhz     : std_logic;
-    signal sys_clk_locked   : std_logic;
+    --signal sys_clk_100mhz   : std_logic;
+    --signal sys_clk_5mhz     : std_logic;
+    --signal sys_clk_locked   : std_logic;
 
     -- DAC SPI communication
 
@@ -67,8 +67,8 @@ architecture Behavioral of test_DAC is
 begin
 
     -- OUTPUTS assigments
-    clk_5mhz <= sys_clk_5mhz;
-    clk_100mhz <= sys_clk_100mhz;
+    --clk_5mhz <= sys_clk_5mhz;
+    --clk_100mhz <= sys_clk_100mhz;
 
     LD_IO13 <= LDAC_signal;
     CS_IO26 <= CS_signal; 
@@ -77,19 +77,19 @@ begin
 
 
     -- Clock distribution
-    clock_distr: entity concept.clock_distribution
-        port map(
-            clock_in   => sys_clk,
-            clock_005  => sys_clk_5mhz,
-            clock_100  => sys_clk_100mhz,
-            locked     => sys_clk_locked
-        );
+--   clock_distr: entity concept.clock_distribution
+--       port map(
+--           clock_in   => sys_clk,
+--           clock_005  => sys_clk_5mhz,
+--           clock_100  => sys_clk_100mhz,
+--           locked     => sys_clk_locked
+--       );
     
     -- DAC Controller
 
     DAC_controller : entity concept.DAC_controller
         port map(
-            clock               => sys_clk_100mhz,
+            clock               => sys_clk,
             rst                 => sys_rst,
             start_conv_pulse    => DAC_start_pulse,
             CS                  => CS_signal,
@@ -101,7 +101,7 @@ begin
 
      data_serializer_wrapper : entity concept.data_serializer_wrapper
         port map(
-            clk                 => sys_clk_100mhz,
+            clk                 => sys_clk,
             rst                 => sys_rst,
             gate_read           => CS_signal,
             data_clk            => CK_signal,
@@ -111,6 +111,4 @@ begin
             ready               => serializer_ready, 
             serial_data         => SDI_signal
             );
-
-
 end Behavioral;

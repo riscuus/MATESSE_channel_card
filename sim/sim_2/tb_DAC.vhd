@@ -32,8 +32,9 @@ architecture Behavioral of tb_test_DAC is
     -- Constants
     constant T_HALF_CLK         : time := 5 ns;
     constant RST_START          : time := 32 ns;
+    constant RST_PULSE_LENGTH   : time := 100 ns;
     constant START_TIME         : time := 403 ns;
-    constant START_PULSE_LENGTH : time := 26 ns;
+    constant START_PULSE_LENGTH : time := 100 ns;
     constant SIM_DURATION       : time := 5 ms;
 
     -- Clock
@@ -58,8 +59,10 @@ begin
     -- Reset generation
     rst_generation : process
     begin
-        sys_rst <= '1';
+        sys_rst <= '0';
         wait for RST_START; 
+        sys_rst <= '1';
+        wait for RST_PULSE_LENGTH;
         sys_rst <= '0';
         wait for SIM_DURATION;
     end process;
@@ -87,9 +90,7 @@ begin
             SDI_IO28             => open,
             LD_IO13              => open,
             CS_IO26              => open,
-            CK_IO27              => open,
-            clk_5mhz             => open,
-            clk_100mhz           => open
+            CK_IO27              => open
         );
 
 end Behavioral;

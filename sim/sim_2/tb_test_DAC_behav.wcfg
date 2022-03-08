@@ -12,17 +12,20 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="3465000001fs"></ZoomEndTime>
-      <Cursor1Time time="486800000fs"></Cursor1Time>
+      <ZoomEndTime time="2224000001fs"></ZoomEndTime>
+      <Cursor1Time time="40000000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="296"></NameColumnWidth>
-      <ValueColumnWidth column_width="110"></ValueColumnWidth>
+      <ValueColumnWidth column_width="105"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="9" />
-   <wvobject fp_name="/tb_test_DAC/test_DAC_module/sys_clk_100mhz" type="logic">
-      <obj_property name="ElementShortName">sys_clk_100mhz</obj_property>
-      <obj_property name="ObjectShortName">sys_clk_100mhz</obj_property>
+   <wave_markers>
+      <marker time="403000000" label="" />
+   </wave_markers>
+   <wvobject fp_name="/tb_test_DAC/sys_clk" type="logic">
+      <obj_property name="ElementShortName">sys_clk</obj_property>
+      <obj_property name="ObjectShortName">sys_clk</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_test_DAC/test_DAC_module/sys_rst" type="logic">
       <obj_property name="ElementShortName">sys_rst</obj_property>

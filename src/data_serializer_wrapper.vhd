@@ -81,13 +81,11 @@ data_clk_fall_pulse_not_busy <= data_clk_fall_pulse_int and (not busy_flag);
         port map ( 
             clk                     => clk,
             rst                     => rst,
-            gate_fall_pulse         => gate_read,
             data_clk_fall_pulse     => data_clk_fall_pulse_not_busy,
             valid                   => valid,
             parallel_data           => parallel_data,
             ready                   => ready,
-            serial_data             => serial_data,
-            busy_flag               => busy_flag
+            serial_data             => serial_data
         );
 
 end behave;
