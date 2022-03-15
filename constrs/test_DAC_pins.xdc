@@ -150,7 +150,8 @@ create_clock -period 10.000 -name sys_clk_pin -waveform {0.000 5.000} -add [get_
 # Switches
 ## We set the sw[0] as the reset signal
 set_property -dict {PACKAGE_PIN H14 IOSTANDARD LVCMOS33} [get_ports sys_rst]
-#set_property -dict {PACKAGE_PIN H14 IOSTANDARD LVCMOS33} [get_ports {sw[0]}]
+## We set the sw[1] as the enabled signal
+set_property -dict {PACKAGE_PIN H18 IOSTANDARD LVCMOS33} [get_ports enabled]
 #set_property -dict {PACKAGE_PIN H18 IOSTANDARD LVCMOS33} [get_ports {sw[1]}]
 #set_property -dict {PACKAGE_PIN G18 IOSTANDARD LVCMOS33} [get_ports {sw[2]}]
 #set_property -dict {PACKAGE_PIN M5 IOSTANDARD SSTL135} [get_ports {sw[3]}]
@@ -174,7 +175,7 @@ set_property -dict {PACKAGE_PIN H14 IOSTANDARD LVCMOS33} [get_ports sys_rst]
 
 ## Buttons
 # Btn0
-set_property -dict {PACKAGE_PIN G15 IOSTANDARD LVCMOS33} [get_ports DAC_start_pulse]
+#set_property -dict {PACKAGE_PIN G15 IOSTANDARD LVCMOS33} [get_ports DAC_start_pulse]
 #set_property -dict {PACKAGE_PIN K16 IOSTANDARD LVCMOS33} [get_ports valid_DAC]
 #set_property -dict { PACKAGE_PIN J16   IOSTANDARD LVCMOS33 } [get_ports btn[2]]; #IO_L19N_T3_A21_VREF_15 Sch=btn[2]
 #set_property -dict {PACKAGE_PIN H13 IOSTANDARD LVCMOS33} [get_ports START_CONV_ADC_CH_PULSE]
@@ -470,11 +471,17 @@ set_property INTERNAL_VREF 0.675 [get_iobanks 34]
 #connect_debug_port dbg_hub/clk [get_nets sys_clk]
 
 
+
+
+
+
+
+
 create_debug_core u_ila_0 ila
 set_property ALL_PROBE_SAME_MU true [get_debug_cores u_ila_0]
 set_property ALL_PROBE_SAME_MU_CNT 1 [get_debug_cores u_ila_0]
 set_property C_ADV_TRIGGER false [get_debug_cores u_ila_0]
-set_property C_DATA_DEPTH 1024 [get_debug_cores u_ila_0]
+set_property C_DATA_DEPTH 2048 [get_debug_cores u_ila_0]
 set_property C_EN_STRG_QUAL false [get_debug_cores u_ila_0]
 set_property C_INPUT_PIPE_STAGES 0 [get_debug_cores u_ila_0]
 set_property C_TRIGIN_EN false [get_debug_cores u_ila_0]
@@ -482,28 +489,36 @@ set_property C_TRIGOUT_EN false [get_debug_cores u_ila_0]
 set_property port_width 1 [get_debug_ports u_ila_0/clk]
 connect_debug_port u_ila_0/clk [get_nets [list sys_clk_IBUF_BUFG]]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe0]
-set_property port_width 1 [get_debug_ports u_ila_0/probe0]
-connect_debug_port u_ila_0/probe0 [get_nets [list CK_IO27_OBUF]]
+set_property port_width 18 [get_debug_ports u_ila_0/probe0]
+connect_debug_port u_ila_0/probe0 [get_nets [list {parallel_data[0]} {parallel_data[1]} {parallel_data[2]} {parallel_data[3]} {parallel_data[4]} {parallel_data[5]} {parallel_data[6]} {parallel_data[7]} {parallel_data[8]} {parallel_data[9]} {parallel_data[10]} {parallel_data[11]} {parallel_data[12]} {parallel_data[13]} {parallel_data[14]} {parallel_data[15]} {parallel_data[16]} {parallel_data[17]}]]
 create_debug_port u_ila_0 probe
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe1]
 set_property port_width 1 [get_debug_ports u_ila_0/probe1]
-connect_debug_port u_ila_0/probe1 [get_nets [list CS_IO26_OBUF]]
+connect_debug_port u_ila_0/probe1 [get_nets [list CK_IO27_OBUF]]
 create_debug_port u_ila_0 probe
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe2]
 set_property port_width 1 [get_debug_ports u_ila_0/probe2]
-connect_debug_port u_ila_0/probe2 [get_nets [list DAC_start_pulse_IBUF]]
+connect_debug_port u_ila_0/probe2 [get_nets [list CS_IO26_OBUF]]
 create_debug_port u_ila_0 probe
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe3]
 set_property port_width 1 [get_debug_ports u_ila_0/probe3]
-connect_debug_port u_ila_0/probe3 [get_nets [list LD_IO13_OBUF]]
+connect_debug_port u_ila_0/probe3 [get_nets [list DAC_start_pulse]]
 create_debug_port u_ila_0 probe
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe4]
 set_property port_width 1 [get_debug_ports u_ila_0/probe4]
-connect_debug_port u_ila_0/probe4 [get_nets [list SDI_IO28_OBUF]]
+connect_debug_port u_ila_0/probe4 [get_nets [list enabled_IBUF]]
 create_debug_port u_ila_0 probe
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe5]
 set_property port_width 1 [get_debug_ports u_ila_0/probe5]
-connect_debug_port u_ila_0/probe5 [get_nets [list sys_rst_IBUF]]
+connect_debug_port u_ila_0/probe5 [get_nets [list LD_IO13_OBUF]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe6]
+set_property port_width 1 [get_debug_ports u_ila_0/probe6]
+connect_debug_port u_ila_0/probe6 [get_nets [list SDI_IO28_OBUF]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe7]
+set_property port_width 1 [get_debug_ports u_ila_0/probe7]
+connect_debug_port u_ila_0/probe7 [get_nets [list sys_rst_IBUF]]
 set_property C_CLK_INPUT_FREQ_HZ 300000000 [get_debug_cores dbg_hub]
 set_property C_ENABLE_CLK_DIVIDER false [get_debug_cores dbg_hub]
 set_property C_USER_SCAN_CHAIN 1 [get_debug_cores dbg_hub]

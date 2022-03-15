@@ -36,7 +36,7 @@ entity data_serializer_wrapper is
                                                                 -- MSB are sent first. The first 2 bits must
                                                                 -- indicate the DAC address
         busy_flag           : in std_logic; --input signal that must be not active for the component to work
-        ready               : out std_logic; -- output signal that indicates that the component is ready to receive data
+        DAC_start_pulse     : in std_logic; -- input pulse signal indicating that a new DAC cycle must start
         serial_data         : out std_logic --output signal containing the serialized data                                          
     );
 end data_serializer_wrapper;
@@ -77,14 +77,15 @@ data_clk_fall_pulse_not_busy <= data_clk_fall_pulse_int and (not busy_flag);
             signal_out  => data_clk_fall_pulse_int
         );
 
-    stateMachineMemoryLoad : entity concept.data_serializer 
+    data_serializer : entity concept.data_serializer 
         port map ( 
             clk                     => clk,
             rst                     => rst,
+            DAC_start_pulse         => DAC_start_pulse,
+            cs_fall_pulse           => gate_edge_pulse_int_not_busy,
             data_clk_fall_pulse     => data_clk_fall_pulse_not_busy,
             valid                   => valid,
             parallel_data           => parallel_data,
-            ready                   => ready,
             serial_data             => serial_data
         );
 

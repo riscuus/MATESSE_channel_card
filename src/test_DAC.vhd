@@ -30,7 +30,7 @@ entity test_DAC is
     port ( 
         sys_clk              : in std_logic;
         sys_rst              : in std_logic;
-        DAC_start_pulse      : in std_logic;
+        enabled              : in std_logic;
         SDI_IO28             : out std_logic;
         LD_IO13              : out std_logic;
         CS_IO26              : out std_logic;
@@ -59,10 +59,17 @@ architecture Behavioral of test_DAC is
     -- DAC data serializer
 
     signal busy_flag                : std_logic := '0';
-    signal data_valid               : std_logic := '1';
-    signal serializer_ready         : std_logic;
+    signal data_valid               : std_logic := '0';
     signal parallel_data            : std_logic_vector(17 downto 0) := "100110101011100010";
+    signal DAC_start_pulse          : std_logic := '0';
 
+    -- Set debugging signals
+    attribute keep : string;
+    attribute keep of parallel_data   : signal is "true";
+    attribute keep of SDI_IO28        : signal is "true";
+    attribute keep of LD_IO13         : signal is "true";
+    attribute keep of CS_IO26         : signal is "true";
+    attribute keep of CK_IO27         : signal is "true";
 
 begin
 
@@ -108,7 +115,19 @@ begin
             valid               => data_valid, 
             parallel_data       => parallel_data, 
             busy_flag           => busy_flag, 
-            ready               => serializer_ready, 
+            DAC_start_pulse     => DAC_start_pulse,
             serial_data         => SDI_signal
             );
+
+    -- Function generator
+    
+    function_generator : entity concept.function_generator
+        port map(
+            clk                 => sys_clk,
+            rst                 => sys_rst,
+            enabled             => enabled,
+            DAC_start_pulse     => DAC_start_pulse,
+            data_valid          => data_valid,
+            parallel_data       => parallel_data
+        );
 end Behavioral;

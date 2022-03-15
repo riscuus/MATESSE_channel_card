@@ -34,15 +34,14 @@ architecture Behavioral of tb_test_DAC is
     constant RST_START          : time := 32 ns;
     constant RST_PULSE_LENGTH   : time := 100 ns;
     constant START_TIME         : time := 403 ns;
-    constant START_PULSE_LENGTH : time := 100 ns;
-    constant SIM_DURATION       : time := 5 ms;
+    constant SIM_DURATION       : time := 10 ms;
 
     -- Clock
     signal sys_clk  : std_logic;
     signal sys_rst  : std_logic;
 
     -- DAC signals
-    signal start_pulse  : std_logic;
+    signal enabled  : std_logic;
 
 
 begin
@@ -67,15 +66,12 @@ begin
         wait for SIM_DURATION;
     end process;
 
-    -- start pulse
-
-    start_pulse_generation : process
+    -- Enable switch
+    enable_switch_generation : process
     begin
-        start_pulse <= '0';
+        enabled <= '0';
         wait for START_TIME;
-        start_pulse <= '1';
-        wait for START_PULSE_LENGTH;
-        start_pulse <= '0';
+        enabled <= '1';
         wait for SIM_DURATION;
     end process;
 
@@ -84,13 +80,13 @@ begin
 
     test_DAC_module : entity concept.test_DAC
         port map(
-            sys_clk              => sys_clk,
-            sys_rst              => sys_rst,
-            DAC_start_pulse      => start_pulse,
-            SDI_IO28             => open,
-            LD_IO13              => open,
-            CS_IO26              => open,
-            CK_IO27              => open
+            sys_clk               => sys_clk,
+            sys_rst               => sys_rst,
+            enabled               => '1',
+            SDI_IO28              => open,
+            LD_IO13               => open,
+            CS_IO26               => open,
+            CK_IO27               => open
         );
 
 end Behavioral;
