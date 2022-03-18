@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_test_ADC_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_test_ADC" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="10993333334fs"></ZoomStartTime>
+      <ZoomEndTime time="85793333335fs"></ZoomEndTime>
+      <Cursor1Time time="31893333000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="279"></NameColumnWidth>
+      <ValueColumnWidth column_width="72"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="8" />
+   <wvobject fp_name="/tb_test_ADC/sys_clk" type="logic">
+      <obj_property name="ElementShortName">sys_clk</obj_property>
+      <obj_property name="ObjectShortName">sys_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_ADC/sys_rst" type="logic">
+      <obj_property name="ElementShortName">sys_rst</obj_property>
+      <obj_property name="ObjectShortName">sys_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_ADC/simulation_data" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">simulation_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">simulation_data[15:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+      <obj_property name="label">simulation_data[17:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="group55" type="group">
+      <obj_property name="label">DAC signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_controller/start_conv_pulse" type="logic">
+         <obj_property name="ElementShortName">start_conv_pulse</obj_property>
+         <obj_property name="ObjectShortName">start_conv_pulse</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_CS_signal" type="logic">
+         <obj_property name="ElementShortName">DAC_CS_signal</obj_property>
+         <obj_property name="ObjectShortName">DAC_CS_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_CK_signal" type="logic">
+         <obj_property name="ElementShortName">DAC_CK_signal</obj_property>
+         <obj_property name="ObjectShortName">DAC_CK_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_SDI_signal" type="logic">
+         <obj_property name="ElementShortName">DAC_SDI_signal</obj_property>
+         <obj_property name="ObjectShortName">DAC_SDI_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_LDAC_signal" type="logic">
+         <obj_property name="ElementShortName">DAC_LDAC_signal</obj_property>
+         <obj_property name="ObjectShortName">DAC_LDAC_signal</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group68" type="group">
+      <obj_property name="label">ADC signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_test_ADC/ADC_enabled" type="logic">
+         <obj_property name="ElementShortName">ADC_enabled</obj_property>
+         <obj_property name="ObjectShortName">ADC_enabled</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/ADC_CNV_signal" type="logic">
+         <obj_property name="ElementShortName">ADC_CNV_signal</obj_property>
+         <obj_property name="ObjectShortName">ADC_CNV_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/ADC_SCK_signal" type="logic">
+         <obj_property name="ElementShortName">ADC_SCK_signal</obj_property>
+         <obj_property name="ObjectShortName">ADC_SCK_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/ADC_SDO_signal" type="logic">
+         <obj_property name="ElementShortName">ADC_SDO_signal</obj_property>
+         <obj_property name="ObjectShortName">ADC_SDO_signal</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group60" type="group">
+      <obj_property name="label">ADC input shift register</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/input_shift_register/serial_clk" type="logic">
+         <obj_property name="ElementShortName">serial_clk</obj_property>
+         <obj_property name="ObjectShortName">serial_clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/input_shift_register/iddr_parallel_output" type="array">
+         <obj_property name="ElementShortName">iddr_parallel_output[1:0]</obj_property>
+         <obj_property name="ObjectShortName">iddr_parallel_output[1:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/input_shift_register/conv_started" type="logic">
+         <obj_property name="ElementShortName">conv_started</obj_property>
+         <obj_property name="ObjectShortName">conv_started</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/input_shift_register/valid_word" type="logic">
+         <obj_property name="ElementShortName">valid_word</obj_property>
+         <obj_property name="ObjectShortName">valid_word</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/input_shift_register/parallel_data" type="array">
+         <obj_property name="ElementShortName">parallel_data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">parallel_data[15:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group43" type="group">
+      <obj_property name="label">buttons</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_test_ADC/btn0_signal" type="logic">
+         <obj_property name="ElementShortName">btn0_signal</obj_property>
+         <obj_property name="ObjectShortName">btn0_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/btn1_signal" type="logic">
+         <obj_property name="ElementShortName">btn1_signal</obj_property>
+         <obj_property name="ObjectShortName">btn1_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/btn2_signal" type="logic">
+         <obj_property name="ElementShortName">btn2_signal</obj_property>
+         <obj_property name="ObjectShortName">btn2_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/btn3_signal" type="logic">
+         <obj_property name="ElementShortName">btn3_signal</obj_property>
+         <obj_property name="ObjectShortName">btn3_signal</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group48" type="group">
+      <obj_property name="label">voltage generator</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_voltage_generator/clk" type="logic">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_voltage_generator/rst" type="logic">
+         <obj_property name="ElementShortName">rst</obj_property>
+         <obj_property name="ObjectShortName">rst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_voltage_generator/DAC_start_pulse" type="logic">
+         <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
+         <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_voltage_generator/data_valid" type="logic">
+         <obj_property name="ElementShortName">data_valid</obj_property>
+         <obj_property name="ObjectShortName">data_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_voltage_generator/address" type="array">
+         <obj_property name="ElementShortName">address[1:0]</obj_property>
+         <obj_property name="ObjectShortName">address[1:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_voltage_generator/data" type="array">
+         <obj_property name="ElementShortName">data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">data[15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_voltage_generator/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_voltage_generator/DAC_count" type="other">
+         <obj_property name="ElementShortName">DAC_count</obj_property>
+         <obj_property name="ObjectShortName">DAC_count</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

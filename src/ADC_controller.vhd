@@ -10,8 +10,8 @@
 -- Description: Generation of the serial lines for controlling the ADC LTC2325-16. 
 --              General requirements for the controller:
 --                  - The CNV is triggered after the start_pulse and must be a pulse signal of at least 30ns
---                  - A minimum delay of 170 ns must exist between the falling edge of the CNV signal and the first 
---                    cycle of the serial clock => We will use 18 cycles of the 100Mhz clock
+--                  - A minimum delay of 20 ns must exist between the falling edge of the CNV signal and the first 
+--                    cycle of the serial clock => We will use 2 cycles of the 100Mhz clock
 --                  - The serial clock must have a period of at least 18.2 ns => 2 cycles of the 100Mhz clock
 --                  - The serial clock must output exactly 8 pulses
 -- Dependencies: 
@@ -38,9 +38,9 @@ end ADC_controller;
 
 architecture behave OF ADC_controller IS
     -- Num of clk cycles for the serial clock to start
-    constant START_SCLK : positive := 20;
+    constant START_SCLK : positive := 4;
     -- Num of clk cycles for the serial clock to end
-    constant END_SCLK : positive := 37;
+    constant END_SCLK : positive := 21;
 
     -- Register to store the serial clock, needed because we also need to read the previous sclk signal
     signal SCLK_reg : std_logic;
