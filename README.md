@@ -6,7 +6,7 @@ This repository does not track the Vivado project itself, instead contains all t
 
 ## How to generate the vivado project
 
-1. Change the route to your vivado executable in the *build.bat* file
+1. In the *build.bat* file, change the path to point towards your vivado executable
 ```
 C:/<YOUR PATH>/vivado.bat -mode batch -source project_script.tcl
 ```
