@@ -41,6 +41,8 @@ architecture Behavioral of tb_test_ADC is
     constant BTN_3              : time := 20 us;
     constant BTN_LENGTH         : time := 3 us;
     constant SIM_DURATION       : time := 10 ms;
+    constant WAIT_SELECTOR      : time := 10 us;
+    constant WAIT_SEND          : time := 5 us; 
 
     -- Clock
     signal sys_clk  : std_logic;
@@ -49,7 +51,10 @@ architecture Behavioral of tb_test_ADC is
     -- Enbling signals
     signal DAC_enabled  : std_logic;
     signal ADC_enabled  : std_logic;
-
+    
+    -- Test custom voltage
+    signal DAC_send_pulse       : std_logic := '0';
+    signal DAC_selector_signal  : std_logic_vector(2 downto 0) := "000";
     -- Buttons signals
     signal btn0_signal : std_logic := '0';
     signal btn1_signal : std_logic := '0';
@@ -336,7 +341,32 @@ begin
 --        wait for SIM_DURATION;
 --    end process;
 
-    -- Data generator
+    -- test custom voltage
+
+    send_pulse : process
+    begin
+        wait for WAIT_SEND;
+        DAC_send_pulse <= '1';
+        wait for WAIT_SEND;
+        DAC_send_pulse <= '0';
+    end process;
+    
+    selector : process
+    begin
+        wait for WAIT_SELECTOR;
+        DAC_selector_signal <= "000";
+        wait for WAIT_SELECTOR;
+        DAC_selector_signal <= "001";
+        wait for WAIT_SELECTOR;
+        DAC_selector_signal <= "010";
+        wait for WAIT_SELECTOR;
+        DAC_selector_signal <= "011";
+        wait for WAIT_SELECTOR;
+        DAC_selector_signal <= "100";
+        wait for WAIT_SELECTOR;
+        DAC_selector_signal <= "101";
+    end process;
+
 
     -- ADC simulator
     ADC_simulator : entity concept.ADC_simulator
@@ -371,7 +401,11 @@ begin
             -- ADC control
             ADC_CNV_IO0     => ADC_CNV_signal,
             ADC_SCK_IO1     => ADC_SCK_signal,
-            ADC_SDO_IO2     => ADC_SDO_signal
+            ADC_SDO_IO2     => ADC_SDO_signal--,
+
+            --DAC_send_pulse      => DAC_send_pulse,
+            --DAC_selector_signal => DAC_selector_signal
+
         );
 
 end Behavioral;

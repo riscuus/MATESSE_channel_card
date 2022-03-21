@@ -68,23 +68,40 @@ entity test_ADC is
         ADC_CNV_IO0          : out std_logic;
         ADC_SCK_IO1          : out std_logic;
         ADC_SDO_IO2          : in std_logic
+
+        --DAC_send_pulse       : in std_logic;
+        --DAC_selector_signal  : in std_logic_vector(2 downto 0)
     );
+
 end test_ADC;
 
 architecture Behavioral of test_ADC is
 
     -- DAC SPI communication
-    signal DAC_LDAC_signal  : std_logic;
-    signal DAC_CS_signal    : std_logic;
-    signal DAC_CK_signal    : std_logic;
-    signal DAC_SDI_signal   : std_logic;
+    signal DAC_LDAC_signal  : std_logic := '1';
+    signal DAC_CS_signal    : std_logic := '1';
+    signal DAC_CK_signal    : std_logic := '0';
+    signal DAC_SDI_signal   : std_logic := '0';
+
+    -- DAC Intermediate signals for selectors
+    signal DAC_SDI_row_select1  : std_logic := '0';
+    signal DAC_SDI_row_select2  : std_logic := '0';
+    signal DAC_SDI_row_select3  : std_logic := '0';
+    signal DAC_CS_channel0      : std_logic := '1';
+    signal DAC_CS_channel1      : std_logic := '1';
+    signal DAC_CK_channel0      : std_logic := '0';
+    signal DAC_CK_channel1      : std_logic := '0';
+    signal DAC_CK_row_select1   : std_logic := '0';
+    signal DAC_CK_row_select2   : std_logic := '0';
+    signal DAC_CK_row_select3   : std_logic := '0';
+    signal DAC_LD_channel0      : std_logic := '1';
+    signal DAC_LD_channel1      : std_logic := '1';
+    signal DAC_LD_row_select1   : std_logic := '1';
+    signal DAC_LD_row_select2   : std_logic := '1';
+    signal DAC_LD_row_select3   : std_logic := '1';
 
     -- DAC data serializer
-    signal busy_flag                : std_logic := '0';
-    signal data_valid               : std_logic := '0';
-    signal parallel_data            : std_logic_vector(17 downto 0) := "100110101011100010";
-    signal DAC_start_pulse          : std_logic := '0';
-
+    signal busy_flag            : std_logic := '0';
 
     -- ADC communication
     signal ADC_start_pulse      : std_logic := '0';
@@ -98,37 +115,39 @@ architecture Behavioral of test_ADC is
     signal valid_word           : std_logic := '0';
     signal parallel_word_data   : std_logic_vector(15 downto 0) := (others => '0');
 
-    -- Set debugging signals
-    attribute keep : string;
-    attribute keep of parallel_data       : signal is "true";
+    -- Volatge generator signals
+        -- In this test code we have two ways of generating different volatge values for the DACs, one is by 
+        -- clicking the btns in the ARTY board, this modifies all the DACs values, 
+        -- another is by setting via VIO a custom value for an specific DAC
+
+        -- 19 --> DAC_start_pulse
+        -- 18 --> data_valid
+        -- 17 dowto 0 --> parallel_data (address + voltage data)
+    signal btn_voltage_signals      : std_logic_vector(19 downto 0) := (others => '0');
+    signal custom_voltage_signals   : std_logic_vector(19 downto 0) := (others => '0');
+    signal voltage_signals          : std_logic_vector(19 downto 0) := (others => '0');
+
+    -- Signals that will be controlled by the VIO
+    signal btn_or_custom_signal     : std_logic := '0';
+    signal DAC_voltage              : std_logic_vector(15 downto 0) := "0101001010100101";
+    signal DAC_address              : std_logic_vector(1 downto 0) := "10";
+    signal DAC_send_pulse           : std_logic := '0';
+    signal DAC_selector_signal      : std_logic_vector(2 downto 0) := (others => '0');
+
+    component vio_test_adc
+        port (
+            clk        : in std_logic;
+            probe_out0 : out std_logic_vector(0 downto 0);
+            probe_out1 : out std_logic_vector(15 downto 0);
+            probe_out2 : out std_logic_vector(1 downto 0);
+            probe_out3 : out std_logic_vector(0 downto 0);
+            probe_out4 : out std_logic_vector(2 downto 0)
+        );
+    end component;
 
 begin
 
     ----- OUTPUTS ASSIGMENTS -----
-
-    -- DAC U0 (Channel 0)
-    DAC_SDI_IO6     <= DAC_SDI_signal;
-    -- DAC U1 (Channel 1)
-    DAC_SDI_IO30    <= DAC_SDI_signal;
-    -- DAC U0, U1 shared
-    DAC_LD_IO3      <= DAC_LDAC_signal;
-    DAC_CS_IO4      <= DAC_CS_signal;
-    DAC_CK_IO5      <= DAC_CK_signal;
-    -- DAC U20 (Row Operations)
-    DAC_CS_IO8      <= DAC_CS_signal;
-    -- DAC U21 (Row Operations)
-    DAC_CS_IO9      <= DAC_CS_signal;
-    -- DAC U22 (Row Operations)
-    DAC_CS_IO10     <= DAC_CS_signal;
-    -- DAC U20, U21, U22 shared 
-    DAC_LD_IO7      <= DAC_LDAC_signal;
-    DAC_CK_IO11     <= DAC_CK_signal;
-    DAC_SDI_IO12    <= DAC_SDI_signal;
-    -- DAC U23 (Bias)
-    DAC_LD_IO13     <= DAC_LDAC_signal;
-    DAC_CS_IO26     <= DAC_CS_signal; 
-    DAC_CK_IO27     <= DAC_CK_signal;
-    DAC_SDI_IO28    <= DAC_SDI_signal;
 
     -- ADC control signals
     ADC_CNV_IO0     <= ADC_CNV_signal;
@@ -144,15 +163,15 @@ begin
         port map(
             clock               => sys_clk,
             rst                 => sys_rst,
-            start_conv_pulse    => DAC_start_pulse,
+            start_conv_pulse    => voltage_signals(19),
             CS                  => DAC_CS_signal,
             CLK                 => DAC_CK_signal,
             LDAC                => DAC_LDAC_signal
         );
 
-    -- DAC voltage generator
-     
-    DAC_voltage_generator : entity concept.DAC_voltage_generator
+    -- DAC voltage generators
+
+    DAC_btn_voltage_generator : entity concept.DAC_voltage_generator
         port map(
             clk                 => sys_clk,
             rst                 => sys_rst,
@@ -161,25 +180,104 @@ begin
             v1_pulse            => btn1,
             v2_pulse            => btn2,
             v3_pulse            => btn3,
-            DAC_start_pulse     => DAC_start_pulse,
-            data_valid          => data_valid,
-            parallel_data       => parallel_data
+            parallel_data       => btn_voltage_signals(17 downto 0),
+            data_valid          => btn_voltage_signals(18),
+            DAC_start_pulse     => btn_voltage_signals(19)
+        );
+
+    DAC_custom_voltage_generator : entity concept.custom_voltage_generator
+        port map(
+            clk                 => sys_clk,
+            rst                 => sys_rst,
+            address             => DAC_address,
+            voltage             => DAC_voltage,
+            send_pulse          => DAC_send_pulse,
+            parallel_data       => custom_voltage_signals(17 downto 0),
+            data_valid          => custom_voltage_signals(18),
+            DAC_start_pulse     => custom_voltage_signals(19)
+        );
+
+    -- Multiplexer to choose between btn or custom volatge
+    btn_or_custom_selector : entity concept.mux2x20
+        port map(
+            sel     => btn_or_custom_signal,
+            a1      => btn_voltage_signals,
+            a2      => custom_voltage_signals,
+            b       => voltage_signals
         );
 
     -- DAC data serializer
-
-     data_serializer_wrapper : entity concept.data_serializer_wrapper
+    data_serializer_wrapper : entity concept.data_serializer_wrapper
         port map(
             clk                 => sys_clk,
             rst                 => sys_rst,
             gate_read           => DAC_CS_signal,
             data_clk            => DAC_CK_signal,
-            valid               => data_valid, 
-            parallel_data       => parallel_data, 
+            valid               => voltage_signals(18), 
+            parallel_data       => voltage_signals(17 downto 0),
             busy_flag           => busy_flag, 
-            DAC_start_pulse     => DAC_start_pulse,
+            DAC_start_pulse     => voltage_signals(19),
             serial_data         => DAC_SDI_signal
             );
+
+    -- DAC selectors
+    DAC_SDI_selector : entity concept.demux_1_to_6
+        port map(
+            sel     => DAC_selector_signal,
+            a       => DAC_SDI_signal,
+            b1      => DAC_SDI_IO6,
+            b2      => DAC_SDI_IO30,
+            b3      => DAC_SDI_row_select1,
+            b4      => DAC_SDI_row_select2,
+            b5      => DAC_SDI_row_select3,
+            b6      => DAC_SDI_IO28
+        );
+
+    DAC_SDI_IO12 <= DAC_SDI_row_select1 or DAC_SDI_row_select2 or DAC_SDI_row_select3;
+
+    DAC_CS_selector : entity concept.demux_1_to_6
+        port map(
+            sel     => DAC_selector_signal,
+            a       => DAC_CS_signal,
+            b1      => DAC_CS_channel0,
+            b2      => DAC_CS_channel1,
+            b3      => DAC_CS_IO8,
+            b4      => DAC_CS_IO9,
+            b5      => DAC_CS_IO10,
+            b6      => DAC_CS_IO26
+        );
+    
+    DAC_CS_IO4 <= DAC_CS_channel0 or DAC_CS_channel1;
+
+    DAC_CK_selector : entity concept.demux_1_to_6
+        port map(
+            sel     => DAC_selector_signal,
+            a       => DAC_CK_signal,
+            b1      => DAC_CK_channel0,
+            b2      => DAC_CK_channel1,
+            b3      => DAC_CK_row_select1,
+            b4      => DAC_CK_row_select2,
+            b5      => DAC_CK_row_select3,
+            b6      => DAC_CK_IO27
+        );
+
+    DAC_CK_IO5  <= DAC_CK_channel0 or DAC_CK_channel1;
+    DAC_CK_IO11 <= DAC_CK_row_select1 or DAC_CK_row_select2 or DAC_CK_row_select3;
+
+    DAC_LD_selector : entity concept.demux_1_to_6
+        port map(
+            sel     => DAC_selector_signal,
+            a       => DAC_LDAC_signal,
+            b1      => DAC_LD_channel0,
+            b2      => DAC_LD_channel1,
+            b3      => DAC_LD_row_select1,
+            b4      => DAC_LD_row_select2,
+            b5      => DAC_LD_row_select3,
+            b6      => DAC_LD_IO13
+        );
+
+    DAC_LD_IO3 <= DAC_LD_channel0 or DAC_LD_channel1;
+    DAC_LD_IO7 <= DAC_LD_row_select1 or DAC_LD_row_select2 or DAC_LD_row_select3;
 
     -- ADC start pulse generator
 
@@ -235,6 +333,17 @@ begin
             valid_word              => valid_word,
             parallel_data           => parallel_word_data
         );
+
+    -- VIO component
     
+    vio : vio_test_ADC
+        port map(
+            clk             => sys_clk,
+            probe_out0(0)   => btn_or_custom_signal,
+            probe_out1      => DAC_voltage,
+            probe_out2      => DAC_address,
+            probe_out3(0)   => DAC_send_pulse,
+            probe_out4      => DAC_selector_signal
+        );
 
 end Behavioral;
