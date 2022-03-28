@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.numeric_std.all;
 
 library concept;
 use concept.all;
@@ -126,6 +127,9 @@ begin
             clk                 => sys_clk,
             rst                 => sys_rst,
             enabled             => enabled,
+            address             => "00",
+            amplitude           => to_unsigned(20, 7),
+            offset              => (others => '0'),
             DAC_start_pulse     => DAC_start_pulse,
             data_valid          => data_valid,
             parallel_data       => parallel_data

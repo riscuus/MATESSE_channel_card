@@ -24,6 +24,8 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.numeric_std.all;
+
 
 library concept;
 use concept.all;
@@ -123,27 +125,39 @@ architecture Behavioral of test_ADC is
         -- 19 --> DAC_start_pulse
         -- 18 --> data_valid
         -- 17 dowto 0 --> parallel_data (address + voltage data)
-    signal btn_voltage_signals      : std_logic_vector(19 downto 0) := (others => '0');
-    signal custom_voltage_signals   : std_logic_vector(19 downto 0) := (others => '0');
-    signal voltage_signals          : std_logic_vector(19 downto 0) := (others => '0');
+    signal btn_voltage_signals          : std_logic_vector(19 downto 0) := (others => '0');
+    signal custom_voltage_signals       : std_logic_vector(19 downto 0) := (others => '0');
+    signal function_voltage_signals     : std_logic_vector(19 downto 0) := (others => '0');
+    signal voltage_signals              : std_logic_vector(19 downto 0) := (others => '0');
 
     -- Signals that will be controlled by the VIO
-    signal btn_or_custom_signal     : std_logic := '0';
+    signal generator_sel            : std_logic_vector(1 downto 0) := "00";
     signal DAC_voltage              : std_logic_vector(15 downto 0) := "0101001010100101";
     signal DAC_address              : std_logic_vector(1 downto 0) := "10";
     signal DAC_send_pulse           : std_logic := '0';
     signal DAC_selector_signal      : std_logic_vector(2 downto 0) := (others => '0');
+    signal DAC_function_amplitude   : std_logic_vector(6 downto 0) := (others => '0');
+    signal DAC_function_offset      : std_logic_vector(15 downto 0) := (others => '0');
 
+    -- Signals to keep for debugging
+    attribute keep : string;
+    attribute keep of parallel_word_data    : signal is "true";
+    attribute keep of voltage_signals       : signal is "true";
+
+    -- Component declarations
     component vio_test_adc
         port (
             clk        : in std_logic;
-            probe_out0 : out std_logic_vector(0 downto 0);
+            probe_out0 : out std_logic_vector(1 downto 0);
             probe_out1 : out std_logic_vector(15 downto 0);
             probe_out2 : out std_logic_vector(1 downto 0);
             probe_out3 : out std_logic_vector(0 downto 0);
-            probe_out4 : out std_logic_vector(2 downto 0)
+            probe_out4 : out std_logic_vector(2 downto 0);
+            probe_out5 : out std_logic_vector(6 downto 0);
+            probe_out6 : out std_logic_vector(15 downto 0)
         );
     end component;
+
 
 begin
 
@@ -197,12 +211,26 @@ begin
             DAC_start_pulse     => custom_voltage_signals(19)
         );
 
-    -- Multiplexer to choose between btn or custom volatge
-    btn_or_custom_selector : entity concept.mux2x20
+    DAC_function_generator : entity concept.function_generator
         port map(
-            sel     => btn_or_custom_signal,
+            clk                 => sys_clk,
+            rst                 => sys_rst,
+            enabled             => DAC_enabled,
+            address             => DAC_address,
+            amplitude           => unsigned(DAC_function_amplitude),
+            offset              => DAC_function_offset,
+            DAC_start_pulse     => function_voltage_signals(19),
+            data_valid          => function_voltage_signals(18),
+            parallel_data       => function_voltage_signals(17 downto 0)
+        );
+
+    -- Multiplexer to choose between btn or custom volatge
+    generator_selector : entity concept.mux3x20
+        port map(
+            sel     => generator_sel,
             a1      => btn_voltage_signals,
             a2      => custom_voltage_signals,
+            a3      => function_voltage_signals,
             b       => voltage_signals
         );
 
@@ -339,11 +367,13 @@ begin
     vio : vio_test_ADC
         port map(
             clk             => sys_clk,
-            probe_out0(0)   => btn_or_custom_signal,
+            probe_out0      => generator_sel,
             probe_out1      => DAC_voltage,
             probe_out2      => DAC_address,
             probe_out3(0)   => DAC_send_pulse,
-            probe_out4      => DAC_selector_signal
+            probe_out4      => DAC_selector_signal,
+            probe_out5      => DAC_function_amplitude,
+            probe_out6      => DAC_function_offset
         );
 
 end Behavioral;

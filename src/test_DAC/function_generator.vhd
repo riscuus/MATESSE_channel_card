@@ -36,6 +36,12 @@ entity function_generator is
         rst : in std_logic;
         -- Signal that determines if the function generator must be active
         enabled : in std_logic;
+        -- Address of the DAC
+        address : in std_logic_vector(1 downto 0);
+        -- Amplitude of the triangular function as a percentage of the total dynamic range. values from 1 to 100
+        amplitude : in unsigned(6 downto 0);
+        -- Offset of the triangular function, sets the minimum value to start incrementing. Values from 0 to 2^16-1
+        offset : in std_logic_vector(15 downto 0);
         -- Signal to announce that a new DAC cycle must start
         DAC_start_pulse : out std_logic;
         -- Signal that announces that the current data is already valid
@@ -50,14 +56,20 @@ architecture Behavioral of function_generator is
     constant NUM_HALF_SAMPLES : positive := 256;
     -- Number of samples for the whole period of the triangular function
     constant NUM_SAMPLES : positive := 512;
-    -- The increment in voltage value on each sample
-    constant INCREMENT : positive := 256;
+    -- The increment in voltage value we can have with offset = 0 and amplitude = 100 %
+    constant MAX_INCREMENT : positive := 10;
     -- The number of clk cycles between each new sample
     constant NEW_VALUE_CLK_CYCLES : positive := 200;
     -- The number of clk cycles before triggering the start pulse
     constant TRIGGER_START_PULSE : positive := 2;
     -- The number of clk cycles that the start pulse lasts
     constant START_PULSE_DURATION : positive := 1;
+    -- 2^15 / 100. In order to do the division of the percentage for the amplitud, we multiply and divide by 2^15
+    constant divider : unsigned(8 downto 0) := to_unsigned(328, 9);
+    -- NUM_HALF_SAMPLES * amplitude * divider
+    signal total_multiplication : unsigned(19 downto 0);
+    -- Is the total_multiplication but shifted 15 bits to the right. That is the same as dividing by 2^15.
+    signal increment : unsigned(4 downto 0) := (others => '0');
 
     -- Counter for the number of clk cycles
     signal clk_count : natural range 0 to NEW_VALUE_CLK_CYCLES := 0;
@@ -65,14 +77,19 @@ architecture Behavioral of function_generator is
     signal sample_count : positive := 1;
     -- The value of each sample
     signal data : std_logic_vector(15 downto 0) := (others => '0');
+    -- 
+    signal offset_signal : std_logic_vector(15 downto 0) := (others => '0');
 begin
+
+    total_multiplication <= to_unsigned(MAX_INCREMENT, 4) * amplitude * divider;
+    increment <= total_multiplication(19 downto 15);
+    offset_signal <= offset;
 
     generation : process (clk, rst)
     begin
         if (rst = '1') then
             DAC_start_pulse <= '0';
-            --parallel_data <= (others => '0');
-            data <= (others => '0');
+            data <= offset_signal;
             sample_count <= 1;
             clk_count <= 0;
         elsif(rising_edge(clk)) then
@@ -81,23 +98,23 @@ begin
                 if(clk_count = NEW_VALUE_CLK_CYCLES) then
                     data_valid <= '0';
                     if (sample_count <= NUM_HALF_SAMPLES) then
-                        -- Just for the first step we just increment INCREMENT - 1 in order to not overpass in the last sample
+                        -- Just for the first step we just increment increment - 1 in order to not overpass in the last sample
                         if(sample_count = 1) then
-                            data <= std_logic_vector(unsigned(data) + INCREMENT - 1);
+                            data <= std_logic_vector(unsigned(data) + increment - 1);
                         else
-                            data <= std_logic_vector(unsigned(data) + INCREMENT);
+                            data <= std_logic_vector(unsigned(data) + increment);
                         end if;
                         sample_count <= sample_count + 1;
                     end if;
                     
                     if (sample_count > NUM_HALF_SAMPLES and sample_count < NUM_SAMPLES) then
-                        data <= std_logic_vector(unsigned(data) - INCREMENT);
+                        data <= std_logic_vector(unsigned(data) - increment);
                         sample_count <= sample_count + 1;
                     end if;
 
                     -- Once we have done the whole period we reset the variable and the cycle starts again
                     if (sample_count = NUM_SAMPLES) then
-                        data <= (others => '0');
+                        data <= offset_signal;
                         sample_count <= 1;
                     end if;
                     clk_count <= 0;
@@ -117,7 +134,7 @@ begin
     end process;
     
     -- Address bits of the DAC
-    parallel_data(17 downto 16) <= "11";
+    parallel_data(17 downto 16) <= address;
     -- Voltage bits
     parallel_data(15 downto 0) <= data;
 
