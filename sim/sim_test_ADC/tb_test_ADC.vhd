@@ -65,7 +65,7 @@ architecture Behavioral of tb_test_ADC is
     signal ADC_CNV_signal   : std_logic;
     signal ADC_SCK_signal   : std_logic;
     signal ADC_SDO_signal   : std_logic;
-    signal simulation_data  : std_logic_vector(15 downto 0) := "1001101100100110"; -- Which should be the equivalent of 2V
+    signal simulation_data  : std_logic_vector(15 downto 0) := "0111111111111111"; -- Which should be the equivalent of 2V
 
 begin
 

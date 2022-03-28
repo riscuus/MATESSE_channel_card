@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="293200000001fs"></ZoomEndTime>
-      <Cursor1Time time="21000000000fs"></Cursor1Time>
+      <ZoomStartTime time="1999465000000fs"></ZoomStartTime>
+      <ZoomEndTime time="1999849000001fs"></ZoomEndTime>
+      <Cursor1Time time="1999613000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="269"></NameColumnWidth>
+      <NameColumnWidth column_width="259"></NameColumnWidth>
       <ValueColumnWidth column_width="72"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="15" />
+   <WVObjectSize size="16" />
    <wvobject fp_name="/tb_test_ADC/sys_clk" type="logic">
       <obj_property name="ElementShortName">sys_clk</obj_property>
       <obj_property name="ObjectShortName">sys_clk</obj_property>
@@ -38,7 +38,6 @@
    <wvobject fp_name="group55" type="group">
       <obj_property name="label">DAC signals</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_controller/start_conv_pulse" type="logic">
          <obj_property name="ElementShortName">start_conv_pulse</obj_property>
          <obj_property name="ObjectShortName">start_conv_pulse</obj_property>
@@ -63,6 +62,11 @@
    <wvobject fp_name="group68" type="group">
       <obj_property name="label">ADC signals</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/ADC_start_pulse_generator/ADC_start_pulse" type="logic">
+         <obj_property name="ElementShortName">ADC_start_pulse</obj_property>
+         <obj_property name="ObjectShortName">ADC_start_pulse</obj_property>
+      </wvobject>
       <wvobject fp_name="/tb_test_ADC/ADC_enabled" type="logic">
          <obj_property name="ElementShortName">ADC_enabled</obj_property>
          <obj_property name="ObjectShortName">ADC_enabled</obj_property>
@@ -79,10 +83,29 @@
          <obj_property name="ElementShortName">ADC_SDO_signal</obj_property>
          <obj_property name="ObjectShortName">ADC_SDO_signal</obj_property>
       </wvobject>
+      <wvobject fp_name="/tb_test_ADC/test_ADC_module/ADC_controller/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group80" type="group">
+      <obj_property name="label">ADC simulator</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_test_ADC/ADC_simulator/data" type="array">
+         <obj_property name="ElementShortName">data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">data[15:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_ADC/ADC_simulator/SDO" type="logic">
+         <obj_property name="ElementShortName">SDO</obj_property>
+         <obj_property name="ObjectShortName">SDO</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject fp_name="group60" type="group">
       <obj_property name="label">ADC input shift register</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_test_ADC/test_ADC_module/input_shift_register/serial_clk" type="logic">
          <obj_property name="ElementShortName">serial_clk</obj_property>
          <obj_property name="ObjectShortName">serial_clk</obj_property>
@@ -103,7 +126,7 @@
       <wvobject fp_name="/tb_test_ADC/test_ADC_module/input_shift_register/parallel_data" type="array">
          <obj_property name="ElementShortName">parallel_data[15:0]</obj_property>
          <obj_property name="ObjectShortName">parallel_data[15:0]</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group43" type="group">
@@ -171,7 +194,6 @@
    <wvobject fp_name="group39" type="group">
       <obj_property name="label">voltage signals</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_test_ADC/test_ADC_module/voltage_signals" type="array">
          <obj_property name="ElementShortName">voltage_signals[19:0]</obj_property>
          <obj_property name="ObjectShortName">voltage_signals[19:0]</obj_property>
@@ -304,7 +326,6 @@
    <wvobject fp_name="group183" type="group">
       <obj_property name="label">CKs</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_test_ADC/test_ADC_module/DAC_CK_IO5" type="logic">
          <obj_property name="ElementShortName">DAC_CK_IO5</obj_property>
          <obj_property name="ObjectShortName">DAC_CK_IO5</obj_property>

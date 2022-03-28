@@ -28,76 +28,101 @@ use ieee.numeric_std.all;
 
 entity ADC_controller IS
     port(   clk             : in std_logic; -- 100MHz clock
-            nrst            : in std_logic; -- Async reset
+            rst             : in std_logic; -- Async reset
             start_pulse     : in std_logic; -- Input pulse that indicates that a new conversion must start
             CNV             : out std_logic; -- Output CNV pulse 30ns min high
-            SCLK            : out std_logic -- Serial output clock, min period 18.2 ns
+            SCK             : out std_logic -- Serial output clock, min period 18.2 ns
             );
 end ADC_controller;
 
 
 architecture behave OF ADC_controller IS
-    -- Num of clk cycles for the serial clock to start
-    constant START_SCLK : positive := 4;
-    -- Num of clk cycles for the serial clock to end
-    constant END_SCLK : positive := 21;
+    constant CNV_LENGTH : positive := 10;
+    constant SCK_DELAY : positive := 8;
+    constant SCK_HALF_PERIOD : positive := 3;
+    constant NUM_OF_SCK_CYCLES : positive := 8;
 
-    -- Register to store the serial clock, needed because we also need to read the previous sclk signal
-    signal SCLK_reg : std_logic;
-    -- Counter that keeps track of the clk cycles during the conversion
-    signal counter : natural range 0 to 36;
-    -- Register to store the start pulse and delay the triggering of the CNV pulse one cycle
-    signal start_pulse_reg : std_logic;
+    signal CNV_counter : natural := 0;
+    signal wait_SCK_counter : natural := 0;
+    signal SCK_counter : natural := 0;
+    signal SCK_cycles_counter : natural := 0;
+
+    type StateType is (init, wait_start_pulse, CNV_active, wait_serial_clk, SCK_active, SCK_non_active);
+    signal state : StateType;
     
 --  attribute mark_debug : string;
---  attribute mark_debug of counter                 : signal is "true";
 --  attribute mark_debug of start_pulse_reg_ff      : signal is "true";
---  attribute mark_debug of SCLK_reg                : signal is "true";
     
     
 begin
 
-    SCLK <= SCLK_reg;
-
-    adc_gates_generation : process (clk, nrst)
-    -- Clocked state transitions
+    adc_gates_generation : process (clk, rst)
     begin
-        if nrst = '1' then
-            CNV <= '0';
-            SCLK_reg <= '0';
-            counter <= 0;
-            start_pulse_reg <= '0';
-            
+        if rst = '1' then
+            state <= init;
         elsif (rising_edge(clk)) then
+            case state is
+                when init =>
+                    CNV_counter <= 0;
+                    wait_SCK_counter <= 0;
+                    SCK_counter <= 0;
+                    SCK_cycles_counter <= 0;
+                    CNV <= '0';
+                    SCK <= '0';
 
-            -- Delay for the start pulse
-            if start_pulse = '1' then
-                start_pulse_reg <= '1';
-            end if;
-            
-            -- CNV high for 3 clock cycles => 30ns
-            if ((start_pulse_reg = '1')  or  (counter = 1) or  (counter = 2)) then
-                CNV <= '1';
-                start_pulse_reg <= '0';
-                counter <= counter + 1;
-            else
-                CNV <= '0';
-            end if;
-            
-            -- Serial clock 8 cycles => 16 clk cycles
-            if ((counter > START_SCLK)  and  (counter < END_SCLK)) then
-                SCLK_reg <= not SCLK_reg;
-            end if;
-            
-            -- Counter update
-            if (counter = END_SCLK - 1) then
-            -- Conversion finished. We set to 0 one cycle before it will be updated on next cycle
-                counter <= 0;
-            elsif counter > 0 then
-            -- The conversion has started
-            counter <= counter + 1;
-            end if;
-
+                    state <= wait_start_pulse;
+                when wait_start_pulse =>
+                    if(start_pulse = '1') then
+                        CNV <= '1';
+                        state <= CNV_active;
+                    else
+                        state <= state;
+                    end if;
+                when CNV_active =>
+                    if(CNV_counter = CNV_LENGTH - 1) then
+                        CNV <= '0';
+                        CNV_counter <= 0;
+                        state <= wait_serial_clk;
+                    else
+                        CNV_counter <= CNV_counter + 1;
+                        state <= state;
+                    end if;
+                when wait_serial_clk =>
+                    if(wait_SCK_counter = SCK_DELAY - 1) then
+                        SCK <= '1';
+                        wait_SCK_counter <= 0;
+                        state <= SCK_active;
+                    else
+                        wait_SCK_counter <= wait_SCK_counter + 1;
+                        state <= state;
+                    end if;
+                when SCK_active => 
+                    if(SCK_counter = SCK_HALF_PERIOD - 1) then 
+                        SCK_counter <= 0;
+                        SCK <= '0';
+                        state <= SCK_non_active;
+                    else 
+                        SCK_counter <= SCK_counter + 1;
+                        state <= state;
+                    end if;
+                when SCK_non_active =>
+                    if(SCK_counter = SCK_HALF_PERIOD - 1) then
+                        SCK_counter <= 0;
+                        if(SCK_cycles_counter = NUM_OF_SCK_CYCLES - 1) then
+                            SCK_cycles_counter <= 0;
+                            state <= wait_start_pulse;
+                        else
+                            SCK_cycles_counter <= SCK_cycles_counter + 1;
+                            SCK <= '1';
+                            state <= SCK_active;
+                        end if;
+                    else
+                        SCK_counter <= SCK_counter + 1;
+                        state <= state;
+                    end if;
+                when others =>
+                    state <= init;
+            end case;
         end if;
 
     end process adc_gates_generation;

@@ -131,7 +131,7 @@ architecture Behavioral of test_ADC is
     signal voltage_signals              : std_logic_vector(19 downto 0) := (others => '0');
 
     -- Signals that will be controlled by the VIO
-    signal generator_sel            : std_logic_vector(1 downto 0) := "00";
+    signal generator_sel            : std_logic_vector(1 downto 0) := "01";
     signal DAC_voltage              : std_logic_vector(15 downto 0) := "0101001010100101";
     signal DAC_address              : std_logic_vector(1 downto 0) := "10";
     signal DAC_send_pulse           : std_logic := '0';
@@ -322,10 +322,10 @@ begin
     ADC_controller : entity concept.ADC_controller
         port map(
             clk             => sys_clk,
-            nrst            => sys_rst,
+            rst             => sys_rst,
             start_pulse     => ADC_start_pulse,
             CNV             => ADC_CNV_signal,
-            SCLK            => ADC_SCK_signal
+            SCK             => ADC_SCK_signal
         );
 
     -- ADC DDR input reader
