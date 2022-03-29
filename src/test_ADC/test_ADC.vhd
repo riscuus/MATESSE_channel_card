@@ -354,7 +354,7 @@ begin
     input_shift_register : entity concept.input_shift_register
         port map(
             clk                     => sys_clk,
-            nrst                    => sys_rst,
+            rst                     => sys_rst,
             serial_clk              => ADC_SCK_signal,
             iddr_parallel_output    => parallel_ddr_data,
             conv_started            => CNV_fall_pulse,
