@@ -26,7 +26,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity input_shift_register is
     port ( 
         clk                     : in std_logic; -- 100 MHz clock
-        nrst                    : in std_logic; -- Async reset active low
+        rst                     : in std_logic; -- Async reset active low
         serial_clk              : in std_logic; -- The serial clock sent to ADC
         iddr_parallel_output    : in std_logic_vector(1 downto 0); -- Output of the ddr_input module
         conv_started            : in std_logic; -- Pulse that indicates that the conversion has started
@@ -36,61 +36,78 @@ entity input_shift_register is
 end input_shift_register;
 
 architecture Behavioral of input_shift_register is
+    -- Num of cycles that the SCK does. As we use DDR it is 8
+    constant NUM_OF_SCK_CYCLES : positive := 8;
     -- Register to store the data received
     signal input_word_iddr : std_logic_vector(15 downto 0) := (others => '0');
-    -- Register that indicates if the shifting register must be working or not
-    signal shift_on : std_logic := '0';
-    -- Register that serves as condition to know when the iddr_parallel_output data is valid
-    signal valid_bits : std_logic := '0';
-    -- Bits counter
-    signal counter : natural range 0 to 16 := 0;
-    -- Register to be able to read valid_word output
-    signal valid_word_reg : std_logic;
+    -- SCK cycles counter
+    signal counter : natural range 0 to 8 := 0;
+
+
+    type StateType is (init, wait_start, wait_sck_on, wait_sck_off, delay_valid_word, valid_word_on);
+    signal state : StateType;
 begin
 
-    process(clk, nrst) is
+    process(clk, rst) is
     begin
-        if nrst = '1' then
-            input_word_iddr <= (others => '0');
-            valid_word_reg <= '0';
-            shift_on <= '0';
-            counter <= 0;
-            valid_bits <= '0';
+        if rst = '1' then
+            state <= init;
             
         elsif rising_edge(clk) then
-            -- Conversion has started
-            if(conv_started = '1') then
-                shift_on <= '1';
-            end if;
+            case state is
+                when init =>
+                    input_word_iddr <= (others => '0');
+                    counter <= 0;
+                    state <= wait_start;
 
-            -- Serial clock has started
-            if (serial_clk = '1' and shift_on = '1') then
-                valid_bits <= '1';
-            end if;
+                when wait_start =>
+                    if(conv_started = '1') then
+                        state <= wait_sck_on;
+                    else 
+                        state <= state;
+                    end if;
 
-            -- Store iddr_parallel_output and shift bits
-            if (serial_clk = '0' and valid_bits = '1') then
-                -- We store them in reverse order because the output of the iddr_input sets the MSB as the LSB
-                input_word_iddr(0) <= iddr_parallel_output(1); 
-                input_word_iddr(1) <= iddr_parallel_output(0);
-                input_word_iddr(15 downto 2) <= input_word_iddr(13 downto 0);
-                counter <= counter + 2;
-                valid_bits <= '0';
-            end if;
-            -- Note that we read 16 bits but the condition has to be set at 14 because the counter will be updated on
-            -- next cycle
-            if (counter = 14) then
-                shift_on <= '0';
-                valid_word_reg <= '1';
-            end if;
+                when wait_sck_on =>
+                    if(serial_clk = '1') then
+                        state <= wait_sck_off;
+                    else
+                        state <= state;
+                    end if;
 
-            if (valid_word_reg = '1') then
-                valid_word_reg <= '0';
-            end if;
+                when wait_sck_off =>
+                    if(serial_clk = '0') then
+                        -- We store them in reverse order because the output of the iddr_input sets the MSB as the LSB
+                        input_word_iddr(0) <= iddr_parallel_output(1); 
+                        input_word_iddr(1) <= iddr_parallel_output(0);
+                        input_word_iddr(15 downto 2) <= input_word_iddr(13 downto 0);
+                        counter <= counter + 1;
+                        -- Condition to know when to end shifting
+                        if(counter = NUM_OF_SCK_CYCLES - 1) then
+                            counter <= 0;
+                            state <= delay_valid_word;
+                        else
+                            state <= wait_sck_on;
+                        end if;
+                    else
+                        state <= state;
+                    end if;
+
+                when delay_valid_word =>
+                    -- We delay one clock cycle the valid_word pulse
+                    state <= valid_word_on;
+
+                when valid_word_on =>
+                    state <= init;
+
+                when others =>
+                    state <= init;
+            end case;
         end if;
     end process;
-
-    valid_word <= valid_word_reg;
+    
+    valid_word <= '1' when state = valid_word_on else
+                  '0';
+                      
     parallel_data <= input_word_iddr;
 
 end Behavioral;
