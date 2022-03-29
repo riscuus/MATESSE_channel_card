@@ -31,18 +31,15 @@ entity ADC_controller IS
             rst             : in std_logic; -- Async reset
             start_pulse     : in std_logic; -- Input pulse that indicates that a new conversion must start
             CNV             : out std_logic; -- Output CNV pulse 30ns min high
-            SCK             : out std_logic; -- Serial output clock, min period 18.2 ns
-            CNV_LENGTH      : in positive;
-            SCK_DELAY       : in positive;
-            SCK_HALF_PERIOD : in positive
+            SCK             : out std_logic -- Serial output clock, min period 18.2 ns
             );
 end ADC_controller;
 
 
 architecture behave OF ADC_controller IS
-    --constant CNV_LENGTH : positive := 4;
-    --constant SCK_DELAY : positive := 4;
-    --constant SCK_HALF_PERIOD : positive := 1;
+    constant CNV_LENGTH : positive := 10;
+    constant SCK_DELAY : positive := 8;
+    constant SCK_HALF_PERIOD : positive := 3;
     constant NUM_OF_SCK_CYCLES : positive := 8;
 
     signal CNV_counter : natural := 0;
