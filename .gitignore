@@ -2,3 +2,4 @@
 project/*
 vivado.jou
 vivado.log
+**.pyc
