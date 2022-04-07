@@ -22,7 +22,15 @@ def sweep_ADC_vio_parameter(parameter):
         s = s + set_new_parameter_value(parameter, value)
         s = s + trigger_ila()
         filename = "" + parameter.name + "_" + str(value)
-        s = s + save_ila_data(cts.VIO_PARAMETER_TO_RELATIVE_DIRECTORY[parameter], filename)
+        s = s + save_ila_data(cts.VIO_PARAMETER_TO_DATA_DIRECTORY[parameter], filename)
+    return s
+
+def trigger_ila_multiple_times(N, relative_path):
+    # Triggers N times ila. Used to get a big sample of ADC measurements without increasing ila samples
+    s = ""
+    for i in range(N):
+        s = s + trigger_ila()
+        s = s + save_ila_data(relative_path, str(i))
     return s
 
 def set_ADC_vio_parameters_to_default():
@@ -44,7 +52,8 @@ def set_new_parameter_value(parameter, value):
 def trigger_ila():
     run_ila = "run_hw_ila [get_hw_ilas -of_objects [get_hw_devices xc7s25_0] -filter {CELL_NAME=~\"u_ila_0\"}] -trigger_now"
     wait_ila = "wait_on_hw_ila [get_hw_ilas -of_objects [get_hw_devices xc7s25_0] -filter {CELL_NAME=~\"u_ila_0\"}]"
-    display_ila = "display_hw_ila_data [upload_hw_ila_data [get_hw_ilas -of_objects [get_hw_devices xc7s25_0] -filter {CELL_NAME=~\"u_ila_0\"}]]"
+    #display_ila = "display_hw_ila_data [upload_hw_ila_data [get_hw_ilas -of_objects [get_hw_devices xc7s25_0] -filter {CELL_NAME=~\"u_ila_0\"}]]"
+    display_ila = "upload_hw_ila_data [get_hw_ilas -of_objects [get_hw_devices xc7s25_0] -filter {CELL_NAME=~\"u_ila_0\"}]"
 
     return run_ila + "\n" + wait_ila + "\n" + display_ila + "\n"
 
@@ -54,10 +63,16 @@ def save_ila_data(relative_path, filename):
     write_data = f"write_hw_ila_data -csv_file {{{cts.CURRENT_DIRECTORY}\{relative_path}\{filename}.csv}} hw_ila_data_1"
     return write_data + "\n"
 
+def export_string_to_file(str):
+    f = open("output.txt", "w")
+    f.write(str)
+    f.close()
+
 
 def main():
-    #print(sweep_ADC_vio_parameters())
-    print(sweep_ADC_vio_parameter(cts.Vio_parameter.HALF_PERIOD))
+    #export_string_to_file(sweep_ADC_vio_parameters())
+    #export_string_to_file(sweep_ADC_vio_parameter(cts.Vio_parameter.HALF_PERIOD))
+    export_string_to_file(trigger_ila_multiple_times(500, cts.TEST_3_DATA_DIRECTORIES[cts.Test_3_scenarios.TEMP]))
 
 if __name__ == "__main__" :
     main()
