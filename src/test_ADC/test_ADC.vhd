@@ -34,7 +34,7 @@ use concept.all;
 entity test_ADC is
     port ( 
         sys_clk              : in std_logic;
-        sys_rst              : in std_logic;
+        sys_rst_btn          : in std_logic;
         -- Enabling signals
         DAC_enabled          : in std_logic;
         ADC_enabled          : in std_logic;
@@ -78,6 +78,8 @@ entity test_ADC is
 end test_ADC;
 
 architecture Behavioral of test_ADC is
+    -- Global rst
+    signal sys_rst  : std_logic := '0';
 
     -- DAC SPI communication
     signal DAC_LDAC_signal  : std_logic := '1';
@@ -138,6 +140,10 @@ architecture Behavioral of test_ADC is
     signal DAC_selector_signal      : std_logic_vector(2 downto 0) := (others => '0');
     signal DAC_function_amplitude   : std_logic_vector(6 downto 0) := (others => '0');
     signal DAC_function_offset      : std_logic_vector(15 downto 0) := (others => '0');
+    signal cnv_length_signal        : std_logic_vector(3 downto 0) := "0100";
+    signal sck_delay_signal         : std_logic_vector(3 downto 0) := "0100";
+    signal sck_half_period_signal   : std_logic_vector(3 downto 0) := "0001";
+    signal sys_rst_vio              : std_logic := '0';
 
     -- Signals to keep for debugging
     attribute keep : string;
@@ -147,14 +153,18 @@ architecture Behavioral of test_ADC is
     -- Component declarations
     component vio_test_adc
         port (
-            clk        : in std_logic;
-            probe_out0 : out std_logic_vector(1 downto 0);
-            probe_out1 : out std_logic_vector(15 downto 0);
-            probe_out2 : out std_logic_vector(1 downto 0);
-            probe_out3 : out std_logic_vector(0 downto 0);
-            probe_out4 : out std_logic_vector(2 downto 0);
-            probe_out5 : out std_logic_vector(6 downto 0);
-            probe_out6 : out std_logic_vector(15 downto 0)
+            clk         : in std_logic;
+            probe_out0  : out std_logic_vector(1 downto 0);
+            probe_out1  : out std_logic_vector(15 downto 0);
+            probe_out2  : out std_logic_vector(1 downto 0);
+            probe_out3  : out std_logic_vector(0 downto 0);
+            probe_out4  : out std_logic_vector(2 downto 0);
+            probe_out5  : out std_logic_vector(6 downto 0);
+            probe_out6  : out std_logic_vector(15 downto 0);
+            probe_out7  : out std_logic_vector(3 downto 0);
+            probe_out8  : out std_logic_vector(3 downto 0);
+            probe_out9  : out std_logic_vector(3 downto 0);
+            probe_out10 : out std_logic_vector(0 downto 0)
         );
     end component;
 
@@ -168,6 +178,8 @@ begin
     ADC_SCK_IO1     <= ADC_SCK_signal;
     ADC_SDO_signal  <= ADC_SDO_IO2;
 
+    -- Sys rst assigment
+    sys_rst <= sys_rst_btn or sys_rst_vio;
 
     ---- SUBCOMPONENTS DECLARATIONS ----
 
@@ -325,7 +337,10 @@ begin
             rst             => sys_rst,
             start_pulse     => ADC_start_pulse,
             CNV             => ADC_CNV_signal,
-            SCK             => ADC_SCK_signal
+            SCK             => ADC_SCK_signal,
+            CNV_LENGTH      => to_integer(unsigned(cnv_length_signal)),
+            SCK_DELAY       => to_integer(unsigned(sck_delay_signal)),
+            SCK_HALF_PERIOD => to_integer(unsigned(sck_half_period_signal))
         );
 
     -- ADC DDR input reader
@@ -373,7 +388,11 @@ begin
             probe_out3(0)   => DAC_send_pulse,
             probe_out4      => DAC_selector_signal,
             probe_out5      => DAC_function_amplitude,
-            probe_out6      => DAC_function_offset
+            probe_out6      => DAC_function_offset,
+            probe_out7      => cnv_length_signal,
+            probe_out8      => sck_delay_signal,
+            probe_out9      => sck_half_period_signal,
+            probe_out10(0)  => sys_rst_vio
         );
 
 end Behavioral;
