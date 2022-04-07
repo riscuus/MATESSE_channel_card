@@ -9,5 +9,9 @@ The steps to generate the different tests for the ADC are the following:
 Right now 3 different tests are defined:
 
 * test_1 : Changes different timming parameters of the ADC to see how do they affect the noise
-* test_2 : Triggers a large ammount of times the **ila** to save a large amount of samples of one voltage level. This allow us to better analyze the noise by for example generating the FFT of the data.
-* test_3 : Triggers for different scenarios a large ammount of time the **ila**. Later we analyze the noise in each scenario.
+* test_2 : Triggers a large ammount of times the **ILA** to save a large amount of samples of one voltage level. This allow us to better analyze the noise by for example generating the FFT of the data.
+* test_3 : Triggers for different scenarios a large ammount of time the **ILA**. Later we analyze the noise in each scenario.
+
+### IMPORTANT
+
+Be aware that these tests have been generated for an specific configuration of the **ILA** and the **VIO** if in a future the VIO component changes, the tcl code generate may be outdated. So please, before generating the tcl test code, check that all the parameters are configured correctly.
