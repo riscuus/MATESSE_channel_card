@@ -149,7 +149,7 @@ create_clock -period 10.000 -name sys_clk_pin -waveform {0.000 5.000} -add [get_
 
 # Switches
 ## We set the sw[0] as the reset signal
-set_property -dict {PACKAGE_PIN H14 IOSTANDARD LVCMOS33} [get_ports sys_rst]
+set_property -dict {PACKAGE_PIN H14 IOSTANDARD LVCMOS33} [get_ports sys_rst_btn]
 ## We set the sw[1] as the DAC enabled signal
 set_property -dict {PACKAGE_PIN H18 IOSTANDARD LVCMOS33} [get_ports DAC_enabled]
 ## We set the sw[2] as the ADC enabled signal
