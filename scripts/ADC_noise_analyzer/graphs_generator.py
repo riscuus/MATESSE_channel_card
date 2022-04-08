@@ -187,6 +187,8 @@ def get_test_4_files(attempt : int) -> dict[int, list]:
 def get_test_4_data(files_dict : dict[int, list]) -> dict[int, list]:
     data = {}
     for dac_value in files_dict:
+        if(dac_value < 1100 or dac_value > 1800):
+            continue
         data[dac_value] = []
         for file in files_dict[dac_value]:
             data[dac_value].extend(extract_data_from_file(file))
@@ -195,7 +197,7 @@ def get_test_4_data(files_dict : dict[int, list]) -> dict[int, list]:
 def plot_test_4_data(data_dict : dict[int, list], attempt : int):
     utils.create_folder(cts.TEST_4_RESULTS_DIRECTORY + str(attempt))
     filename = cts.TEST_4_RESULTS_DIRECTORY + str(attempt) + "\\dynamic_range.png"
-    plot_dict_as_scatter(data_dict, filename)
+    plot_dict_as_error_bars(data_dict, filename)
 
 
 #######################################################
@@ -315,6 +317,42 @@ def plot_dict_as_scatter(data_dict : dict[int, list], filename):
     pyplot.savefig(filename)
     pyplot.close()
 
+
+def plot_dict_as_error_bars(data_dict, filename):
+    fig, ax = pyplot.subplots(figsize=(40,20))
+
+    y = calculate_means_from_dict(data_dict)
+    x = list(data_dict.keys())
+    yerr = calculate_std_deviations_from_dict(data_dict)
+    
+    real_x = [1800, 1700, 1600, 1500, 1400, 1300, 1200, 1100]
+
+    real_y = [1.348, 0.988, 0.635, 0.276, -0.063, -0.417, -0.756, -0.934]
+
+
+    # ADC readings points
+    ax.errorbar(x, y, yerr, color = "black", fmt="none", capsize=4, elinewidth=2)
+    ax.plot(real_x, real_y)
+
+    # Axes labels
+    pyplot.xlabel("DAC value", fontsize=30)
+    pyplot.ylabel("ADC readings (V)", fontsize=30)
+
+    # Axes ticks
+    ax.minorticks_on()
+    ax.get_yaxis().set_major_locator(MultipleLocator(0.25))
+    #ax.get_xaxis().set_major_locator(MultipleLocator(2))
+    #ax.get_xaxis().set_minor_locator(MultipleLocator(0.2))
+    ax.tick_params(axis='both', which='major', labelsize=20)
+    # Grid
+    ax.grid(visible=True, which='major', axis='both', linewidth=1)
+    ax.grid(visible=True, which='minor', axis='both', linewidth=0.5)
+    # Axes limit
+
+    #ax.legend()
+    pyplot.savefig(filename, dpi=400)
+    pyplot.close()
+
 def build_axes_from_dict(data_dict):
     x = []
     y = []
@@ -326,11 +364,23 @@ def build_axes_from_dict(data_dict):
         y.extend(data_dict[key])
     return x, y
 
+def calculate_means_from_dict(data_dict : dict[int, list]) -> list:
+    means = []
+    for key in data_dict:
+        means.append(calculate_mean_from_array(data_dict[key]))
+    return means
+
+def calculate_std_deviations_from_dict(data_dict : dict[int, list]) -> list:
+    deviations = []
+    for key in data_dict:
+        deviations.append(calculate_std_deviation_from_array(data_dict[key]))
+    return deviations
+
 def main():
     #generate_graph_test_1()
     #generate_graph_test_2()
     #generate_graph_test_3()
-    #generate_graph_test_4(2)
+    generate_graph_test_4(3)
 
 if __name__ == "__main__" :
     main()

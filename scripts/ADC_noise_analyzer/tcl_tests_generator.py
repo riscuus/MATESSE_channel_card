@@ -138,7 +138,7 @@ def main():
     #generate_test_1()
     #generate_test_2(cts.Test_2_scenarios.ALUMINUM)
     #generate_test_3(cts.Test_3_scenarios.ALUMINUM)
-    generate_test_4(1000, 2000, 10, 50, 2)
+    generate_test_4(1000, 2000, 10, 50, 3)
 
 if __name__ == "__main__" :
     main()
