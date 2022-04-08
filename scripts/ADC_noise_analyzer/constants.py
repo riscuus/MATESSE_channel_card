@@ -12,10 +12,22 @@ DEFAULT_HALF_PERIOD = 2
 MIN_HALF_PERIOD = 2
 MAX_HALF_PERIOD = 7
 
+DAC_UOB_0V_HEX = 9355
+
 class Vio_parameter(Enum):
     CNV_LENGTH = 1
     SCK_DELAY = 2
     HALF_PERIOD = 3
+    DAC_ADDRESS = 4
+    DAC_VOLTAGE = 5
+    DAC_SEND_PULSE = 6
+
+class Radix(Enum):
+    BINARY = 1
+    OCTAL = 2
+    HEX = 3
+    UNSIGNED = 4
+    SIGNED = 5
 
 class Test_2_scenarios(Enum):
     NO_ALUMINUM = 1
@@ -32,9 +44,13 @@ class Test_3_scenarios(Enum):
     ALUMINUM = 8
     TEMP = 9
 
-VIO_PARAMETER_TO_PROBE = {Vio_parameter.CNV_LENGTH  : "probe_out7",
-                          Vio_parameter.SCK_DELAY   : "probe_out8", 
-                          Vio_parameter.HALF_PERIOD : "probe_out9"}
+VIO_PARAMETER_TO_PROBE = {Vio_parameter.CNV_LENGTH      : "probe_out7",
+                          Vio_parameter.SCK_DELAY       : "probe_out8", 
+                          Vio_parameter.HALF_PERIOD     : "probe_out9",
+                          Vio_parameter.DAC_ADDRESS     : "DAC_address",
+                          Vio_parameter.DAC_VOLTAGE     : "DAC_voltage",
+                          Vio_parameter.DAC_SEND_PULSE  : "DAC_send_pulse_1"
+                          }
 
 VIO_PARAMETER_TO_MIN_VALUE = {Vio_parameter.CNV_LENGTH  : MIN_CNV_LENGTH,
                               Vio_parameter.SCK_DELAY   : MIN_SCK_DELAY, 
@@ -66,5 +82,8 @@ TEST_3_DATA_DIRECTORIES = {Test_3_scenarios.NO_PROBE       : "data\\test_3\\no_p
                            Test_3_scenarios.ALUMINUM       : "data\\test_3\\aluminum"}
 
 TEST_3_RESULTS_DIRECTORY = "results\\test_3"
+
+TEST_4_DATA_DIRECTORY = "data\\test_4\\attempt_"
+TEST_4_RESULTS_DIRECTORY = "results\\test_4\\attempt_"
 
 CURRENT_DIRECTORY = os.path.dirname(os.path.realpath(__file__))

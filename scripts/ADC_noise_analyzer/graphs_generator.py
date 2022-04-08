@@ -1,3 +1,4 @@
+from genericpath import isdir
 from os import listdir
 from os.path import isfile, join
 import csv
@@ -7,8 +8,12 @@ import numpy as np
 import matplotlib.pyplot as pyplot
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
                                AutoMinorLocator)
+import pprint
+
+
 # local files
 import constants as cts
+import utils
 
 #######################################################
 # test_1
@@ -161,13 +166,49 @@ def plot_test_3_fft(values, test_3_scenario):
     plot_fft(values, filename)
 
 #######################################################
+# test_4
+#######################################################
+def generate_graph_test_4(attempt : int):
+    files = get_test_4_files(attempt)
+    data_dict = get_test_4_data(files)
+    #no_mean_data_dict = substract_mean_from_dict(data_dict)
+    #pprint.pprint(no_mean_data_dict)
+    plot_test_4_data(data_dict, attempt)
+
+
+def get_test_4_files(attempt : int) -> dict[int, list]:
+    files = {}
+    folders = get_folders_of_directory(cts.TEST_4_DATA_DIRECTORY+str(attempt))
+    for folder in folders:
+        value = int(folder[len(cts.TEST_4_DATA_DIRECTORY) + len(str(attempt) + "\\") : len(folder)])
+        files[value] = get_files_of_directory(cts.TEST_4_DATA_DIRECTORY+str(attempt)+"\\"+str(value))
+    return files
+
+def get_test_4_data(files_dict : dict[int, list]) -> dict[int, list]:
+    data = {}
+    for dac_value in files_dict:
+        data[dac_value] = []
+        for file in files_dict[dac_value]:
+            data[dac_value].extend(extract_data_from_file(file))
+    return data
+
+def plot_test_4_data(data_dict : dict[int, list], attempt : int):
+    utils.create_folder(cts.TEST_4_RESULTS_DIRECTORY + str(attempt))
+    filename = cts.TEST_4_RESULTS_DIRECTORY + str(attempt) + "\\dynamic_range.png"
+    plot_dict_as_scatter(data_dict, filename)
+
+
+#######################################################
 # Generic
 #######################################################
+
+def get_folders_of_directory(directory):
+    return list(map(lambda s: "" + directory + "\\" + s, [f for f in listdir(directory) if isdir(join(directory, f))]))
 
 def get_files_of_directory(directory):
     return list(map(lambda s: "" + directory + "/" + s, [f for f in listdir(directory) if isfile(join(directory, f))]))
 
-def extract_data_from_file(filename):
+def extract_data_from_file(filename : str):
     csvfile = open(filename, newline='')
     reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
     adc_values = []
@@ -202,6 +243,12 @@ def calculate_mean_from_array(values):
     for x in values:
         sum = sum + x
     return sum/len(values)
+
+def substract_mean_from_dict(data_dict : dict[int, list]) -> dict[int, list]:
+    no_mean_dict = {}
+    for key in data_dict:
+        no_mean_dict[key] = substract_mean_from_array(data_dict[key])
+    return no_mean_dict
 
 def substract_mean_from_array(values):
     mean = calculate_mean_from_array(values)
@@ -250,11 +297,40 @@ def plot_histogram(values, title, filename):
     pyplot.savefig(filename)
     pyplot.close()
 
+def plot_dict_as_scatter(data_dict : dict[int, list], filename):
+    fig, ax = pyplot.subplots()
+
+    x, y = build_axes_from_dict(data_dict)
+    # ADC readings points
+    ax.scatter(x, y, color = "black", marker = ".", s = 10)
+
+    # Axes labels
+    pyplot.xlabel("DAC value")
+    pyplot.ylabel("ADC readings (V)")
+
+    # Axes limit
+    #pyplot.ylim([-0.08, 0.08])
+
+    #ax.legend()
+    pyplot.savefig(filename)
+    pyplot.close()
+
+def build_axes_from_dict(data_dict):
+    x = []
+    y = []
+
+    for key in data_dict:
+        # We repeat the same 'x' value as 'y' values there are
+        x.extend([key for i in range(len(data_dict[key]))])
+        # We simply join in the same list all the 'y' values
+        y.extend(data_dict[key])
+    return x, y
 
 def main():
     #generate_graph_test_1()
     #generate_graph_test_2()
-    generate_graph_test_3()
+    #generate_graph_test_3()
+    #generate_graph_test_4(2)
 
 if __name__ == "__main__" :
     main()
