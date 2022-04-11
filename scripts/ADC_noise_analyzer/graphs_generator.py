@@ -168,6 +168,18 @@ def plot_test_3_fft(values, test_3_scenario):
 #######################################################
 # test_4
 #######################################################
+def generate_graph_test_4_double(attempt_1 : int, attempt_2 : int):
+    files_1 = get_test_4_files(attempt_1)
+    data_dict_1 = get_test_4_data(files_1)
+    print("Keys : " + str(len(data_dict_1.keys())))
+    print("Samples per key : " + str(len(data_dict_1[1100])))
+     #files_2 = get_test_4_files(attempt_2)
+     #data_dict_2 = get_test_4_data(files_2)
+
+     #plot_test_4_data_double(data_dict_1, data_dict_2)
+
+
+
 def generate_graph_test_4(attempt : int):
     files = get_test_4_files(attempt)
     data_dict = get_test_4_data(files)
@@ -199,6 +211,12 @@ def plot_test_4_data(data_dict : dict[int, list], attempt : int):
     filename = cts.TEST_4_RESULTS_DIRECTORY + str(attempt) + "\\dynamic_range.png"
     plot_dict_as_error_bars(data_dict, filename)
 
+def plot_test_4_data_double(data_dict_1 : dict[int, list], data_dict_2 : dict[int, list]):
+    utils.create_folder(cts.TEST_4_RESULTS_DIRECTORY + "double")
+    filename_dyn_range = cts.TEST_4_RESULTS_DIRECTORY + "double" + "\\dynamic_range.png"
+    filename_std_deviation = cts.TEST_4_RESULTS_DIRECTORY + "double" + "\\std_deviation.png"
+    plot_two_dict_as_error_bars(data_dict_1, data_dict_2, filename_dyn_range)
+    plot_two_dict_as_std_deviation(data_dict_1, data_dict_2, filename_std_deviation)
 
 #######################################################
 # Generic
@@ -353,6 +371,80 @@ def plot_dict_as_error_bars(data_dict, filename):
     pyplot.savefig(filename, dpi=400)
     pyplot.close()
 
+def plot_two_dict_as_error_bars(data_dict_1 : dict[int, list], data_dict_2 : dict[int, list], filename : str):
+    fig, ax = pyplot.subplots(figsize=(40,20))
+
+    y_1 = calculate_means_from_dict(data_dict_1)
+    x_1 = list(data_dict_1.keys())
+    yerr_1 = calculate_std_deviations_from_dict(data_dict_1)
+    
+    y_2 = calculate_means_from_dict(data_dict_2)
+    x_2 = list(data_dict_2.keys())
+    yerr_2 = calculate_std_deviations_from_dict(data_dict_2)
+    
+    real_x = [1800, 1700, 1600, 1500, 1400, 1300, 1200, 1100]
+
+    real_y = [1.348, 0.988, 0.635, 0.276, -0.063, -0.417, -0.756, -0.934]
+
+
+    # ADC readings points
+    ax.errorbar(x_1, y_1, yerr_1, fmt="none", capsize=4, elinewidth=2, color = "#1f77b4", label="Std. deviation PCB open")
+    ax.errorbar(x_2, y_2, yerr_2, fmt="none", capsize=4, elinewidth=2, color = "#ff7f0e", label = "Std. deviation PCB wrapped in aluminum")
+    ax.plot(real_x, real_y, '.-', color = "black", label = "Multimeter readings")
+
+    # Axes labels
+    pyplot.xlabel("DAC value (DEC)", fontsize=30)
+    pyplot.ylabel("ADC readings (V)", fontsize=30)
+
+    # Axes ticks
+    ax.minorticks_on()
+    ax.get_yaxis().set_major_locator(MultipleLocator(0.25))
+    #ax.get_xaxis().set_major_locator(MultipleLocator(2))
+    #ax.get_xaxis().set_minor_locator(MultipleLocator(0.2))
+    ax.tick_params(axis='both', which='major', labelsize=20)
+    # Grid
+    ax.grid(visible=True, which='major', axis='both', linewidth=1)
+    ax.grid(visible=True, which='minor', axis='both', linewidth=0.5)
+    # Axes limit
+
+    ax.legend(prop={'size': 30})
+    pyplot.savefig(filename, dpi=400)
+    pyplot.close()
+
+
+def plot_two_dict_as_std_deviation(data_dict_1 : dict[int, list], data_dict_2 : dict[int, list], filename : str):
+    fig, ax = pyplot.subplots(figsize=(40,20))
+
+    x_1 = list(data_dict_1.keys())
+    y_1 = list(map(lambda x : x * 1000, calculate_std_deviations_from_dict(data_dict_1)))
+    
+    x_2 = list(data_dict_2.keys())
+    y_2 = list(map(lambda x : x * 1000, calculate_std_deviations_from_dict(data_dict_2)))
+    
+    # ADC readings points
+    ax.plot(x_1, y_1, '.-', label="PCB open")
+    ax.plot(x_2, y_2, '.-', label="PCB wrapped in aluminum foil")
+
+    # Axes labels
+    pyplot.xlabel("DAC value (DEC)", fontsize=30)
+    pyplot.ylabel("Std. deviation (mV)", fontsize=30)
+
+    # Axes ticks
+    ax.minorticks_on()
+    #ax.get_yaxis().set_major_locator(MultipleLocator(0.25))
+    #ax.get_xaxis().set_major_locator(MultipleLocator(2))
+    #ax.get_xaxis().set_minor_locator(MultipleLocator(0.2))
+    ax.tick_params(axis='both', which='major', labelsize=20)
+    # Grid
+    ax.grid(visible=True, which='major', axis='both', linewidth=1)
+    ax.grid(visible=True, which='minor', axis='both', linewidth=0.5)
+    # Axes limit
+
+    ax.legend(prop={'size': 30})
+    pyplot.savefig(filename, dpi=400)
+    pyplot.close()
+
+
 def build_axes_from_dict(data_dict):
     x = []
     y = []
@@ -380,7 +472,8 @@ def main():
     #generate_graph_test_1()
     #generate_graph_test_2()
     #generate_graph_test_3()
-    generate_graph_test_4(3)
+    #generate_graph_test_4(3)
+    generate_graph_test_4_double(2, 3)
 
 if __name__ == "__main__" :
     main()
