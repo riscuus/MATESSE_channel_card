@@ -40,7 +40,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.std_logic_unsigned.all;
 
 entity UART_TX_CTRL is
-    Port ( SEND : in  STD_LOGIC;
+    Port( 
+           SEND : in  STD_LOGIC;
            DATA : in  STD_LOGIC_VECTOR (7 downto 0);
            CLK : in  STD_LOGIC;
            READY : out  STD_LOGIC;
@@ -51,7 +52,8 @@ architecture Behavioral of UART_TX_CTRL is
 
 type TX_STATE_TYPE is (RDY, LOAD_BIT, SEND_BIT);
 
-constant BIT_TMR_MAX : std_logic_vector(13 downto 0) := "10100010110000"; --10416 = (round(100MHz / 9600)) - 1
+--constant BIT_TMR_MAX : std_logic_vector(13 downto 0) := "10100010110000"; --10416 = (round(100MHz / 9600)) - 1
+constant BIT_TMR_MAX : std_logic_vector(13 downto 0) := "00001101100011"; --867 = (round(100MHz / 115200)) - 1
 constant BIT_INDEX_MAX : natural := 10;
 
 --Counter that keeps track of the number of clock cycles the current bit has been held stable over the

@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_packet_builder_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_packet_builder" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="14220000000001fs"></ZoomEndTime>
+      <Cursor1Time time="50000000000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="265"></NameColumnWidth>
+      <ValueColumnWidth column_width="120"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="15" />
+   <wvobject fp_name="/tb_packet_builder/sys_clk" type="logic">
+      <obj_property name="ElementShortName">sys_clk</obj_property>
+      <obj_property name="ObjectShortName">sys_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_packet_builder/sys_rst" type="logic">
+      <obj_property name="ElementShortName">sys_rst</obj_property>
+      <obj_property name="ObjectShortName">sys_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="group631" type="group">
+      <obj_property name="label">packet information</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_packet_builder/packet_type" type="other">
+         <obj_property name="ElementShortName">packet_type</obj_property>
+         <obj_property name="ObjectShortName">packet_type</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/card_id" type="array">
+         <obj_property name="ElementShortName">card_id[15:0]</obj_property>
+         <obj_property name="ObjectShortName">card_id[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/param_id" type="array">
+         <obj_property name="ElementShortName">param_id[15:0]</obj_property>
+         <obj_property name="ObjectShortName">param_id[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/cmd_type" type="other">
+         <obj_property name="ElementShortName">cmd_type</obj_property>
+         <obj_property name="ObjectShortName">cmd_type</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/err_ok" type="logic">
+         <obj_property name="ElementShortName">err_ok</obj_property>
+         <obj_property name="ObjectShortName">err_ok</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/payload_size" type="other">
+         <obj_property name="ElementShortName">payload_size</obj_property>
+         <obj_property name="ObjectShortName">payload_size</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_payload" type="array">
+         <obj_property name="ElementShortName">packet_payload[0:555][31:0]</obj_property>
+         <obj_property name="ObjectShortName">packet_payload[0:555][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/params_valid" type="logic">
+         <obj_property name="ElementShortName">params_valid</obj_property>
+         <obj_property name="ObjectShortName">params_valid</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group634" type="group">
+      <obj_property name="label">cmd_packet logic</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/cmd_state" type="other">
+         <obj_property name="ElementShortName">cmd_state</obj_property>
+         <obj_property name="ObjectShortName">cmd_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/packet_type_cmd" type="logic">
+         <obj_property name="ElementShortName">packet_type_cmd</obj_property>
+         <obj_property name="ObjectShortName">packet_type_cmd</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group917" type="group">
+      <obj_property name="label">reply_packet logic</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/reply_state" type="other">
+         <obj_property name="ElementShortName">reply_state</obj_property>
+         <obj_property name="ObjectShortName">reply_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="group926" type="group">
+         <obj_property name="label">start signals</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_preamble_reply" type="logic">
+            <obj_property name="ElementShortName">start_preamble_reply</obj_property>
+            <obj_property name="ObjectShortName">start_preamble_reply</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_param_packet_type_reply" type="logic">
+            <obj_property name="ElementShortName">start_param_packet_type_reply</obj_property>
+            <obj_property name="ObjectShortName">start_param_packet_type_reply</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_param_size_reply" type="logic">
+            <obj_property name="ElementShortName">start_param_size_reply</obj_property>
+            <obj_property name="ObjectShortName">start_param_size_reply</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_param_err_reply" type="logic">
+            <obj_property name="ElementShortName">start_param_err_reply</obj_property>
+            <obj_property name="ObjectShortName">start_param_err_reply</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_param_id_reply" type="logic">
+            <obj_property name="ElementShortName">start_param_id_reply</obj_property>
+            <obj_property name="ObjectShortName">start_param_id_reply</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_payload_reply" type="logic">
+            <obj_property name="ElementShortName">start_payload_reply</obj_property>
+            <obj_property name="ObjectShortName">start_payload_reply</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_checksum_reply" type="logic">
+            <obj_property name="ElementShortName">start_checksum_reply</obj_property>
+            <obj_property name="ObjectShortName">start_checksum_reply</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group933" type="group">
+      <obj_property name="label">data_packet logic</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/data_state" type="other">
+         <obj_property name="ElementShortName">data_state</obj_property>
+         <obj_property name="ObjectShortName">data_state</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group651" type="group">
+      <obj_property name="label">Preamble logic</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_preamble" type="logic">
+         <obj_property name="ElementShortName">start_preamble</obj_property>
+         <obj_property name="ObjectShortName">start_preamble</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/preamble_state" type="other">
+         <obj_property name="ElementShortName">preamble_state</obj_property>
+         <obj_property name="ObjectShortName">preamble_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/preamble_word_buffer" type="array">
+         <obj_property name="ElementShortName">preamble_word_buffer[31:0]</obj_property>
+         <obj_property name="ObjectShortName">preamble_word_buffer[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/preamble_sent" type="logic">
+         <obj_property name="ElementShortName">preamble_sent</obj_property>
+         <obj_property name="ObjectShortName">preamble_sent</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/preamble_count" type="logic">
+         <obj_property name="ElementShortName">preamble_count</obj_property>
+         <obj_property name="ObjectShortName">preamble_count</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group657" type="group">
+      <obj_property name="label">packet_type logic</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/packet_type_state" type="other">
+         <obj_property name="ElementShortName">packet_type_state</obj_property>
+         <obj_property name="ObjectShortName">packet_type_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/packet_type_word_buffer" type="array">
+         <obj_property name="ElementShortName">packet_type_word_buffer[31:0]</obj_property>
+         <obj_property name="ObjectShortName">packet_type_word_buffer[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_param_packet_type" type="logic">
+         <obj_property name="ElementShortName">start_param_packet_type</obj_property>
+         <obj_property name="ObjectShortName">start_param_packet_type</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/param_packet_type_sent" type="logic">
+         <obj_property name="ElementShortName">param_packet_type_sent</obj_property>
+         <obj_property name="ObjectShortName">param_packet_type_sent</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_param_packet_type_word" type="logic">
+         <obj_property name="ElementShortName">send_param_packet_type_word</obj_property>
+         <obj_property name="ObjectShortName">send_param_packet_type_word</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group663" type="group">
+      <obj_property name="label">id logic</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/id_state" type="other">
+         <obj_property name="ElementShortName">id_state</obj_property>
+         <obj_property name="ObjectShortName">id_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/id_word_buffer" type="array">
+         <obj_property name="ElementShortName">id_word_buffer[31:0]</obj_property>
+         <obj_property name="ObjectShortName">id_word_buffer[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_param_id" type="logic">
+         <obj_property name="ElementShortName">start_param_id</obj_property>
+         <obj_property name="ObjectShortName">start_param_id</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/param_id_sent" type="logic">
+         <obj_property name="ElementShortName">param_id_sent</obj_property>
+         <obj_property name="ObjectShortName">param_id_sent</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_param_id_word" type="logic">
+         <obj_property name="ElementShortName">send_param_id_word</obj_property>
+         <obj_property name="ObjectShortName">send_param_id_word</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group927" type="group">
+      <obj_property name="label">ERR/OK logic</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/err_state" type="other">
+         <obj_property name="ElementShortName">err_state</obj_property>
+         <obj_property name="ObjectShortName">err_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_param_err_reply" type="logic">
+         <obj_property name="ElementShortName">start_param_err_reply</obj_property>
+         <obj_property name="ObjectShortName">start_param_err_reply</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/err_word_buffer" type="array">
+         <obj_property name="ElementShortName">err_word_buffer[31:0]</obj_property>
+         <obj_property name="ObjectShortName">err_word_buffer[31:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/param_err_sent" type="logic">
+         <obj_property name="ElementShortName">param_err_sent</obj_property>
+         <obj_property name="ObjectShortName">param_err_sent</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_param_err_word" type="logic">
+         <obj_property name="ElementShortName">send_param_err_word</obj_property>
+         <obj_property name="ObjectShortName">send_param_err_word</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group669" type="group">
+      <obj_property name="label">size logic</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/size_state" type="other">
+         <obj_property name="ElementShortName">size_state</obj_property>
+         <obj_property name="ObjectShortName">size_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_param_size_cmd" type="logic">
+         <obj_property name="ElementShortName">start_param_size_cmd</obj_property>
+         <obj_property name="ObjectShortName">start_param_size_cmd</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_param_size_reply" type="logic">
+         <obj_property name="ElementShortName">start_param_size_reply</obj_property>
+         <obj_property name="ObjectShortName">start_param_size_reply</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_param_size_data" type="logic">
+         <obj_property name="ElementShortName">start_param_size_data</obj_property>
+         <obj_property name="ObjectShortName">start_param_size_data</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/param_size_sent" type="logic">
+         <obj_property name="ElementShortName">param_size_sent</obj_property>
+         <obj_property name="ObjectShortName">param_size_sent</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_param_size_word" type="logic">
+         <obj_property name="ElementShortName">send_param_size_word</obj_property>
+         <obj_property name="ObjectShortName">send_param_size_word</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/size_word_buffer" type="array">
+         <obj_property name="ElementShortName">size_word_buffer[31:0]</obj_property>
+         <obj_property name="ObjectShortName">size_word_buffer[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group677" type="group">
+      <obj_property name="label">payload logic</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/payload_state" type="other">
+         <obj_property name="ElementShortName">payload_state</obj_property>
+         <obj_property name="ObjectShortName">payload_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/payload_word_buffer" type="array">
+         <obj_property name="ElementShortName">payload_word_buffer[31:0]</obj_property>
+         <obj_property name="ObjectShortName">payload_word_buffer[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/payload_word_counter" type="other">
+         <obj_property name="ElementShortName">payload_word_counter</obj_property>
+         <obj_property name="ObjectShortName">payload_word_counter</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_payload_word" type="logic">
+         <obj_property name="ElementShortName">send_payload_word</obj_property>
+         <obj_property name="ObjectShortName">send_payload_word</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_payload" type="logic">
+         <obj_property name="ElementShortName">start_payload</obj_property>
+         <obj_property name="ObjectShortName">start_payload</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/payload_sent" type="logic">
+         <obj_property name="ElementShortName">payload_sent</obj_property>
+         <obj_property name="ObjectShortName">payload_sent</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group911" type="group">
+      <obj_property name="label">Checksum logic</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/checksum_state" type="other">
+         <obj_property name="ElementShortName">checksum_state</obj_property>
+         <obj_property name="ObjectShortName">checksum_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/checksum_word_buffer" type="array">
+         <obj_property name="ElementShortName">checksum_word_buffer[31:0]</obj_property>
+         <obj_property name="ObjectShortName">checksum_word_buffer[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/checksum_sent" type="logic">
+         <obj_property name="ElementShortName">checksum_sent</obj_property>
+         <obj_property name="ObjectShortName">checksum_sent</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_param_checksum_word" type="logic">
+         <obj_property name="ElementShortName">send_param_checksum_word</obj_property>
+         <obj_property name="ObjectShortName">send_param_checksum_word</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/start_checksum" type="logic">
+         <obj_property name="ElementShortName">start_checksum</obj_property>
+         <obj_property name="ObjectShortName">start_checksum</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group638" type="group">
+      <obj_property name="label">send_word logic</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group649" type="group">
+         <obj_property name="label">Sending signals</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_preamble_word" type="logic">
+            <obj_property name="ElementShortName">send_preamble_word</obj_property>
+            <obj_property name="ObjectShortName">send_preamble_word</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_param_packet_type_word" type="logic">
+            <obj_property name="ElementShortName">send_param_packet_type_word</obj_property>
+            <obj_property name="ObjectShortName">send_param_packet_type_word</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_param_id_word" type="logic">
+            <obj_property name="ElementShortName">send_param_id_word</obj_property>
+            <obj_property name="ObjectShortName">send_param_id_word</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_param_size_word" type="logic">
+            <obj_property name="ElementShortName">send_param_size_word</obj_property>
+            <obj_property name="ObjectShortName">send_param_size_word</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_param_err_word" type="logic">
+            <obj_property name="ElementShortName">send_param_err_word</obj_property>
+            <obj_property name="ObjectShortName">send_param_err_word</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_payload_word" type="logic">
+            <obj_property name="ElementShortName">send_payload_word</obj_property>
+            <obj_property name="ObjectShortName">send_payload_word</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_packet_builder/packet_builder_module/send_param_checksum_word" type="logic">
+            <obj_property name="ElementShortName">send_param_checksum_word</obj_property>
+            <obj_property name="ObjectShortName">send_param_checksum_word</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/word_state" type="other">
+         <obj_property name="ElementShortName">word_state</obj_property>
+         <obj_property name="ObjectShortName">word_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/word_buffer" type="array">
+         <obj_property name="ElementShortName">word_buffer[31:0]</obj_property>
+         <obj_property name="ObjectShortName">word_buffer[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/word_sent" type="logic">
+         <obj_property name="ElementShortName">word_sent</obj_property>
+         <obj_property name="ObjectShortName">word_sent</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/packet_builder_module/word_byte_count" type="other">
+         <obj_property name="ElementShortName">word_byte_count</obj_property>
+         <obj_property name="ObjectShortName">word_byte_count</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group633" type="group">
+      <obj_property name="label">UART_TX</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_packet_builder/byte_data" type="array">
+         <obj_property name="ElementShortName">byte_data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">byte_data[7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/send_byte" type="logic">
+         <obj_property name="ElementShortName">send_byte</obj_property>
+         <obj_property name="ObjectShortName">send_byte</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/TX_ready" type="logic">
+         <obj_property name="ElementShortName">TX_ready</obj_property>
+         <obj_property name="ObjectShortName">TX_ready</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_packet_builder/uart_serial" type="logic">
+         <obj_property name="ElementShortName">uart_serial</obj_property>
+         <obj_property name="ObjectShortName">uart_serial</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

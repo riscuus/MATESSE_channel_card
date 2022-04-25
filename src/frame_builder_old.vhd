@@ -1,14 +1,16 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: NASA Goddard Space Flight Center
+-- Engineer: Iban Ibanez, Albert Risco
 -- 
--- Create Date: 06/05/2020 08:59:38 PM
--- Design Name: 
--- Module Name: FRAME_BUILDER - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
+-- Create Date: 04.21.2020
+-- Module Name: frame_builder.vhd
+-- Project Name: channel_card_v1
+-- Target Devices: Spartan 7 xc7s25csga324-1
+-- Tool Versions: Vivado 2019.1
+-- Description: This component is in charge of generating each of the bytes of the different frames in the communication
+--              between the MATESSE board and the external PC. It is able to produce 3 different types of frames:
+--              commands, replies and data frames.
+
 -- 
 -- Dependencies: 
 -- 
@@ -37,8 +39,8 @@ use     concept.utils.all;
 --use UNISIM.VComponents.all;
 
 entity FRAME_BUILDER is
-    Port ( Sys_Clock_100mhz :  in  STD_LOGIC;
-           Sys_Reset: in  std_logic;
+    port ( clk :  in  STD_LOGIC;
+           rst: in  std_logic;
            
            -- FRAME FIELDS --
            FRAME_STATUS_BIT4_ACTIVECLOCK: in  std_logic;
@@ -91,9 +93,9 @@ begin
     DATA <= DATA_signal;
     READY <= not UART_TRANSMITTING;
  	
-	process(Sys_Clock_100mhz, Sys_Reset) is
+	process(clk, rst) is
 	begin
-        if (Sys_Reset = '1') then
+        if (rst = '1') then
             FRAME_HEADER_signal <= (others => (others => '0'));
             FRAME_DATA_signal <= (others => (others => (others => '0')));
             CC_Frame_counter <= (others => '0');
@@ -108,7 +110,7 @@ begin
             DATA_ROW_COUNTER <= (others => '0');
             CHECKSUM <= (others => '0');
             TRANSMITTING_CHECKSUM <= '0';
-        elsif rising_edge(Sys_Clock_100mhz) then
+        elsif rising_edge(clk) then
         
             -- Set fields values --
             if FRAME_FIELDS_VALID = '1' then
