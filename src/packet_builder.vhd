@@ -7,9 +7,9 @@
 -- Project Name: channel_card_v1
 -- Target Devices: Spartan 7 xc7s25csga324-1
 -- Tool Versions: Vivado 2019.1
--- Description: This component is in charge of generating each of the bytes of the different frames in the communication
---              between the MATESSE board and the external PC. It is able to produce 3 different types of frames:
---              commands, replies and data frames.
+-- Description: This component is in charge of generating each of the bytes of the different packets in the communicationA
+--              between the MATESSE board and the external PC. It is able to produce 3 different types of packets:
+--              commands, replies and data packets.
 
 -- 
 -- Dependencies: 
@@ -42,7 +42,7 @@ entity packet_builder is
 
         params_valid            : in std_logic; -- Indicates that the params are already valid and that the 
                                                 -- communication can start
-        TX_ready                : in std_logic; -- In order to know if the the TX is available
+        tx_busy                 : in std_logic; -- In order to know if the the TX is available
         send_byte               : out std_logic; -- Active high when byte data is valid
         byte_data               : out t_byte -- Data that is sent to the UART_TX
 
@@ -911,7 +911,7 @@ begin
                 word_state <= wait_tx_and_send_byte;
 
             when wait_tx_and_send_byte =>
-                if (TX_ready = '1') then
+                if (tx_busy = '0') then
                     send_byte <= '1';
                     if(word_byte_count = 3) then
                         word_byte_count <= 0;

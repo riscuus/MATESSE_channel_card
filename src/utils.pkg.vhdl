@@ -25,7 +25,7 @@ package utils is
     subtype t_word is std_logic_vector(31 downto 0);
     type t_packet_payload is array(0 to 555) of t_word; -- 2 cols * 256 rows + 43 header words
 
-    type t_packet_type is (cmd_rb, cmd_wb, cmd_go, cmd_st, cmd_rs, reply, data);
+    type t_packet_type is (cmd_rb, cmd_wb, cmd_go, cmd_st, cmd_rs, reply, data, undefined);
 
 
     -- Constants 
