@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_test_uart_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_test_uart" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="6460000000000fs"></ZoomStartTime>
+      <ZoomEndTime time="23260000000001fs"></ZoomEndTime>
+      <Cursor1Time time="9680000000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="187"></NameColumnWidth>
+      <ValueColumnWidth column_width="72"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="7" />
+   <wvobject fp_name="/tb_test_uart/sys_clk" type="logic">
+      <obj_property name="ElementShortName">sys_clk</obj_property>
+      <obj_property name="ObjectShortName">sys_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_uart/sys_rst" type="logic">
+      <obj_property name="ElementShortName">sys_rst</obj_property>
+      <obj_property name="ObjectShortName">sys_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_test_uart/send" type="logic">
+      <obj_property name="ElementShortName">send</obj_property>
+      <obj_property name="ObjectShortName">send</obj_property>
+   </wvobject>
+   <wvobject fp_name="group323" type="group">
+      <obj_property name="label">builder controller</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_controller/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_controller/packet_type_sel" type="array">
+         <obj_property name="ElementShortName">packet_type_sel[2:0]</obj_property>
+         <obj_property name="ObjectShortName">packet_type_sel[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_controller/cmd_type_sel" type="array">
+         <obj_property name="ElementShortName">cmd_type_sel[2:0]</obj_property>
+         <obj_property name="ObjectShortName">cmd_type_sel[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_controller/payload_sel" type="array">
+         <obj_property name="ElementShortName">payload_sel[2:0]</obj_property>
+         <obj_property name="ObjectShortName">payload_sel[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_controller/packet_type" type="other">
+         <obj_property name="ElementShortName">packet_type</obj_property>
+         <obj_property name="ObjectShortName">packet_type</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_controller/cmd_type" type="other">
+         <obj_property name="ElementShortName">cmd_type</obj_property>
+         <obj_property name="ObjectShortName">cmd_type</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_controller/packet_payload" type="array">
+         <obj_property name="ElementShortName">packet_payload[0:555][31:0]</obj_property>
+         <obj_property name="ObjectShortName">packet_payload[0:555][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_controller/payload_size" type="other">
+         <obj_property name="ElementShortName">payload_size</obj_property>
+         <obj_property name="ObjectShortName">payload_size</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_controller/params_valid" type="logic">
+         <obj_property name="ElementShortName">params_valid</obj_property>
+         <obj_property name="ObjectShortName">params_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_controller/builder_ready" type="logic">
+         <obj_property name="ElementShortName">builder_ready</obj_property>
+         <obj_property name="ObjectShortName">builder_ready</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group334" type="group">
+      <obj_property name="label">Builder</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_module/cmd_state" type="other">
+         <obj_property name="ElementShortName">cmd_state</obj_property>
+         <obj_property name="ObjectShortName">cmd_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_module/word_buffer" type="array">
+         <obj_property name="ElementShortName">word_buffer[31:0]</obj_property>
+         <obj_property name="ObjectShortName">word_buffer[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_module/packet_type" type="other">
+         <obj_property name="ElementShortName">packet_type</obj_property>
+         <obj_property name="ObjectShortName">packet_type</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_module/packet_type_state" type="other">
+         <obj_property name="ElementShortName">packet_type_state</obj_property>
+         <obj_property name="ObjectShortName">packet_type_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_builder_module/packet_type_word_buffer" type="array">
+         <obj_property name="ElementShortName">packet_type_word_buffer[31:0]</obj_property>
+         <obj_property name="ObjectShortName">packet_type_word_buffer[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group336" type="group">
+      <obj_property name="label">uart tx</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/uart_tx_module/tx_busy" type="logic">
+         <obj_property name="ElementShortName">tx_busy</obj_property>
+         <obj_property name="ObjectShortName">tx_busy</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group338" type="group">
+      <obj_property name="label">Parser</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_parser_module/packet_parser_state" type="other">
+         <obj_property name="ElementShortName">packet_parser_state</obj_property>
+         <obj_property name="ObjectShortName">packet_parser_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_parser_module/good_preamble" type="logic">
+         <obj_property name="ElementShortName">good_preamble</obj_property>
+         <obj_property name="ObjectShortName">good_preamble</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_parser_module/good_type" type="logic">
+         <obj_property name="ElementShortName">good_type</obj_property>
+         <obj_property name="ObjectShortName">good_type</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_parser_module/bad_preamble" type="logic">
+         <obj_property name="ElementShortName">bad_preamble</obj_property>
+         <obj_property name="ObjectShortName">bad_preamble</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_parser_module/bad_type" type="logic">
+         <obj_property name="ElementShortName">bad_type</obj_property>
+         <obj_property name="ObjectShortName">bad_type</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_parser_module/bad_checksum" type="logic">
+         <obj_property name="ElementShortName">bad_checksum</obj_property>
+         <obj_property name="ObjectShortName">bad_checksum</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_parser_module/cmd_state" type="other">
+         <obj_property name="ElementShortName">cmd_state</obj_property>
+         <obj_property name="ObjectShortName">cmd_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_test_uart/test_uart_module/packet_parser_module/received_word" type="array">
+         <obj_property name="ElementShortName">received_word[31:0]</obj_property>
+         <obj_property name="ObjectShortName">received_word[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

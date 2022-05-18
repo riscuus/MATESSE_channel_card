@@ -162,6 +162,19 @@ architecture behave of packet_parser is
     signal byte_counter     : natural := 0;
     signal word_available   : std_logic := '0';
 
+    -- Debug parameters
+    attribute keep : string;
+    attribute keep of good_preamble     : signal is "true";
+    attribute keep of bad_preamble      : signal is "true";
+    attribute keep of good_type         : signal is "true";
+    attribute keep of bad_type          : signal is "true";
+    attribute keep of id_received       : signal is "true";
+    attribute keep of size_received     : signal is "true";
+    attribute keep of payload_received  : signal is "true";
+    attribute keep of good_checksum     : signal is "true";
+    attribute keep of bad_checksum      : signal is "true";
+    attribute keep of received_word     : signal is "true";
+
 begin
 
 -- General packet parser. Once we know which type the packet is, the cmd, reply or data parsers are started

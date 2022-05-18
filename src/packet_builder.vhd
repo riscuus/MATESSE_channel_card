@@ -44,7 +44,8 @@ entity packet_builder is
                                                 -- communication can start
         tx_busy                 : in std_logic; -- In order to know if the the TX is available
         send_byte               : out std_logic; -- Active high when byte data is valid
-        byte_data               : out t_byte -- Data that is sent to the UART_TX
+        byte_data               : out t_byte; -- Data that is sent to the UART_TX
+        builder_ready           : out std_logic -- Signal that indicates that a new packet can be sent
 
     );
 
@@ -65,6 +66,7 @@ architecture behave of packet_builder is
     signal start_param_size_cmd         : std_logic := '0';
     signal start_payload_cmd            : std_logic := '0';
     signal start_checksum_cmd           : std_logic := '0';
+    signal builder_ready_cmd            : std_logic := '0';
 
     -- reply_packet SM signals
     type reply_stateType is (init, wait_packet_params, wait_preamble_sent, wait_param_packet_type_sent, 
@@ -79,6 +81,7 @@ architecture behave of packet_builder is
     signal start_param_id_reply             : std_logic := '0';
     signal start_payload_reply              : std_logic := '0';
     signal start_checksum_reply             : std_logic := '0';
+    signal builder_ready_reply              : std_logic := '0';
 
     -- data_packet SM signals
     type data_stateType is (init, wait_packet_params, wait_preamble_sent, wait_param_packet_type_sent, 
@@ -90,6 +93,7 @@ architecture behave of packet_builder is
     signal start_param_size_data            : std_logic := '0';
     signal start_payload_data               : std_logic := '0';
     signal start_checksum_data              : std_logic := '0';
+    signal builder_ready_data               : std_logic := '0';
 
 
     -- Parameter "preamble" SM signals
@@ -166,6 +170,9 @@ architecture behave of packet_builder is
 
 begin
 
+-- Builder ready output
+builder_ready <= builder_ready_cmd and builder_ready_reply and builder_ready_data;
+
 -- Command packet
 packet_type_cmd <= '1' when packet_type = cmd_rb or
                             packet_type = cmd_wb or
@@ -187,10 +194,12 @@ begin
                 start_param_size_cmd        <= '0';
                 start_payload_cmd           <= '0';
                 start_checksum_cmd          <= '0';
+                builder_ready_cmd           <= '0';
 
                 cmd_state <= wait_packet_params;
 
             when wait_packet_params =>
+                builder_ready_cmd <= '1';
                 if (params_valid = '1') then
                     if (packet_type_cmd = '1') then
                         start_preamble_cmd <= '1';
@@ -204,6 +213,7 @@ begin
 
             -- Preamble
             when wait_preamble_sent => 
+                builder_ready_cmd <= '0';
                 start_preamble_cmd <= '0';
                 if (preamble_sent = '1') then
                     start_param_packet_type_cmd <= '1';
@@ -281,10 +291,12 @@ begin
                 start_param_id_reply            <= '0';
                 start_payload_reply             <= '0';
                 start_checksum_reply            <= '0';
+                builder_ready_reply             <= '0';
 
                 reply_state <= wait_packet_params;
 
             when wait_packet_params =>
+                builder_ready_reply <= '1';
                 if (params_valid = '1') then
                     if (packet_type = reply) then
                         start_preamble_reply <= '1';
@@ -298,6 +310,7 @@ begin
 
             -- Preamble
             when wait_preamble_sent => 
+                builder_ready_reply <= '0';
                 start_preamble_reply <= '0';
                 if (preamble_sent = '1') then
                     start_param_packet_type_reply <= '1';
@@ -385,10 +398,12 @@ begin
                 start_param_size_data           <= '0';
                 start_payload_data              <= '0';
                 start_checksum_data             <= '0';
+                builder_ready_data              <= '0';
 
                 data_state <= wait_packet_params;
 
             when wait_packet_params =>
+                builder_ready_data <= '1';
                 if (params_valid = '1') then
                     if (packet_type = data) then
                         start_preamble_data <= '1';
@@ -402,6 +417,7 @@ begin
 
             -- Preamble
             when wait_preamble_sent => 
+                builder_ready_data <= '0';
                 start_preamble_data <= '0';
                 if (preamble_sent = '1') then
                     start_param_packet_type_data <= '1';
@@ -540,6 +556,8 @@ begin
                             packet_type_word_buffer <= CMD_GO_TYPE;
                         when cmd_st =>
                             packet_type_word_buffer <= CMD_ST_TYPE;
+                        when cmd_rs =>
+                            packet_type_word_buffer <= CMD_RS_TYPE;
                         when reply =>
                             packet_type_word_buffer <= REPLY_TYPE;
                         when data =>
