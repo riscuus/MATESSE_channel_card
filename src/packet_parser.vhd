@@ -2,7 +2,7 @@
 -- Company: NASA Goddard Space Flight Center
 -- Engineer: Albert Risco
 -- 
--- Create Date: 04.25.2020
+-- Create Date: 04.25.2022
 -- Module Name: packet_parser.vhd
 -- Project Name: channel_card_v1
 -- Target Devices: Spartan 7 xc7s25csga324-1

@@ -23,12 +23,48 @@ package utils is
     subtype t_byte is std_logic_vector(7 downto 0);
     subtype t_half_word is std_logic_vector(15 downto 0); -- Used in some parameters of some packets
     subtype t_word is std_logic_vector(31 downto 0);
-    type t_packet_payload is array(0 to 555) of t_word; -- 2 cols * 256 rows + 43 header words
+    type t_packet_payload is array(0 to 66) of t_word; -- Max payload that any packet will have. 2 cols * 12 rows + 43 header words
+    type t_cmd_payload is array(0 to CMD_REPLY_MAX_SIZE - 1) of t_word; -- Fixed size of 58 words. Defined by MCE. Also max size for reply packet
+    type t_max_reply_payload is array(0 to CMD_REPLY_MAX_SIZE - 1) of t_word;
 
     type t_packet_type is (cmd_rb, cmd_wb, cmd_go, cmd_st, cmd_rs, reply, data, undefined);
 
+    type t_param_id is (row_len, 
+                        num_rows,
+                        ret_dat_s,
+                        sa_bias,
+                        ret_data,
+                        servo_mode,
+                        ramp_dly,
+                        ramp_amp,
+                        ramp_step,
+                        fb_const,
+                        sample_dly,
+                        sample_num,
+                        fb_dly,
+                        fltr_rst,
+                        fltr_coeff,
+                        flux_fb,
+                        bias,
+                        row_order,
+                        on_bias,
+                        off_bias
+                       );
+    
+    subtype t_param_id_address is natural range 0 to PARAM_ID_RAM_DEPTH - 1;
+    
+    type t_param_address_ram is array(0 to PARAM_ID_RAM_DEPTH - 1) of t_param_id; 
 
-    -- Constants 
+    ----------------------------------------------------------------
+    -- Constants
+    ----------------------------------------------------------------
+
+    -- Basic constraints
+    constant MAX_CHANNELS       : natural := 2; -- Max channels that the daughter board can handle
+    constant MAX_ROWS           : natural := 8; -- Max rows that the daughter board can handle
+    constant IIR_FILTER_POLES   : natural := 4; -- This will define the depth of the buffers and the size of the coef arrays
+
+    -- Packet constants
     constant PREAMBLE_1 : t_word := x"A5A5A5A5";
     constant PREAMBLE_2 : t_word := x"5A5A5A5A";
 
@@ -49,8 +85,59 @@ package utils is
     constant OK_ASCII : t_half_word := x"4F4B"; -- ASCII : "OK"
     constant ER_ASCII : t_half_word := x"4552"; -- ASCII : "ER"
 
-    constant CMD_PAYLOAD_FIXED_SIZE : natural := 58;
+    constant CMD_REPLY_MAX_SIZE : natural := 58;
 
+    -- This card ID
+    constant DAUGHTER_CARD_ID : t_half_word := x"ffff";
+
+    -- Max number a param id address can have
+    constant PARAM_ID_RAM_DEPTH : natural := 256;
+
+    -- The addresses of each param id
+    constant ROW_LEN_ADDR       : t_param_id_address := x"30"; -- Affects row_selector (how many pulses to spend on each row)
+    constant NUM_ROWS_ADDR      : t_param_id_address := x"31"; -- Affects row_selector (to cycle #num_rows)
+    constant RET_DATA_S_ADDR    : t_param_id_address := x"53"; -- Affects the data_frame_builder (num in header)
+    constant SA_BIAS_ADDR       : t_param_id_address := x"10"; -- Affects bias_setter (SA bias)
+    constant RET_DAT_ADDR       : t_param_id_address := x"16"; -- Start Acquisition
+    constant SERVO_MODE_ADDR    : t_param_id_address := x"1B"; -- Affects feedback_setter (can get values from feedback calculator, constant, or ramp)
+    constant RAMP_DLY_ADDR      : t_param_id_address := x"1C"; -- Affects ramp_generator
+    constant RAMP_AMP_ADDR      : t_param_id_address := x"1D"; -- Affects ramp_generator
+    constant RAMP_STEP_ADDR     : t_param_id_address := x"1E"; -- Affects ramp_generator
+    constant FB_CONST_ADDR      : t_param_id_address := x"1f"; -- Affects the feedback_setter. The values for constant feedback. SQ1??
+    constant SAMPLE_DLY_ADDR    : t_param_id_address := x"32"; -- Affects sample_selector
+    constant SAMPLE_NUM_ADDR    : t_param_id_address := x"33"; -- Affects sample_selector
+    constant FB_DLY_ADDR        : t_param_id_address := x"34"; -- Affects feedback_setter
+    constant FLTR_RST_ADDR      : t_param_id_address := x"14"; -- Affects butterworth_filter (direct). NOT IMPLEMENTED
+    constant FILTR_COEFF_ADDR   : t_param_id_address := x"1a"; -- Affects butterworth_filter
+    constant FLUX_FB_ADDR       : t_param_id_address := x"20"; -- Affects feedback_setter. SA feedback
+    constant BIAS_ADDR          : t_param_id_address := x"21"; -- Affects bias_setter (TES bias)
+    constant ROW_ORDER_ADDR     : t_param_id_address := x"01"; -- Affects row_selector
+    constant ON_BIAS_ADDR       : t_param_id_address := x"02"; -- Affects row_activator
+    constant OFF_BIAS_ADDR      : t_param_id_address := x"03"; -- Affects row_activator
+
+    -- Number of words that the parameter occupies in the RAM memory
+    constant PARAM_ID_TO_SIZE : array(0 to 255) of natural :=
+        (
+            ROW_LEN_ADDR        => 1,
+            NUM_ROWS_ADDR       => 1,
+            RET_DATA_S_ADDR     => 2,
+            SA_BIAS_ADDR        => MAX_CHANNELS,
+            SERVO_MODE_ADDR     => MAX_CHANNELS,
+            RAMP_DLY_ADDR       => 1,
+            RAMP_AMP_ADDR       => 1,
+            RAMP_STEP_ADDR      => 1,
+            FB_CONST_ADDR       => MAX_CHANNELS,
+            SAMPLE_DLY_ADDR     => 1,
+            SAMPLE_NUM_ADDR     => 1,
+            FB_DLY_ADDR         => 1,
+            FILTR_COEFF_ADDR    => IIR_FILTER_POLES * 2,
+            FLUX_FB_ADDR        => MAX_ROWS,
+            BIAS_ADDR           => MAX_CHANNELS,
+            ROW_ORDER_ADDR      => MAX_ROWS,
+            ON_BIAS_ADDR        => MAX_ROWS,
+            OFF_BIAS_ADDR       => MAX_ROWS,
+            (others => 0)
+        );
 
     -- Data structures for frames
     type t_frame_header is array(0 to 42) of t_word;
@@ -103,6 +190,7 @@ package body utils is
         end if;
         return 14;
     end function;
+
     function get_BRAM_write_enable_BITS(DATA_BITS : positive) return positive is
     begin
         if (DATA_BITS >= 19) then 
@@ -112,5 +200,8 @@ package body utils is
         end if;
         return 1;
     end function;
+
+    function get_param_id_from_half_word(param_id_h_word : t_half_word) return t_param_id is
+
 
 end package body;

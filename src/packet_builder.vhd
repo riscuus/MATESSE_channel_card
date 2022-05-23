@@ -2,7 +2,7 @@
 -- Company: NASA Goddard Space Flight Center
 -- Engineer: Iban Ibanez, Albert Risco
 -- 
--- Create Date: 04.21.2020
+-- Create Date: 04.21.2022
 -- Module Name: packet_builder.vhd
 -- Project Name: channel_card_v1
 -- Target Devices: Spartan 7 xc7s25csga324-1
