@@ -11,9 +11,9 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="2802050000fs"></ZoomStartTime>
-      <ZoomEndTime time="2839650001fs"></ZoomEndTime>
-      <Cursor1Time time="2835450000fs"></Cursor1Time>
+      <ZoomStartTime time="4074600000fs"></ZoomStartTime>
+      <ZoomEndTime time="4804600001fs"></ZoomEndTime>
+      <Cursor1Time time="4273100000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="255"></NameColumnWidth>
@@ -72,6 +72,10 @@
       <wvobject fp_name="/tb_cmd_handler/command_handler_module/acquisition_on" type="logic">
          <obj_property name="ElementShortName">acquisition_on</obj_property>
          <obj_property name="ObjectShortName">acquisition_on</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_cmd_handler/command_handler_module/last_data_frame_pulse" type="logic">
+         <obj_property name="ElementShortName">last_data_frame_pulse</obj_property>
+         <obj_property name="ObjectShortName">last_data_frame_pulse</obj_property>
       </wvobject>
       <wvobject fp_name="group251" type="group">
          <obj_property name="label">packet_regs</obj_property>
