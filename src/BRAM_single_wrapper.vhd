@@ -27,6 +27,9 @@ use     IEEE.numeric_std.all;
 Library UNISIM;
 use UNISIM.vcomponents.all;
 
+Library UNIMACRO;
+use     UNIMACRO.vcomponents.all;
+
 library concept;
 use concept.utils.all;
 
@@ -35,7 +38,7 @@ entity BRAM_single_wrapper is
         clk                     : in std_logic; -- 5MHz clock                                                                           
         rst                     : in std_logic; -- Asynchronous reset
 
-        address                 : in t_param_id_address;
+        address                 : in natural;
         write_data              : in t_word;
         write_pulse             : in std_logic;
         read_data               : out t_word
@@ -44,8 +47,25 @@ entity BRAM_single_wrapper is
 end BRAM_single_wrapper;
 
 architecture behave of BRAM_single_wrapper is
-    signal address_expande
+--COMPONENT bram_single_param
+--  PORT (
+--    clka : IN STD_LOGIC;
+--    ena : IN STD_LOGIC;
+--    wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+--    addra : IN STD_LOGIC_VECTOR(8 DOWNTO 0);
+--    dina : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+--    douta : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+--  );
+--END COMPONENT;
+
+signal address_vector : std_logic_vector(8 downto 0) := (others => '0');
+signal write_vector   : std_logic_vector(3 downto 0) := (others => '0');
+
 begin
+
+    address_vector <= std_logic_vector(to_unsigned(address, 9));
+    write_vector   <= (others => write_pulse);
+    
     -- BRAM_SINGLE_MACRO: Single Port RAM
     -- 7 Series
     -- Xilinx HDL Libraries Guide, version 2012.2
@@ -71,6 +91,17 @@ begin
     -- 1           | "36Kb"    | 32768       | 15-bit     | 1-bit --
     -- 1           | "18Kb"    | 16384       | 14-bit     | 1-bit --
     ---------------------------------------------------------------------
+    
+--    your_instance_name : bram_single_param
+--  PORT MAP (
+--    clka => clk,
+--    ena => '1',
+--    wea(0) => write_pulse,
+--    addra => address_vector,
+--    dina => write_data,
+--    douta => read_data
+--  );
+  
     BRAM_SINGLE_MACRO_inst : BRAM_SINGLE_MACRO
     generic map (
 
@@ -82,17 +113,17 @@ begin
         WRITE_WIDTH => t_word'length,                       -- Valid values are 1-72 (37-72 only valid when BRAM_SIZE="36Kb")
         READ_WIDTH => t_word'length,                        -- Valid values are 1-72 (37-72 only valid when BRAM_SIZE="36Kb")
         SRVAL => X"000000000",                              -- Set/Reset value for port output
-        WRITE_MODE => "WRITE_FIRST",                        -- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
+        WRITE_MODE => "WRITE_FIRST"                        -- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
     )
     port map (
-        DO => output_data,                                  -- Output data, width defined by READ_WIDTH parameter
-        ADDR => std_logic_vector(to_unsigned(address, 9)),  -- Input address, width defined by read/write port depth
+        DO => read_data,                                    -- Output data, width defined by READ_WIDTH parameter
+        ADDR => address_vector,  -- Input address, width defined by read/write port depth
         CLK => clk,                                         -- 1-bit input clock
         DI => write_data,                                   -- Input data port, width defined by WRITE_WIDTH parameter
         EN => '1',                                          -- 1-bit input RAM enable
-        REGCE => open,                                      -- 1-bit input output register enable
+        REGCE => '0',                                       -- 1-bit input output register enable
         RST => rst,                                         -- 1-bit input reset
-        WE => (others => write_enable)                      -- Input write enable, width defined by write port depth
+        WE => write_vector                                  -- Input write enable, width defined by write port depth
     );
 
 end behave;
