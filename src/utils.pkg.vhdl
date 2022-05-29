@@ -29,6 +29,9 @@ package utils is
 
     type t_packet_type is (cmd_rb, cmd_wb, cmd_go, cmd_st, cmd_rs, reply, data, undefined);
 
+    -- Data structures for ADC reading
+    subtype t_adc_sample is std_logic_vector(15 downto 0);
+
     ----------------------------------------------------------------
     -- Constants
     ----------------------------------------------------------------
