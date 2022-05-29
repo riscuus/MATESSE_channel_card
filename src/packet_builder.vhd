@@ -786,7 +786,7 @@ begin
                         end if;
                     else
                         -- For cmd packets the payload size is fixed
-                        if (payload_word_counter = CMD_PAYLOAD_FIXED_SIZE - 1) then
+                        if (payload_word_counter = CMD_REPLY_MAX_SIZE - 1) then
                             payload_sent <= '1';
                             payload_state <= init;
                         else

@@ -710,7 +710,7 @@ begin
                             payload_state <= payload_state;
                         end if;
                     else 
-                        if (payload_word_count = CMD_PAYLOAD_FIXED_SIZE - 1) then
+                        if (payload_word_count = CMD_REPLY_MAX_SIZE - 1) then
                             payload_received <= '1';
                             payload_state <= init;
                         else 

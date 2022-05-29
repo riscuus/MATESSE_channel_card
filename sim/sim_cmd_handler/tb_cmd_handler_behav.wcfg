@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_cmd_handler_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_cmd_handler" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="2802050000fs"></ZoomStartTime>
+      <ZoomEndTime time="2839650001fs"></ZoomEndTime>
+      <Cursor1Time time="2835450000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="255"></NameColumnWidth>
+      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="4" />
+   <wvobject fp_name="/tb_cmd_handler/sys_clk" type="logic">
+      <obj_property name="ElementShortName">sys_clk</obj_property>
+      <obj_property name="ObjectShortName">sys_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cmd_handler/sys_rst" type="logic">
+      <obj_property name="ElementShortName">sys_rst</obj_property>
+      <obj_property name="ObjectShortName">sys_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="group162" type="group">
+      <obj_property name="label">cmd_sent</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_cmd_handler/parser_params_valid" type="logic">
+         <obj_property name="ElementShortName">parser_params_valid</obj_property>
+         <obj_property name="ObjectShortName">parser_params_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_cmd_handler/parser_packet_type" type="other">
+         <obj_property name="ElementShortName">parser_packet_type</obj_property>
+         <obj_property name="ObjectShortName">parser_packet_type</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_cmd_handler/parser_card_id" type="array">
+         <obj_property name="ElementShortName">parser_card_id[15:0]</obj_property>
+         <obj_property name="ObjectShortName">parser_card_id[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_cmd_handler/parser_param_id" type="array">
+         <obj_property name="ElementShortName">parser_param_id[15:0]</obj_property>
+         <obj_property name="ObjectShortName">parser_param_id[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_cmd_handler/parser_payload_size" type="other">
+         <obj_property name="ElementShortName">parser_payload_size</obj_property>
+         <obj_property name="ObjectShortName">parser_payload_size</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_cmd_handler/parser_packet_payload" type="array">
+         <obj_property name="ElementShortName">parser_packet_payload[0:66][31:0]</obj_property>
+         <obj_property name="ObjectShortName">parser_packet_payload[0:66][31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group161" type="group">
+      <obj_property name="label">cmd_handler</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_cmd_handler/command_handler_module/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_cmd_handler/command_handler_module/acquisition_configured" type="logic">
+         <obj_property name="ElementShortName">acquisition_configured</obj_property>
+         <obj_property name="ObjectShortName">acquisition_configured</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_cmd_handler/command_handler_module/acquisition_on" type="logic">
+         <obj_property name="ElementShortName">acquisition_on</obj_property>
+         <obj_property name="ObjectShortName">acquisition_on</obj_property>
+      </wvobject>
+      <wvobject fp_name="group251" type="group">
+         <obj_property name="label">packet_regs</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/packet_type_reg" type="other">
+            <obj_property name="ElementShortName">packet_type_reg</obj_property>
+            <obj_property name="ObjectShortName">packet_type_reg</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/card_id_reg" type="array">
+            <obj_property name="ElementShortName">card_id_reg[15:0]</obj_property>
+            <obj_property name="ObjectShortName">card_id_reg[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/param_id_reg" type="array">
+            <obj_property name="ElementShortName">param_id_reg[15:0]</obj_property>
+            <obj_property name="ObjectShortName">param_id_reg[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/payload_size_reg" type="other">
+            <obj_property name="ElementShortName">payload_size_reg</obj_property>
+            <obj_property name="ObjectShortName">payload_size_reg</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/packet_payload_reg" type="array">
+            <obj_property name="ElementShortName">packet_payload_reg[0:66][31:0]</obj_property>
+            <obj_property name="ObjectShortName">packet_payload_reg[0:66][31:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group171" type="group">
+         <obj_property name="label">reply data</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/packet_sender_ready" type="logic">
+            <obj_property name="ElementShortName">packet_sender_ready</obj_property>
+            <obj_property name="ObjectShortName">packet_sender_ready</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/send_reply_pulse" type="logic">
+            <obj_property name="ElementShortName">send_reply_pulse</obj_property>
+            <obj_property name="ObjectShortName">send_reply_pulse</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/reply_cmd_type" type="other">
+            <obj_property name="ElementShortName">reply_cmd_type</obj_property>
+            <obj_property name="ObjectShortName">reply_cmd_type</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/reply_err_ok" type="logic">
+            <obj_property name="ElementShortName">reply_err_ok</obj_property>
+            <obj_property name="ObjectShortName">reply_err_ok</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/reply_payload_size" type="other">
+            <obj_property name="ElementShortName">reply_payload_size</obj_property>
+            <obj_property name="ObjectShortName">reply_payload_size</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/param_data" type="array">
+            <obj_property name="ElementShortName">param_data[0:66][31:0]</obj_property>
+            <obj_property name="ObjectShortName">param_data[0:66][31:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group245" type="group">
+         <obj_property name="label">RAM interface</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/ram_read_data" type="array">
+            <obj_property name="ElementShortName">ram_read_data[31:0]</obj_property>
+            <obj_property name="ObjectShortName">ram_read_data[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/ram_write_data" type="array">
+            <obj_property name="ElementShortName">ram_write_data[31:0]</obj_property>
+            <obj_property name="ObjectShortName">ram_write_data[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/ram_address" type="other">
+            <obj_property name="ElementShortName">ram_address</obj_property>
+            <obj_property name="ObjectShortName">ram_address</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/word_count" type="other">
+            <obj_property name="ElementShortName">word_count</obj_property>
+            <obj_property name="ObjectShortName">word_count</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/ram_write" type="logic">
+            <obj_property name="ElementShortName">ram_write</obj_property>
+            <obj_property name="ObjectShortName">ram_write</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group290" type="group">
+         <obj_property name="label">param_buffers interface</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/update_param_pulse" type="logic">
+            <obj_property name="ElementShortName">update_param_pulse</obj_property>
+            <obj_property name="ObjectShortName">update_param_pulse</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/param_id_address" type="other">
+            <obj_property name="ElementShortName">param_id_address</obj_property>
+            <obj_property name="ObjectShortName">param_id_address</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_cmd_handler/command_handler_module/param_data" type="array">
+            <obj_property name="ElementShortName">param_data[0:66][31:0]</obj_property>
+            <obj_property name="ObjectShortName">param_data[0:66][31:0]</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+</wave_config>

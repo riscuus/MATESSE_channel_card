@@ -24,36 +24,10 @@ package utils is
     subtype t_half_word is std_logic_vector(15 downto 0); -- Used in some parameters of some packets
     subtype t_word is std_logic_vector(31 downto 0);
     type t_packet_payload is array(0 to 66) of t_word; -- Max payload that any packet will have. 2 cols * 12 rows + 43 header words
-    type t_cmd_payload is array(0 to CMD_REPLY_MAX_SIZE - 1) of t_word; -- Fixed size of 58 words. Defined by MCE. Also max size for reply packet
-    type t_max_reply_payload is array(0 to CMD_REPLY_MAX_SIZE - 1) of t_word;
+
+    constant CMD_REPLY_MAX_SIZE : natural := 58;
 
     type t_packet_type is (cmd_rb, cmd_wb, cmd_go, cmd_st, cmd_rs, reply, data, undefined);
-
-    type t_param_id is (row_len, 
-                        num_rows,
-                        ret_dat_s,
-                        sa_bias,
-                        ret_data,
-                        servo_mode,
-                        ramp_dly,
-                        ramp_amp,
-                        ramp_step,
-                        fb_const,
-                        sample_dly,
-                        sample_num,
-                        fb_dly,
-                        fltr_rst,
-                        fltr_coeff,
-                        flux_fb,
-                        bias,
-                        row_order,
-                        on_bias,
-                        off_bias
-                       );
-    
-    subtype t_param_id_address is natural range 0 to PARAM_ID_RAM_DEPTH - 1;
-    
-    type t_param_address_ram is array(0 to PARAM_ID_RAM_DEPTH - 1) of t_param_id; 
 
     ----------------------------------------------------------------
     -- Constants
@@ -85,39 +59,38 @@ package utils is
     constant OK_ASCII : t_half_word := x"4F4B"; -- ASCII : "OK"
     constant ER_ASCII : t_half_word := x"4552"; -- ASCII : "ER"
 
-    constant CMD_REPLY_MAX_SIZE : natural := 58;
 
     -- This card ID
     constant DAUGHTER_CARD_ID : t_half_word := x"ffff";
 
-    -- Max number a param id address can have
-    constant PARAM_ID_RAM_DEPTH : natural := 256;
 
     -- The addresses of each param id
-    constant ROW_LEN_ADDR       : t_param_id_address := x"30"; -- Affects row_selector (how many pulses to spend on each row)
-    constant NUM_ROWS_ADDR      : t_param_id_address := x"31"; -- Affects row_selector (to cycle #num_rows)
-    constant RET_DATA_S_ADDR    : t_param_id_address := x"53"; -- Affects the data_frame_builder (num in header)
-    constant SA_BIAS_ADDR       : t_param_id_address := x"10"; -- Affects bias_setter (SA bias)
-    constant RET_DAT_ADDR       : t_param_id_address := x"16"; -- Start Acquisition
-    constant SERVO_MODE_ADDR    : t_param_id_address := x"1B"; -- Affects feedback_setter (can get values from feedback calculator, constant, or ramp)
-    constant RAMP_DLY_ADDR      : t_param_id_address := x"1C"; -- Affects ramp_generator
-    constant RAMP_AMP_ADDR      : t_param_id_address := x"1D"; -- Affects ramp_generator
-    constant RAMP_STEP_ADDR     : t_param_id_address := x"1E"; -- Affects ramp_generator
-    constant FB_CONST_ADDR      : t_param_id_address := x"1f"; -- Affects the feedback_setter. The values for constant feedback. SQ1??
-    constant SAMPLE_DLY_ADDR    : t_param_id_address := x"32"; -- Affects sample_selector
-    constant SAMPLE_NUM_ADDR    : t_param_id_address := x"33"; -- Affects sample_selector
-    constant FB_DLY_ADDR        : t_param_id_address := x"34"; -- Affects feedback_setter
-    constant FLTR_RST_ADDR      : t_param_id_address := x"14"; -- Affects butterworth_filter (direct). NOT IMPLEMENTED
-    constant FILTR_COEFF_ADDR   : t_param_id_address := x"1a"; -- Affects butterworth_filter
-    constant FLUX_FB_ADDR       : t_param_id_address := x"20"; -- Affects feedback_setter. SA feedback
-    constant BIAS_ADDR          : t_param_id_address := x"21"; -- Affects bias_setter (TES bias)
-    constant ROW_ORDER_ADDR     : t_param_id_address := x"01"; -- Affects row_selector
-    constant ON_BIAS_ADDR       : t_param_id_address := x"02"; -- Affects row_activator
-    constant OFF_BIAS_ADDR      : t_param_id_address := x"03"; -- Affects row_activator
+    constant ROW_LEN_ADDR       : natural := 48; -- (0x30) Affects row_selector (how many pulses to spend on each row)
+    constant NUM_ROWS_ADDR      : natural := 49; -- (0x31) Affects row_selector (to cycle #num_rows)
+    constant RET_DATA_S_ADDR    : natural := 83; -- (0x53) Affects the data_frame_builder (num in header)
+    constant SA_BIAS_ADDR       : natural := 16; -- (0x10) Affects bias_setter (SA bias)
+    constant RET_DAT_ADDR       : natural := 22; -- (0x16) Start Acquisition
+    constant SERVO_MODE_ADDR    : natural := 27; -- (0x1B) Affects feedback_setter (can get values from feedback calculator, constant, or ramp)
+    constant RAMP_DLY_ADDR      : natural := 28; -- (0x1C) Affects ramp_generator
+    constant RAMP_AMP_ADDR      : natural := 29; -- (0x1D) Affects ramp_generator
+    constant RAMP_STEP_ADDR     : natural := 30; -- (0x1E) Affects ramp_generator
+    constant FB_CONST_ADDR      : natural := 31; -- (0x1F) Affects the feedback_setter. The values for constant feedback. SQ1??
+    constant SAMPLE_DLY_ADDR    : natural := 50; -- (0x32) Affects sample_selector
+    constant SAMPLE_NUM_ADDR    : natural := 51; -- (0x33) Affects sample_selector
+    constant FB_DLY_ADDR        : natural := 52; -- (0x34) Affects feedback_setter
+    constant FLTR_RST_ADDR      : natural := 20; -- (0x14) Affects butterworth_filter (direct). NOT IMPLEMENTED
+    constant FILTR_COEFF_ADDR   : natural := 26; -- (0x1A) Affects butterworth_filter
+    constant FLUX_FB_ADDR       : natural := 32; -- (0x20) Affects feedback_setter. SA feedback
+    constant BIAS_ADDR          : natural := 33; -- (0x21) Affects bias_setter (TES bias)
+    constant ROW_ORDER_ADDR     : natural := 1;  -- (0x01) Affects row_selector
+    constant ON_BIAS_ADDR       : natural := 2;  -- (0x02) Affects row_activator
+    constant OFF_BIAS_ADDR      : natural := 3;  -- (0x03) Affects row_activator
+
 
     -- Number of words that the parameter occupies in the RAM memory
-    constant PARAM_ID_TO_SIZE : array(0 to 255) of natural :=
-        (
+    type t_param_id_to_size is array (0 to 255) of natural;
+    constant PARAM_ID_TO_SIZE : t_param_id_to_size :=
+     (
             ROW_LEN_ADDR        => 1,
             NUM_ROWS_ADDR       => 1,
             RET_DATA_S_ADDR     => 2,
@@ -136,7 +109,7 @@ package utils is
             ROW_ORDER_ADDR      => MAX_ROWS,
             ON_BIAS_ADDR        => MAX_ROWS,
             OFF_BIAS_ADDR       => MAX_ROWS,
-            (others => 0)
+            others              => 0
         );
 
     -- Data structures for frames
@@ -200,8 +173,6 @@ package body utils is
         end if;
         return 1;
     end function;
-
-    function get_param_id_from_half_word(param_id_h_word : t_half_word) return t_param_id is
 
 
 end package body;
