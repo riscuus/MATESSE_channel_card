@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_TES_bias_setter_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_TES_bias_setter" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="15333333334fs"></ZoomStartTime>
+      <ZoomEndTime time="44533333335fs"></ZoomEndTime>
+      <Cursor1Time time="20200000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="255"></NameColumnWidth>
+      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="11" />
+   <wvobject fp_name="/tb_TES_bias_setter/sys_clk" type="logic">
+      <obj_property name="ElementShortName">sys_clk</obj_property>
+      <obj_property name="ObjectShortName">sys_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_TES_bias_setter/sys_rst" type="logic">
+      <obj_property name="ElementShortName">sys_rst</obj_property>
+      <obj_property name="ObjectShortName">sys_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_TES_bias_setter/TES_bias" type="array">
+      <obj_property name="ElementShortName">TES_bias[3:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">TES_bias[3:0][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_TES_bias_setter/set_bias" type="logic">
+      <obj_property name="ElementShortName">set_bias</obj_property>
+      <obj_property name="ObjectShortName">set_bias</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_TES_bias_setter/TES_bias_setter/state" type="other">
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_TES_bias_setter/TES_bias_setter/DAC_start_pulse" type="logic">
+      <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
+      <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_TES_bias_setter/TES_bias_setter/DAC_data" type="array">
+      <obj_property name="ElementShortName">DAC_data[17:0]</obj_property>
+      <obj_property name="ObjectShortName">DAC_data[17:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_TES_bias_setter/TES_bias_setter/address" type="array">
+      <obj_property name="ElementShortName">address[1:0]</obj_property>
+      <obj_property name="ObjectShortName">address[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_TES_bias_setter/TES_bias_setter/v_data" type="array">
+      <obj_property name="ElementShortName">v_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">v_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_TES_bias_setter/TES_bias_setter/dac_counter" type="other">
+      <obj_property name="ElementShortName">dac_counter</obj_property>
+      <obj_property name="ObjectShortName">dac_counter</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_TES_bias_setter/TES_bias_setter/clk_counter" type="other">
+      <obj_property name="ElementShortName">clk_counter</obj_property>
+      <obj_property name="ObjectShortName">clk_counter</obj_property>
+   </wvobject>
+</wave_config>

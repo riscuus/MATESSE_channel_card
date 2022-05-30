@@ -32,6 +32,9 @@ package utils is
     -- Data structures for ADC reading
     subtype t_adc_sample is std_logic_vector(15 downto 0);
 
+    -- Data structure for param buffers
+    type param_array is array(natural range<>) of t_word;
+
     ----------------------------------------------------------------
     -- Constants
     ----------------------------------------------------------------
