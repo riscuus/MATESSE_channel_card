@@ -38,7 +38,7 @@ package utils is
 
     -- Basic constraints
     constant MAX_CHANNELS       : natural := 2; -- Max channels that the daughter board can handle
-    constant MAX_ROWS           : natural := 8; -- Max rows that the daughter board can handle
+    constant MAX_ROWS           : natural := 12; -- Max rows that the daughter board can handle
     constant IIR_FILTER_POLES   : natural := 4; -- This will define the depth of the buffers and the size of the coef arrays
 
     -- Packet constants
