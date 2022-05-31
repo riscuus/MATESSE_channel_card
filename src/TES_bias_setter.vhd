@@ -32,7 +32,7 @@ entity TES_bias_setter is
         rst                     : in std_logic; -- asynchronous reset
 
         set_bias                : in std_logic; -- Pulse signal to start the setting of the values
-        TES_bias                : in param_array(3 downto 0); -- Values to be set on each DAC
+        TES_bias                : in t_param_array(3 downto 0); -- Values to be set on each DAC
         DAC_start_pulse         : out std_logic; -- Pulse to be sent to the DAC gate controller to set the value
         DAC_data                : out std_logic_vector(17 downto 0) -- Data to be sent to the DAC (address + voltage)
     );

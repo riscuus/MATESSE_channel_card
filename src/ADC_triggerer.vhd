@@ -30,7 +30,7 @@ use concept.utils.all;
 
 entity ADC_triggerer is
     port(
-        clk                     : in std_logic; -- 5mhz clock                                                                           
+        clk                     : in std_logic; -- 100mhz clock                                                                           
         rst                     : in std_logic; -- asynchronous reset
 
         frame_active            : in std_logic; -- Signal that indicates that the acquisition has started
