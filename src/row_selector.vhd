@@ -37,7 +37,8 @@ entity row_selector is
         row_len                 : in natural;   -- Parameter that indicates how much time do we spend on each row, in 5Mhz clocks
 
         new_row                 : out std_logic;    -- Pulse that indicates that a new row has started
-        row_num                 : out natural      -- Signal that indicates in which row we currently are
+        row_num                 : out natural;      -- Signal that indicates in which row we currently are
+        frame_active            : out std_logic     -- Signal that is active until the acquisition is off and the frame is over
     );
 
 end row_selector;
@@ -53,6 +54,8 @@ architecture behave of row_selector is
 begin
 
 row_num <= row_num_reg;
+frame_active <= '1' when state = wait_next_row else
+                '0';
 
 main_logic : process(clk, rst)
 begin
