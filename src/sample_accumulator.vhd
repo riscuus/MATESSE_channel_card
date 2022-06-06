@@ -34,8 +34,10 @@ entity sample_accumulator is
         sample_num              : in natural; -- Num of samples to be accumulated
         valid_sample            : in std_logic; -- Signal that indicates that the current sample is valid
         sample                  : in t_adc_sample; -- Sample data sent to the sample accumulator
+        row_num                 : in natural; -- Current row the samples belong to (we store the row of the first sample)
         acc_sample              : out t_word;       -- Output data (samples accumulated)
-        valid                   : out std_logic   -- Parameter that indicates that the data is already valid
+        acc_sample_valid        : out std_logic;   -- Parameter that indicates that the data is already valid
+        acc_sample_row          : out natural   -- Signal to indicate to which row the acc_sample belongs to
     );
 
 end sample_accumulator;
@@ -58,21 +60,22 @@ begin
     if (rst = '1') then
         sample_count <= 0;
         acc_sample_int <= 0;
-        valid <= '0';
+        acc_sample_valid <= '0';
         state <= idle;
 
     elsif (rising_edge(clk)) then
         case state is
             when idle => 
                 sample_count <= 0;
+                acc_sample_valid <= '0';
 
                 if (valid_sample = '1') then
-                    valid <= '0';
+                    acc_sample_row <= row_num;
                     acc_sample_int <= to_integer(signed(sample));
                     sample_count <= sample_count + 1;
 
                     if (sample_count = sample_count - 1) then -- Case sample_num = 1
-                        valid <= '1';
+                        acc_sample_valid <= '1';
                         state <= state;
                     else 
                         state <= accumulate;
@@ -85,7 +88,7 @@ begin
                 if (valid_sample = '1') then
                     acc_sample_int <= acc_sample_int + to_integer(signed(sample));
                     if (sample_count = sample_num - 1) then
-                        valid <= '1';
+                        acc_sample_valid <= '1';
                         sample_count <= 0;
                         state <= idle;
                     else

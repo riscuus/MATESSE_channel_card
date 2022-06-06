@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_feedback_calculator_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_feedback_calculator" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="344620000000fs"></ZoomStartTime>
+      <ZoomEndTime time="360680000001fs"></ZoomEndTime>
+      <Cursor1Time time="346800000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="214"></NameColumnWidth>
+      <ValueColumnWidth column_width="82"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="6" />
+   <wvobject fp_name="/tb_feedback_calculator/sys_clk_100" type="logic">
+      <obj_property name="ElementShortName">sys_clk_100</obj_property>
+      <obj_property name="ObjectShortName">sys_clk_100</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_calculator/sys_clk_5" type="logic">
+      <obj_property name="ElementShortName">sys_clk_5</obj_property>
+      <obj_property name="ObjectShortName">sys_clk_5</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_calculator/sys_rst" type="logic">
+      <obj_property name="ElementShortName">sys_rst</obj_property>
+      <obj_property name="ObjectShortName">sys_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="group744" type="group">
+      <obj_property name="label">sample_selector</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_feedback_calculator/sample_dly" type="other">
+         <obj_property name="ElementShortName">sample_dly</obj_property>
+         <obj_property name="ObjectShortName">sample_dly</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/sample_num" type="other">
+         <obj_property name="ElementShortName">sample_num</obj_property>
+         <obj_property name="ObjectShortName">sample_num</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/new_row" type="logic">
+         <obj_property name="ElementShortName">new_row</obj_property>
+         <obj_property name="ObjectShortName">new_row</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/valid_word" type="logic">
+         <obj_property name="ElementShortName">valid_word</obj_property>
+         <obj_property name="ObjectShortName">valid_word</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/parallel_data" type="array">
+         <obj_property name="ElementShortName">parallel_data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">parallel_data[15:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group745" type="group">
+      <obj_property name="label">sample_accumulator</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_feedback_calculator/row_num" type="other">
+         <obj_property name="ElementShortName">row_num</obj_property>
+         <obj_property name="ObjectShortName">row_num</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/valid_sample" type="logic">
+         <obj_property name="ElementShortName">valid_sample</obj_property>
+         <obj_property name="ObjectShortName">valid_sample</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/sample_data" type="array">
+         <obj_property name="ElementShortName">sample_data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">sample_data[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/acc_sample" type="array">
+         <obj_property name="ElementShortName">acc_sample[31:0]</obj_property>
+         <obj_property name="ObjectShortName">acc_sample[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/acc_sample_row" type="other">
+         <obj_property name="ElementShortName">acc_sample_row</obj_property>
+         <obj_property name="ObjectShortName">acc_sample_row</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/acc_sample_valid" type="logic">
+         <obj_property name="ElementShortName">acc_sample_valid</obj_property>
+         <obj_property name="ObjectShortName">acc_sample_valid</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group746" type="group">
+      <obj_property name="label">fb_calculator</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_feedback_calculator/feedback_calculator_module/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/acc_sample_valid_str" type="logic">
+         <obj_property name="ElementShortName">acc_sample_valid_str</obj_property>
+         <obj_property name="ObjectShortName">acc_sample_valid_str</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/sa_fb_gain" type="other">
+         <obj_property name="ElementShortName">sa_fb_gain</obj_property>
+         <obj_property name="ObjectShortName">sa_fb_gain</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/feedback_calculator_module/acc_sample" type="array">
+         <obj_property name="ElementShortName">acc_sample[31:0]</obj_property>
+         <obj_property name="ObjectShortName">acc_sample[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/feedback_calculator_module/calc_fb" type="array">
+         <obj_property name="ElementShortName">calc_fb[31:0]</obj_property>
+         <obj_property name="ObjectShortName">calc_fb[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/feedback_calculator_module/write_row_num" type="other">
+         <obj_property name="ElementShortName">write_row_num</obj_property>
+         <obj_property name="ObjectShortName">write_row_num</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_calculator/feedback_calculator_module/write_en" type="logic">
+         <obj_property name="ElementShortName">write_en</obj_property>
+         <obj_property name="ObjectShortName">write_en</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>
