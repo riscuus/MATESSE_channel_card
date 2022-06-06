@@ -52,8 +52,30 @@ architecture behave of tb_row_activator is
     signal row_num  : natural := 0;
 
     -- row_activator signals
-    signal on_bias      : std_logic_vector(15 downto 0) := x"FFFF";
-    signal off_bias     : std_logic_vector(15 downto 0) := x"0F0F";
+    signal on_bias      : t_param_array(0 to MAX_ROWS - 1) := (0 => x"FFFFFFF0",
+                                                               1 => x"FFFFFFF1",
+                                                               2 => x"FFFFFFF2",
+                                                               3 => x"FFFFFFF3",
+                                                               4 => x"FFFFFFF4",
+                                                               5 => x"FFFFFFF5",
+                                                               6 => x"FFFFFFF6",
+                                                               7 => x"FFFFFFF7",
+                                                               8 => x"FFFFFFF8",
+                                                               9 => x"FFFFFFF9",
+                                                               10 => x"FFFFFF10",
+                                                               others => x"FFFFFFFF");
+    signal off_bias     : t_param_array(0 to MAX_ROWS - 1) := (0 => x"F0F0F0F0",
+                                                               1 => x"F0F0F0F1",
+                                                               2 => x"F0F0F0F2",
+                                                               3 => x"F0F0F0F3",
+                                                               4 => x"F0F0F0F4",
+                                                               5 => x"F0F0F0F5",
+                                                               6 => x"F0F0F0F6",
+                                                               7 => x"F0F0F0F7",
+                                                               8 => x"F0F0F0F8",
+                                                               9 => x"F0F0F0F9",
+                                                               10 => x"F0F0F010",
+                                                               others => x"F0F0F0FF");
     signal update_off   : std_logic := '0';
 
 begin

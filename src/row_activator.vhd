@@ -37,8 +37,8 @@ entity row_activator is
         new_row         : in std_logic;    -- Pulse that indicates that a new row has started
         row_num         : in natural;      -- Signal that indicates in which row we currently are
         acquisition_on  : in std_logic;    -- Signal that indicates that the acquisition is currently active
-        on_bias         : in std_logic_vector(15 downto 0); -- Value to be set to the row when it is active
-        off_bias        : in std_logic_vector(15 downto 0); -- Value to be set to the row when it is deactivated
+        on_bias         : in t_param_array(0 to MAX_ROWS - 1); -- Value to be set to the row when it is active
+        off_bias        : in t_param_array(0 to MAX_ROWS - 1); -- Value to be set to the row when it is deactivated
         num_rows        : in natural; -- Num of rows that are going to be multiplexed
         update_off      : in std_logic;    -- Pulse used to set the off value to all DAC when acquisition is off
         DAC_start_pulse : out std_logic; -- Signal to start the DAC_gate_controller logic
@@ -59,7 +59,7 @@ architecture behave of row_activator is
     -- Signal used to activate the generation of the DAC_start_pulse
     signal gen_start_pulse : std_logic := '0'; 
 
-    -- From 0 to 11, in the following order. 0=U20A, 1=U20B, .. , 10=U22C, 11=U22D
+    -- From 0 to num_rows - 1, in the following order. 0=U20A, 1=U20B, .. , 10=U22C, 11=U22D
     signal selected_row : natural := 0; 
 
     -- Used to set the selected row when acquisition is off
@@ -74,7 +74,7 @@ architecture behave of row_activator is
     -- Voltage data sent to the DAC
     signal v_data : std_logic_vector(15 downto 0) := (others => '0'); 
 
-    -- Counter used to go from row 0 to row 11 when acq is off and we need to update the off_bias value
+    -- Counter used to go from row 0 to row num_rows - 1 when acq is off and we need to update the off_bias value
     signal row_counter : natural := 0;
 
     -- Signal used to know when to launch the start_DAC_pulses (one every DAC_DLY cycles)
@@ -180,8 +180,8 @@ address <= "00" when selected_row = 0 or selected_row = 4 or selected_row = 8 el
            "10" when selected_row = 2 or selected_row = 6 or selected_row = 10 else -- DAC C
            "11"; -- DAC D
 
-v_data <= on_bias   when state = activate_next or state = wait_activation else
-          off_bias  when state = deactivate_current or state = wait_deactivation or state = deactivate_all else
+v_data <= on_bias(selected_row)(15 downto 0)   when state = activate_next or state = wait_activation else
+          off_bias(selected_row)(15 downto 0)  when state = deactivate_current or state = wait_deactivation or state = deactivate_all else
           (others => '0');
 
 DAC_sel <= 0 when selected_row < 4 else
