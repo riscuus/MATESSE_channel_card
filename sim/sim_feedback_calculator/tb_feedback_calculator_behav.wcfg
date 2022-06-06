@@ -11,9 +11,9 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="344620000000fs"></ZoomStartTime>
-      <ZoomEndTime time="360680000001fs"></ZoomEndTime>
-      <Cursor1Time time="346800000000fs"></Cursor1Time>
+      <ZoomStartTime time="345026500000fs"></ZoomStartTime>
+      <ZoomEndTime time="348048500001fs"></ZoomEndTime>
+      <Cursor1Time time="346784500000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="214"></NameColumnWidth>
@@ -75,6 +75,7 @@
       <wvobject fp_name="/tb_feedback_calculator/acc_sample" type="array">
          <obj_property name="ElementShortName">acc_sample[31:0]</obj_property>
          <obj_property name="ObjectShortName">acc_sample[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_feedback_calculator/acc_sample_row" type="other">
          <obj_property name="ElementShortName">acc_sample_row</obj_property>
