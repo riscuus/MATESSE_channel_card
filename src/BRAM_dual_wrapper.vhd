@@ -2,7 +2,7 @@
 -- Company: NASA Goddard Space Flight Center
 -- Engineer: Albert Risco
 -- 
--- Create Date: 05.18.2022
+-- Create Date: 06.06.2022
 -- Module Name: BRAM_dual_wrapper.vhd
 -- Project Name: channel_card_v1
 -- Target Devices: Spartan 7 xc7s25csga324-1
@@ -38,11 +38,11 @@ entity BRAM_dual_wrapper is
         clk                     : in std_logic; -- 5MHz clock                                                                           
         rst                     : in std_logic; -- Asynchronous reset
 
-        write_address           : in natural;
-        write_data              : in t_word;
-        write_pulse             : in std_logic;
-        read_address            : in natural;
-        read_data               : out t_word
+        write_address           : in natural;   -- The address to write data
+        write_data              : in t_word;    -- The data to be written
+        write_pulse             : in std_logic; -- The write data enable pulse
+        read_address            : in natural;   -- The address to read data
+        read_data               : out t_word    -- The data read
     );
 
 end BRAM_dual_wrapper;
@@ -95,7 +95,7 @@ BRAM_SDP_MACRO_inst : BRAM_SDP_MACRO
         INIT_FILE => "NONE",
         SIM_COLLISION_CHECK => "ALL",   -- Collision check enable "ALL", "WARNING_ONLY",
                                         -- "GENERATE_X_ONLY" or "NONE"
-        WRITE_MODE => "WRITE_FIRST",    -- Specify "READ_FIRST" for same clock or synchronous clocks
+        WRITE_MODE => "WRITE_FIRST"    -- Specify "READ_FIRST" for same clock or synchronous clocks
                                         -- Specify "WRITE_FIRST for asynchrononous clocks on ports
     )
     port map (
@@ -106,10 +106,10 @@ BRAM_SDP_MACRO_inst : BRAM_SDP_MACRO
         RDEN => '1',                    -- 1-bit input read port enable
         REGCE => '0',                   -- 1-bit input read output register enable
         RST => rst,                     -- 1-bit input reset
-        WE => '1',                      -- Input write enable, width defined by write port depth
+        WE => write_en_vector,          -- Input write enable, width defined by write port depth
         WRADDR => write_address_vector, -- Input write address, width defined by write port depth
         WRCLK => clk,                   -- 1-bit input write clock
-        WREN => write_en_vector         -- 1-bit input write port enable
+        WREN => '1'                     -- 1-bit input write port enable
     );
 
 end behave;
