@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_feedback_reader_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_feedback_reader" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="45691667000fs"></ZoomStartTime>
+      <ZoomEndTime time="197091667001fs"></ZoomEndTime>
+      <Cursor1Time time="100491667000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="255"></NameColumnWidth>
+      <ValueColumnWidth column_width="87"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="12" />
+   <wvobject fp_name="/tb_feedback_reader/sys_clk" type="logic">
+      <obj_property name="ElementShortName">sys_clk</obj_property>
+      <obj_property name="ObjectShortName">sys_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_reader/sys_rst" type="logic">
+      <obj_property name="ElementShortName">sys_rst</obj_property>
+      <obj_property name="ObjectShortName">sys_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="group816" type="group">
+      <obj_property name="label">row_selector</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_feedback_reader/acquisition_on" type="logic">
+         <obj_property name="ElementShortName">acquisition_on</obj_property>
+         <obj_property name="ObjectShortName">acquisition_on</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_reader/sync_frame" type="logic">
+         <obj_property name="ElementShortName">sync_frame</obj_property>
+         <obj_property name="ObjectShortName">sync_frame</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_reader/row_len" type="other">
+         <obj_property name="ElementShortName">row_len</obj_property>
+         <obj_property name="ObjectShortName">row_len</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_feedback_reader/num_rows" type="other">
+         <obj_property name="ElementShortName">num_rows</obj_property>
+         <obj_property name="ObjectShortName">num_rows</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_reader/write_address" type="other">
+      <obj_property name="ElementShortName">write_address</obj_property>
+      <obj_property name="ObjectShortName">write_address</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_reader/write_data" type="array">
+      <obj_property name="ElementShortName">write_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">write_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_reader/write_pulse" type="logic">
+      <obj_property name="ElementShortName">write_pulse</obj_property>
+      <obj_property name="ObjectShortName">write_pulse</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_reader/new_row" type="logic">
+      <obj_property name="ElementShortName">new_row</obj_property>
+      <obj_property name="ObjectShortName">new_row</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_reader/row_num" type="other">
+      <obj_property name="ElementShortName">row_num</obj_property>
+      <obj_property name="ObjectShortName">row_num</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_reader/feedback_reader_module/state" type="other">
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_reader/read_address" type="other">
+      <obj_property name="ElementShortName">read_address</obj_property>
+      <obj_property name="ObjectShortName">read_address</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_reader/read_data" type="array">
+      <obj_property name="ElementShortName">read_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feedback_reader/feedback_reader_module/sa_fb_data" type="array">
+      <obj_property name="ElementShortName">sa_fb_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">sa_fb_data[15:0]</obj_property>
+   </wvobject>
+</wave_config>
