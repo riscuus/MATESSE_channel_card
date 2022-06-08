@@ -4,13 +4,14 @@ use     IEEE.numeric_std.all;
 
 package utils is
 
-    -- AXI Stream Record (reduced for usecase)
-    type T_AXIS_signed_m2s is record
-        Data  : signed(15 downto 0);
-        Valid : std_logic;
-        User  : unsigned(7 downto 0);
+    -- Channel data record (reduced for usecase)
+    type t_channel_record is record
+        data    : t_word;
+        row_num : natural range 0 to MAX_ROWS;
+        valid   : std_logic;
     end record;
-    type T_AXIS_signed_m2s_ARRAY_COLUMNS is array(1 to 8) of T_AXIS_signed_m2s;
+
+    type t_channel_record_array is array(1 to MAX_COULUMNS) of t_channel_record;
     
     -- signed integer array
     -- Necessary ??
@@ -40,9 +41,10 @@ package utils is
     ----------------------------------------------------------------
 
     -- Basic constraints
-    constant MAX_CHANNELS       : natural := 2; -- Max channels that the daughter board can handle
-    constant MAX_ROWS           : natural := 12; -- Max rows that the daughter board can handle
-    constant IIR_FILTER_POLES   : natural := 4; -- This will define the depth of the buffers and the size of the coef arrays
+    constant MAX_CHANNELS           : natural := 2; -- Max channels that the daughter board can handle
+    constant MAX_ROWS               : natural := 12; -- Max rows that the daughter board can handle
+    constant IIR_FILTER_POLES       : natural := 4; -- This will define the depth of the buffers and the size of the coef arrays
+    constant DATA_PKT_HEADER_LENGTH : natural := 43;
 
     -- Packet constants
     constant PREAMBLE_1 : t_word := x"A5A5A5A5";

@@ -1,0 +1,275 @@
+----------------------------------------------------------------------------------
+-- Company: NASA Goddard Space Flight Center
+-- Engineer: Albert Risco
+-- 
+-- Create Date: 06.08.2022
+-- Module Name: frame_builder.vhd
+-- Project Name: channel_card_v1
+-- Target Devices: Spartan 7 xc7s25csga324-1
+-- Tool Versions: Vivado 2019.1
+-- Description: This component is in charge of receiving the data from the different channels and building the data
+--              frame packets. It is flexible enough to be able to adapt to different channels and rows. 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use     IEEE.std_logic_1164.all;
+use     IEEE.numeric_std.all;
+
+library concept;
+use concept.utils.all;
+
+entity frame_builder is
+    generic(
+    );
+    port(
+        clk                     : in std_logic; -- 5MHz clock                                                                           
+        rst                     : in std_logic; -- asynchronous reset
+
+        -- Param buffers
+        ret_data_setup          : in t_param_array(0 to PARAM_ID_TO_SIZE(return_data_s_address) - 1);
+        data_rate               : in natural;
+        num_rows                : in natural;
+        row_len                 : in natural;
+
+        -- Interface with cmd handler and row selector
+        acquisition_on          : in std_logic;
+        stop_received           : in std_logic;
+        frame_active            : in std_logic;
+        last_frame_sent         : out std_logic;
+
+        -- Interface with channels
+        channels_data           : in t_channel_record_array;
+
+        -- Interface with packet sender
+        sender_ready            : in std_logic;
+        send_data_packet        : out std_logic;
+        payload_size            : out natural;
+        frame_payload           : out t_packet_payload -- Composed by the header_payload + data_payload
+    );
+
+end frame_builder;
+
+architecture behave of frame_builder is
+
+    constant NUM_CHANNELS   : natural := t_channel_record_array'length;
+    constant header_version : natural := 7;
+
+    type stateType is (idle, wait_new_row, wait_fb_dly, set_DAC_voltage);
+    signal state : stateType;
+
+    type t_header_payload is array 0 to (DATA_PKT_HEADER_LENGTH - 1) of t_word;
+    type t_data_payload is array 0 to (MAX_ROWS - 1) of t_word;
+
+    signal header_payload   : t_header_payload := (others => (others => '0'));
+    signal data_payload     : t_data_payload := (others => (others => '0'))
+
+    signal valid_data           : std_logic := '0';
+    signal last_frame           : std_logic := '0';
+    signal send_reg             : std_logic := '0'; -- Needed to be able to read its state
+    signal row_counter          : natural   := 0;
+    signal initial_id           : natural   := 0; -- The first frame will have this id
+    signal final_id             : natural   := 0; -- The last frame will have this id
+    signal num_frames           : natural   := 0; -- (= final_id - initial_id + 1)
+    signal frame_id             : natural   := 0; -- The current frame_id (starts at initial_id)
+    signal frame_counter        : natural   := 0; -- Counter for the current sent frames (starts at 0 ends at data rate)
+    signal total_frame_counter  : natural   := 0; -- Counter for the current total sent frames (starts at 0 ends when acquisition is over)
+
+
+    -- Header needed signals
+    signal stop_bit         : std_logic := '0';
+
+begin
+
+-- Simple assigments
+send_data_packet <= send_reg;
+inital_id <= to_integer(unsigned(ret_data_setup(0)));
+final_id <= to_integer(unsigned(ret_data_setup(0)));
+num_frames <= final_id - initial_id + 1; -- TODO: Consider case when final_id is smaller that initial_id
+last_frame <= '1' when frame_id = final_id or stop_bit = '1' else '0';
+
+-- State machine logic
+main_logic : process(clk, rst)
+begin
+    if (rst = '1') then
+        state <= idle;
+    elsif (rising_edge(clk)) then
+        case state is
+            when idle =>
+                if (acquisition_on = '1') then
+                    frame_id <= initial_id;
+                    state <= wait_valid_data;
+                else
+                    state <= state;
+                end if;
+
+            when wait_valid_data =>
+                    if (valid_data = '1') then
+                        -- Valid frame
+                        if (row_counter = num_rows - 1) then
+                            row_counter <= 0;
+                            total_frame_counter <= total_frame_counter + 1;
+                            -- We only send #data_rate valid frames
+                            if (frame_counter = data_rate - 1) then
+                                frame_counter <= 0;
+                                if (sender_ready = '1') then
+                                    send_reg <= '1';
+                                    state <= send_data;
+                                else
+                                    state <= wait_sender_ready;
+                                end if;
+                            else
+                                frame_counter <= frame_counter + 1;
+                            end if;
+                        else
+                            row_counter <= row_counter + 1;
+                            state <= state;
+                        end if;
+                    end if;
+
+            when wait_sender_ready =>
+                if (sender_ready = '1') then
+                    send_reg <= '1';
+                    state <= send_data;
+                else
+                    state <= wait_sender_ready;
+                end if;
+
+            when send_data =>
+                send_reg <= '0';
+                if (last_frame = '1') then
+                    total_frame_counter <= 0;
+                    state <= idle;
+                else
+                    state <= wait_valid_data;
+                end if;
+
+            when others =>
+                state <= idle;
+        end case;
+    end if;
+end process;
+
+-- Frame payload assigment
+process(header_payload, data_payload)
+begin
+    for i in 0 to frame_payload'length - 1 loop
+        if (i < t_header_payload'length) then
+            frame_payload(i) <= header_payload(i);
+        else
+            frame_payload(i) <= data_payload(i)
+        end if;
+    end loop;
+end process;
+
+-- Valid data signal generation
+process(channels_data)
+begin
+    valid_data <= '0';
+    -- We determine that the data is valid when all channels report valid data. This should always occur as they
+    -- are parallel, if not something is wrong
+    for i in 0 to (NUM_CHANNELS - 2) loop
+            if (i = 0) then
+                valid_data <= channels_data(i).valid and channels_data(i+1).valid;
+            else
+                valid_data <= valid_data and channels_data(i+1);
+            end if;
+    end loop;
+end process;
+
+-- Stop bit signal generation
+process(clk, rst)
+begin
+    if (rst = '1') then
+        stop_bit <= '0';
+    elsif (rising_edge(clk)) then
+        if (stop_received = '1') then
+            stop_bit <= '1';
+        end if;
+        -- We start a new acquisition, restart stop bit
+        if (state = idle) then
+            stop_bit <= '0';
+        end if;
+    end if;
+end process;
+
+-- Data payload signal generation
+process(clk, rst)
+begin
+    if (rst = '1') then
+        stop_bit <= '0';
+    elsif (rising_edge(clk)) then
+        if (valid_data = '1') then
+            for i in 0 to (NUM_CHANNELS - 1) loop
+                data_payload((i*num_rows)+channels_data(i).row_num) <= channels_data(i).data;
+            end loop;
+        end if;
+    end if;
+end process;
+
+-- Header payload signal generation
+process(clk, rst)
+begin
+    if (rst = '1') then
+        stop_bit <= '0';
+    elsif (rising_edge(clk)) then
+        if (valid_data = '1') then
+            -- (0) Status bits
+            header_payload(0) <= (others => '0') & stop_bit & last_frame;
+            -- (1) Frame id
+            header_payload(1) <= std_logic_vector(to_unsigned(frame_id, t_word'length));
+            -- (2) row_len
+            header_payload(2) <= std_logic_vector(to_unsigned(row_len, t_word'length));
+            -- (3) num_rows reported
+            header_payload(3) <= std_logic_vector(to_unsigned(num_rows, t_word'length));
+            -- (4) data_rate
+            header_payload(4) <= std_logic_vector(to_unsigned(data_rate, t_word'length));
+            -- (5) total_frame_counter
+            header_payload(5) <= std_logic_vector(to_unsigned(total_frame_counter, t_word'length));
+            -- (6) Header version
+            header_payload(6) <= std_logic_vector(to_unsigned(header_version, t_word'length));
+            -- (7) ramp value (current value if ramp mode is active) (TODO)
+            header_payload(7) <= (others => '0');
+            -- (8) ramp card addr and param id (TODO)
+            header_payload(8) <= (others => '0');
+            -- (9) num_rows
+            header_payload(9) <= std_logic_vector(to_unsigned(MAX_ROWS, t_word'length));
+            -- (10) sync box number (doesn't apply)
+            -- (11) run_id (don't implemented)
+            -- (12) user_word (don't implemented)
+            -- (13) errno (doesn't apply)
+            -- (14) temperature AC (doesn't apply)
+            -- (15) FPGA Temperature, BC1 (doesn't apply)
+            -- (16) FPGA Temperature, BC2 (doesn't apply)
+            -- (17) FPGA Temperature, BC3 (doesn't apply)
+            -- (18) FPGA Temperature, RC1 (doesn't apply)
+            -- (19) FPGA Temperature, RC2 (doesn't apply)
+            -- (20) FPGA Temperature, RC3 (doesn't apply)
+            -- (21) FPGA Temperature, RC4 (doesn't apply)
+            -- (22) FPGA Temperature, CC (doesn't apply)
+            -- (23) errno (doesn't apply)
+            -- (24) Card Temperature, AC (doesn't apply)
+            -- (25) Card Temperature, BC1 (doesn't apply)
+            -- (26) Card Temperature, BC2 (doesn't apply)
+            -- (27) Card Temperature, BC3 (doesn't apply)
+            -- (28) Card Temperature, RC1 (doesn't apply)
+            -- (29) Card Temperature, RC2 (doesn't apply)
+            -- (30) Card Temperature, RC3 (doesn't apply)
+            -- (31) Card Temperature, RC4 (doesn't apply)
+            -- (32) Card Temperature, CC (doesn't apply)
+            -- (33) errno (doesn't apply)
+            -- (34)(35)(36)(37)(38)(39)(40)(41) Reserved
+            -- (41) errno (doesn't apply)
+            -- (42) box_temp (doesn't apply)
+        end if;
+    end if;
+end process;
+
+end behave;
