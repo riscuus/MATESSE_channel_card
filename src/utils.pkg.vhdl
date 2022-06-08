@@ -118,6 +118,18 @@ package utils is
             others              => 0
         );
 
+
+    -- The possible servo modes
+    constant SERVO_MODE_CONST   : natural := 0;
+    constant SERVO_MODE_RAMP    : natural := 2;
+    constant SERVO_MODE_PID     : natural := 3;
+
+    -- The possible data modes
+    constant DATA_MODE_ERROR    : natural := 0;
+    constant DATA_MODE_FB       : natural := 1;
+    constant DATA_MODE_FILT_FB  : natural := 2;
+    constant DATA_MODE_RAW      : natural := 3;
+
     -- Data structures for frames
     type t_frame_header is array(0 to 42) of t_word;
     type t_frame_data_col is array(0 to 255) of t_word;

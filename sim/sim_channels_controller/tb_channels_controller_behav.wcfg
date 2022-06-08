@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_channels_controller_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_channels_controller" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="200000000fs"></ZoomStartTime>
+      <ZoomEndTime time="1514200000001fs"></ZoomEndTime>
+      <Cursor1Time time="364200000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="255"></NameColumnWidth>
+      <ValueColumnWidth column_width="87"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="19" />
+   <wvobject fp_name="/tb_channels_controller/sys_clk" type="logic">
+      <obj_property name="ElementShortName">sys_clk</obj_property>
+      <obj_property name="ObjectShortName">sys_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/sys_rst" type="logic">
+      <obj_property name="ElementShortName">sys_rst</obj_property>
+      <obj_property name="ObjectShortName">sys_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="group844" type="group">
+      <obj_property name="label">row_selector</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_channels_controller/sync_frame" type="logic">
+         <obj_property name="ElementShortName">sync_frame</obj_property>
+         <obj_property name="ObjectShortName">sync_frame</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_channels_controller/row_len" type="other">
+         <obj_property name="ElementShortName">row_len</obj_property>
+         <obj_property name="ObjectShortName">row_len</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_channels_controller/num_rows" type="other">
+         <obj_property name="ElementShortName">num_rows</obj_property>
+         <obj_property name="ObjectShortName">num_rows</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_channels_controller/row_num" type="other">
+         <obj_property name="ElementShortName">row_num</obj_property>
+         <obj_property name="ObjectShortName">row_num</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/new_row" type="logic">
+      <obj_property name="ElementShortName">new_row</obj_property>
+      <obj_property name="ObjectShortName">new_row</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/acquisition_on" type="logic">
+      <obj_property name="ElementShortName">acquisition_on</obj_property>
+      <obj_property name="ObjectShortName">acquisition_on</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/frame_active" type="logic">
+      <obj_property name="ElementShortName">frame_active</obj_property>
+      <obj_property name="ObjectShortName">frame_active</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/data_mode" type="other">
+      <obj_property name="ElementShortName">data_mode</obj_property>
+      <obj_property name="ObjectShortName">data_mode</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/servo_mode" type="other">
+      <obj_property name="ElementShortName">servo_mode</obj_property>
+      <obj_property name="ObjectShortName">servo_mode</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/channels_controller_module/state" type="other">
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/set_SF" type="logic">
+      <obj_property name="ElementShortName">set_SF</obj_property>
+      <obj_property name="ObjectShortName">set_SF</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/set_SB" type="logic">
+      <obj_property name="ElementShortName">set_SB</obj_property>
+      <obj_property name="ObjectShortName">set_SB</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/set_FF" type="logic">
+      <obj_property name="ElementShortName">set_FF</obj_property>
+      <obj_property name="ObjectShortName">set_FF</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/set_FB" type="logic">
+      <obj_property name="ElementShortName">set_FB</obj_property>
+      <obj_property name="ObjectShortName">set_FB</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/channels_controller_module/line_sel" type="other">
+      <obj_property name="ElementShortName">line_sel</obj_property>
+      <obj_property name="ObjectShortName">line_sel</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/channels_controller_module/data_sel" type="other">
+      <obj_property name="ElementShortName">data_sel</obj_property>
+      <obj_property name="ObjectShortName">data_sel</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/fb_dly" type="other">
+      <obj_property name="ElementShortName">fb_dly</obj_property>
+      <obj_property name="ObjectShortName">fb_dly</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/channels_controller_module/dly_counter" type="other">
+      <obj_property name="ElementShortName">dly_counter</obj_property>
+      <obj_property name="ObjectShortName">dly_counter</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/channels_controller_module/DAC_start_pulse" type="logic">
+      <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
+      <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_channels_controller/channels_controller_module/DAC_address" type="array">
+      <obj_property name="ElementShortName">DAC_address[1:0]</obj_property>
+      <obj_property name="ObjectShortName">DAC_address[1:0]</obj_property>
+   </wvobject>
+</wave_config>

@@ -38,7 +38,8 @@ entity channels_controller is
         fb_dly                  : in natural; -- Param that indicates how many 5 MHz cycles do we have to wait to set the fb (activate DAC)
 
         new_row                 : in std_logic; -- Signal that indicates that a new row has started
-        frame_active            : in std_logic; -- Signal that indicates that the acquisition is active
+        acquisition_on          : in std_logic; -- Signal that indicates that the acquisition is active
+        frame_active            : in std_logic; -- Signal that remains active until the last row has been multiplexed
         set_SF                  : in std_logic; -- Pulse to update the SA feedback line
         set_SB                  : in std_logic; -- Pulse to update the SA bias line
         set_FF                  : in std_logic; -- Pulse to update the 1st stage feedback line
@@ -47,7 +48,7 @@ entity channels_controller is
         DAC_start_pulse         : out std_logic; -- Pulse to start the DAC controller
         DAC_address             : out std_logic_vector(1 downto 0); -- Address of the DAC that we are updating (corresponds either to the SF, SB, FF or FB)
         line_sel                : out natural range 0 to 5; -- Selector for the multiplexer that chooses which data to set in the DAC
-        data_sel                : out natural range 0 to 2; -- Selector for the multiplexer that chooses which data to put in the data frame
+        data_sel                : out natural range 0 to 3 -- Selector for the multiplexer that chooses which data to put in the data frame
     );
 
 end channels_controller;
@@ -68,19 +69,7 @@ architecture behave of channels_controller is
     constant LINE_SEL_FF    : natural := 4;
     constant LINE_SEL_FB    : natural := 5;
 
-    -- The possible servo modes
-    constant SERVO_MODE_CONST   : natural := 0;
-    constant SERVO_MODE_RAMP    : natural := 2;
-    constant SERVO_MODE_PID     : natural := 3;
-
-    -- The possible data modes
-    constant DATA_MODE_ERROR    : natural := 0;
-    constant DATA_MODE_FB       : natural := 1;
-    constant DATA_MODE_FILT_FB  : natural := 2;
-    constant DATA_MODE_RAW      : natural := 3;
-
-
-    type stateType is (idle, wait_sample);
+    type stateType is (idle, wait_new_row, wait_fb_dly, set_DAC_voltage);
     signal state : stateType;
 
     signal dly_counter : natural := 0;
@@ -105,45 +94,47 @@ begin
                 DAC_address <= (others => '0');
                 line_sel <= 0;
 
-                if (frame_active = '1') then
+                if (acquisition_on = '1') then
                     -- PID
                     if (servo_mode = SERVO_MODE_PID) then
-                        line_sel <= line_sel_PID;
+                        line_sel <= LINE_SEL_PID;
                     -- ramp
                     elsif (servo_mode = SERVO_MODE_RAMP) then
-                        line_sel <= line_sel_ramp;
+                        line_sel <= LINE_SEL_RAMP;
                     -- For SERVO_MODE_CONST line_sel is not important as we will not trigger the DAC
                     end if;
+                    DAC_address <= SF_ADDRESS; -- When acquisition is on, we modify the SA feedback only
                     state <= wait_new_row;
                 elsif (set_SF = '1') then
                     line_sel <= LINE_SEL_SF;
                     DAC_start_pulse <= '1';
-                    DAC_address <= SF_address; 
+                    DAC_address <= SF_ADDRESS; 
                     state <= set_DAC_voltage;
                 elsif (set_SB = '1') then
                     line_sel <= LINE_SEL_SB;
                     DAC_start_pulse <= '1';
-                    DAC_address <= SB_address; 
+                    DAC_address <= SB_ADDRESS; 
                     state <= set_DAC_voltage;
                 elsif (set_FF = '1') then
                     line_sel <= LINE_SEL_FF;
                     DAC_start_pulse <= '1';
-                    DAC_address <= FF_address; 
+                    DAC_address <= FF_ADDRESS; 
                     state <= set_DAC_voltage;
                 elsif (set_FB = '1') then
                     line_sel <= LINE_SEL_FB;
                     DAC_start_pulse <= '1';
-                    DAC_address <= FB_address; 
+                    DAC_address <= FB_ADDRESS; 
                     state <= set_DAC_voltage;
                 else
                     state <= state;
                 end if;
 
             when wait_new_row =>
-                if (frame_active = '1') then
+                if (acquisition_on = '1' or frame_active = '1') then
                     if (new_row = '1' and (servo_mode = SERVO_MODE_PID or servo_mode = SERVO_MODE_RAMP)) then
                         if (dly_counter = fb_dly) then
                             DAC_start_pulse <= '1';
+                            dly_counter <= 0;
                             state <= set_DAC_voltage;
                         else
                             dly_counter <= dly_counter + 1;
@@ -159,6 +150,7 @@ begin
             when wait_fb_dly =>
                 if (dly_counter = fb_dly) then
                     DAC_start_pulse <= '1';
+                    dly_counter <= 0;
                     state <= set_DAC_voltage;
                 else 
                     dly_counter <= dly_counter + 1;
