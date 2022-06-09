@@ -4,14 +4,11 @@ use     IEEE.numeric_std.all;
 
 package utils is
 
-    -- Channel data record (reduced for usecase)
-    type t_channel_record is record
-        data    : t_word;
-        row_num : natural range 0 to MAX_ROWS;
-        valid   : std_logic;
-    end record;
-
-    type t_channel_record_array is array(1 to MAX_COULUMNS) of t_channel_record;
+    -- Basic constraints
+    constant MAX_CHANNELS           : natural := 2; -- Max channels that the daughter board can handle
+    constant MAX_ROWS               : natural := 12; -- Max rows that the daughter board can handle
+    constant IIR_FILTER_POLES       : natural := 4; -- This will define the depth of the buffers and the size of the coef arrays
+    constant DATA_PKT_HEADER_LENGTH : natural := 43;
     
     -- signed integer array
     -- Necessary ??
@@ -35,16 +32,21 @@ package utils is
 
     -- Data structure for param buffers
     type t_param_array is array(natural range<>) of t_word;
+    
+    -- Channel data record (reduced for usecase)
+    type t_channel_record is record
+        value   : t_word;
+        row_num : natural range 0 to MAX_ROWS;
+        valid   : std_logic;
+    end record;
+
+    type t_channel_record_array is array(0 to MAX_CHANNELS - 1) of t_channel_record;
 
     ----------------------------------------------------------------
     -- Constants
     ----------------------------------------------------------------
 
-    -- Basic constraints
-    constant MAX_CHANNELS           : natural := 2; -- Max channels that the daughter board can handle
-    constant MAX_ROWS               : natural := 12; -- Max rows that the daughter board can handle
-    constant IIR_FILTER_POLES       : natural := 4; -- This will define the depth of the buffers and the size of the coef arrays
-    constant DATA_PKT_HEADER_LENGTH : natural := 43;
+
 
     -- Packet constants
     constant PREAMBLE_1 : t_word := x"A5A5A5A5";
@@ -75,6 +77,7 @@ package utils is
     -- The addresses of each param id
     constant ROW_LEN_ADDR       : natural := 48; -- (0x30) Affects row_selector (how many pulses to spend on each row)
     constant NUM_ROWS_ADDR      : natural := 49; -- (0x31) Affects row_selector (to cycle #num_rows)
+    constant NUM_COLS_REP_ADDR  : natural := 173;-- (0xAD) Affects frame builder. (num of columns to be reported)
     constant RET_DATA_S_ADDR    : natural := 83; -- (0x53) Affects the data_frame_builder (num in header)
     constant SA_BIAS_ADDR       : natural := 16; -- (0x10) Affects bias_setter (SA bias)
     constant RET_DAT_ADDR       : natural := 22; -- (0x16) Start Acquisition
@@ -117,6 +120,7 @@ package utils is
             ROW_ORDER_ADDR      => MAX_ROWS,
             ON_BIAS_ADDR        => MAX_ROWS,
             OFF_BIAS_ADDR       => MAX_ROWS,
+            NUM_COLS_REP_ADDR   => 1,
             others              => 0
         );
 

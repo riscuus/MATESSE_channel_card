@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_frame_builder_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_frame_builder" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="776000000001fs"></ZoomEndTime>
+      <Cursor1Time time="167000000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="251"></NameColumnWidth>
+      <ValueColumnWidth column_width="72"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="26" />
+   <wvobject fp_name="/tb_frame_builder/sys_clk" type="logic">
+      <obj_property name="ElementShortName">sys_clk</obj_property>
+      <obj_property name="ObjectShortName">sys_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/sys_rst" type="logic">
+      <obj_property name="ElementShortName">sys_rst</obj_property>
+      <obj_property name="ObjectShortName">sys_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/ret_data_setup" type="array">
+      <obj_property name="ElementShortName">ret_data_setup[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">ret_data_setup[0:1][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/data_rate" type="other">
+      <obj_property name="ElementShortName">data_rate</obj_property>
+      <obj_property name="ObjectShortName">data_rate</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/num_rows" type="other">
+      <obj_property name="ElementShortName">num_rows</obj_property>
+      <obj_property name="ObjectShortName">num_rows</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/row_len" type="other">
+      <obj_property name="ElementShortName">row_len</obj_property>
+      <obj_property name="ObjectShortName">row_len</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/acquisition_on" type="logic">
+      <obj_property name="ElementShortName">acquisition_on</obj_property>
+      <obj_property name="ObjectShortName">acquisition_on</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_active" type="logic">
+      <obj_property name="ElementShortName">frame_active</obj_property>
+      <obj_property name="ObjectShortName">frame_active</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/channels_data" type="array">
+      <obj_property name="ElementShortName">channels_data[0:1]</obj_property>
+      <obj_property name="ObjectShortName">channels_data[0:1]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/valid_data" type="logic">
+      <obj_property name="ElementShortName">valid_data</obj_property>
+      <obj_property name="ObjectShortName">valid_data</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/header_payload" type="array">
+      <obj_property name="ElementShortName">header_payload[0:42][31:0]</obj_property>
+      <obj_property name="ObjectShortName">header_payload[0:42][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/data_payload" type="array">
+      <obj_property name="ElementShortName">data_payload[0:23][31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_payload[0:23][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/state" type="other">
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/stop_received" type="logic">
+      <obj_property name="ElementShortName">stop_received</obj_property>
+      <obj_property name="ObjectShortName">stop_received</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/stop_bit" type="logic">
+      <obj_property name="ElementShortName">stop_bit</obj_property>
+      <obj_property name="ObjectShortName">stop_bit</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/initial_id" type="other">
+      <obj_property name="ElementShortName">initial_id</obj_property>
+      <obj_property name="ObjectShortName">initial_id</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/final_id" type="other">
+      <obj_property name="ElementShortName">final_id</obj_property>
+      <obj_property name="ObjectShortName">final_id</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/frame_id" type="other">
+      <obj_property name="ElementShortName">frame_id</obj_property>
+      <obj_property name="ObjectShortName">frame_id</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/total_frame_counter" type="other">
+      <obj_property name="ElementShortName">total_frame_counter</obj_property>
+      <obj_property name="ObjectShortName">total_frame_counter</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/row_counter" type="other">
+      <obj_property name="ElementShortName">row_counter</obj_property>
+      <obj_property name="ObjectShortName">row_counter</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/frame_counter" type="other">
+      <obj_property name="ElementShortName">frame_counter</obj_property>
+      <obj_property name="ObjectShortName">frame_counter</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/last_frame" type="logic">
+      <obj_property name="ElementShortName">last_frame</obj_property>
+      <obj_property name="ObjectShortName">last_frame</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/send_data_packet" type="logic">
+      <obj_property name="ElementShortName">send_data_packet</obj_property>
+      <obj_property name="ObjectShortName">send_data_packet</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/frame_payload" type="array">
+      <obj_property name="ElementShortName">frame_payload[0:66][31:0]</obj_property>
+      <obj_property name="ObjectShortName">frame_payload[0:66][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/payload_size" type="other">
+      <obj_property name="ElementShortName">payload_size</obj_property>
+      <obj_property name="ObjectShortName">payload_size</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_frame_builder/frame_builder_module/last_frame_sent" type="logic">
+      <obj_property name="ElementShortName">last_frame_sent</obj_property>
+      <obj_property name="ObjectShortName">last_frame_sent</obj_property>
+   </wvobject>
+</wave_config>

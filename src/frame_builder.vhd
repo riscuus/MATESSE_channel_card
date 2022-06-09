@@ -27,16 +27,15 @@ library concept;
 use concept.utils.all;
 
 entity frame_builder is
-    generic(
-    );
     port(
         clk                     : in std_logic; -- 5MHz clock                                                                           
         rst                     : in std_logic; -- asynchronous reset
 
         -- Param buffers
-        ret_data_setup          : in t_param_array(0 to PARAM_ID_TO_SIZE(return_data_s_address) - 1);
+        ret_data_setup          : in t_param_array(0 to PARAM_ID_TO_SIZE(RET_DATA_S_ADDR) - 1);
         data_rate               : in natural;
         num_rows                : in natural;
+        num_cols                : in natural;
         row_len                 : in natural;
 
         -- Interface with cmd handler and row selector
@@ -59,17 +58,16 @@ end frame_builder;
 
 architecture behave of frame_builder is
 
-    constant NUM_CHANNELS   : natural := t_channel_record_array'length;
     constant header_version : natural := 7;
 
-    type stateType is (idle, wait_new_row, wait_fb_dly, set_DAC_voltage);
+    type stateType is (idle, wait_valid_data, wait_sender_ready, send_data);
     signal state : stateType;
 
-    type t_header_payload is array 0 to (DATA_PKT_HEADER_LENGTH - 1) of t_word;
-    type t_data_payload is array 0 to (MAX_ROWS - 1) of t_word;
+    type t_header_payload is array (0 to (DATA_PKT_HEADER_LENGTH - 1)) of t_word;
+    type t_data_payload is array (0 to (MAX_CHANNELS * MAX_ROWS - 1)) of t_word;
 
     signal header_payload   : t_header_payload := (others => (others => '0'));
-    signal data_payload     : t_data_payload := (others => (others => '0'))
+    signal data_payload     : t_data_payload := (others => (others => '0'));
 
     signal valid_data           : std_logic := '0';
     signal last_frame           : std_logic := '0';
@@ -77,7 +75,6 @@ architecture behave of frame_builder is
     signal row_counter          : natural   := 0;
     signal initial_id           : natural   := 0; -- The first frame will have this id
     signal final_id             : natural   := 0; -- The last frame will have this id
-    signal num_frames           : natural   := 0; -- (= final_id - initial_id + 1)
     signal frame_id             : natural   := 0; -- The current frame_id (starts at initial_id)
     signal frame_counter        : natural   := 0; -- Counter for the current sent frames (starts at 0 ends at data rate)
     signal total_frame_counter  : natural   := 0; -- Counter for the current total sent frames (starts at 0 ends when acquisition is over)
@@ -90,10 +87,10 @@ begin
 
 -- Simple assigments
 send_data_packet <= send_reg;
-inital_id <= to_integer(unsigned(ret_data_setup(0)));
-final_id <= to_integer(unsigned(ret_data_setup(0)));
-num_frames <= final_id - initial_id + 1; -- TODO: Consider case when final_id is smaller that initial_id
+initial_id <= to_integer(unsigned(ret_data_setup(0)));
+final_id <= to_integer(unsigned(ret_data_setup(1)));
 last_frame <= '1' when frame_id = final_id or stop_bit = '1' else '0';
+payload_size <= t_header_payload'length + num_cols * num_rows;
 
 -- State machine logic
 main_logic : process(clk, rst)
@@ -103,6 +100,7 @@ begin
     elsif (rising_edge(clk)) then
         case state is
             when idle =>
+                last_frame_sent <= '0';
                 if (acquisition_on = '1') then
                     frame_id <= initial_id;
                     state <= wait_valid_data;
@@ -145,9 +143,12 @@ begin
             when send_data =>
                 send_reg <= '0';
                 if (last_frame = '1') then
+                    last_frame_sent <= '1';
                     total_frame_counter <= 0;
+                    frame_id <= initial_id;
                     state <= idle;
                 else
+                    frame_id <= frame_id + 1;
                     state <= wait_valid_data;
                 end if;
 
@@ -164,7 +165,7 @@ begin
         if (i < t_header_payload'length) then
             frame_payload(i) <= header_payload(i);
         else
-            frame_payload(i) <= data_payload(i)
+            frame_payload(i) <= data_payload(i-t_header_payload'length);
         end if;
     end loop;
 end process;
@@ -175,11 +176,11 @@ begin
     valid_data <= '0';
     -- We determine that the data is valid when all channels report valid data. This should always occur as they
     -- are parallel, if not something is wrong
-    for i in 0 to (NUM_CHANNELS - 2) loop
+    for i in 0 to (MAX_CHANNELS - 2) loop
             if (i = 0) then
                 valid_data <= channels_data(i).valid and channels_data(i+1).valid;
             else
-                valid_data <= valid_data and channels_data(i+1);
+                valid_data <= valid_data and channels_data(i+1).valid;
             end if;
     end loop;
 end process;
@@ -200,29 +201,29 @@ begin
     end if;
 end process;
 
--- Data payload signal generation
+-- Data payload assignment from each channel data
 process(clk, rst)
 begin
     if (rst = '1') then
-        stop_bit <= '0';
+        data_payload <= (others => (others => '0'));
     elsif (rising_edge(clk)) then
-        if (valid_data = '1') then
-            for i in 0 to (NUM_CHANNELS - 1) loop
-                data_payload((i*num_rows)+channels_data(i).row_num) <= channels_data(i).data;
+        if ((acquisition_on = '1' or frame_active = '1') and valid_data = '1') then
+            for i in 0 to (MAX_CHANNELS - 1) loop
+                data_payload((i*num_rows)+channels_data(i).row_num) <= channels_data(i).value;
             end loop;
         end if;
     end if;
 end process;
 
--- Header payload signal generation
+-- Header payload assigment
 process(clk, rst)
 begin
     if (rst = '1') then
-        stop_bit <= '0';
+        header_payload <= (others => (others => '0'));
     elsif (rising_edge(clk)) then
-        if (valid_data = '1') then
+        if ((acquisition_on = '1' or frame_active = '1') and valid_data = '1') then
             -- (0) Status bits
-            header_payload(0) <= (others => '0') & stop_bit & last_frame;
+            header_payload(0)(1 downto 0) <= stop_bit & last_frame;
             -- (1) Frame id
             header_payload(1) <= std_logic_vector(to_unsigned(frame_id, t_word'length));
             -- (2) row_len
