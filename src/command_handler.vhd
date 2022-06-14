@@ -56,7 +56,16 @@ entity command_handler is
 
         -- Interface with param buffers
         update_param_pulse      : out std_logic;
-        param_id_address        : out natural;
+        param_id_to_update      : out natural;
+
+        -- Interface with channels controller
+        set_SF                  : out std_logic;
+        set_SB                  : out std_logic;
+        set_FF                  : out std_logic;
+        set_FB                  : out std_logic;
+
+        -- Interface with TES bias setter
+        set_TES_bias            : out std_logic;
 
 
         last_data_frame_pulse   : in std_logic; -- The last data frame during an acquisition has been sent. Used when stop
@@ -105,7 +114,7 @@ begin
                     acquisition_on_reg      <= '0';
                     acquisition_configured  <= '0';
                     ram_address_reg         <= 0;
-                    reply_err_word   <= (others => '0');
+                    reply_err_word          <= (others => '0');
 
                     packet_type_reg         <= undefined;
                     card_id_reg             <= (others => '0');
@@ -176,7 +185,7 @@ begin
                 when check_param_id =>
                     if (correct_param_id = '1') then
                         ram_address_reg <= to_integer(unsigned(param_id_reg(7 downto 0))); 
-                        param_id_address <= to_integer(unsigned(param_id_reg(7 downto 0))); 
+                        param_id_address <= PARAM_ID_TO_ADDR(to_integer(unsigned(param_id_reg(7 downto 0)))); 
                         param_id_size <= PARAM_ID_TO_SIZE(to_integer(unsigned(param_id_reg(7 downto 0))));
                         
                         if (packet_type_reg = cmd_rb) then -- We either read the param or write it
@@ -191,6 +200,7 @@ begin
                 
                 when check_payload_size =>
                     if (param_id_size = payload_size_reg) then
+                        ram_write <= '1';
                         state <= write_ram_data;
                     else
                         reply_err_word(3) <= '1'; -- ER_CODE = Incorrect payload size
@@ -217,6 +227,8 @@ begin
                     param_data(word_count) <= packet_payload_reg(word_count); -- We already set the param data for the later update
 
                     if (word_count = param_id_size - 1) then
+                        ram_write <= '0';
+                        update_param_pulse <= '1';
                         state <= update_param_state;
                     else
                         ram_address_reg <= ram_address_reg + 1;
@@ -227,10 +239,11 @@ begin
                 when update_param_state =>
 
                     -- Check special case
-                    if (to_integer(unsigned(param_id_reg)) = RET_DATA_S_ADDR) then
+                    if (to_integer(unsigned(param_id_reg)) = RET_DATA_S_ID) then
                         acquisition_configured <= '1';
                     end if;
 
+                    update_param_pulse <= '0';
                     state <= setup_ok_reply;
 
                 -- Acquire data
@@ -273,12 +286,14 @@ begin
 
                 when wait_packet_sender_ready =>
                     if (packet_sender_ready = '1') then
+                        send_reply_pulse <= '1';
                         state <= send_reply;
                     else
                         state <= state;
                     end if;
 
                 when send_reply =>
+                    send_reply_pulse <= '0';
                     state <= idle;
 
                 when others =>
@@ -294,39 +309,34 @@ begin
     ram_write_data      <= packet_payload_reg(word_count);
     
     -- Conbinational conditional assigments
-    update_param_pulse  <= '1' when state = update_param_state else
+    correct_param_id    <= '1' when to_integer(unsigned(param_id_reg(7 downto 0))) = ROW_ORDER_ID    or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ON_BIAS_ID      or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = OFF_BIAS_ID     or 
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SA_BIAS_ID      or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FLTR_RST_ID     or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RET_DATA_ID     or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = DATA_MODE_ID    or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FILTR_COEFF_ID  or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SERVO_MODE_ID   or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_DLY_ID     or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_AMP_ID     or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_STEP_ID    or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = BIAS_ID         or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ROW_LEN_ID      or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = NUM_ROWS_ID     or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SAMPLE_DLY_ID   or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SAMPLE_NUM_ID   or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FB_DLY_ID       or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RET_DATA_S_ID   or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ADC_OFFSET_0_ID or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ADC_OFFSET_1_ID or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = GAIN_0_ID       or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = GAIN_1_ID       or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = DATA_RATE_ID    or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = NUM_COLS_REP_ID or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SA_FB_ID        or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SQ1_BIAS_ID     or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SQ1_FB_ID       else
                            '0';
-    ram_write           <= '1' when state = write_ram_data else
-                           '0';
-    send_reply_pulse    <= '1' when state = send_reply else
-                           '0';
-    correct_param_id    <= '1' when to_integer(unsigned(param_id_reg(7 downto 0))) = ROW_LEN_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = NUM_ROWS_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RET_DATA_S_ADDR or -- Special case
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SA_BIAS_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RET_DAT_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SERVO_MODE_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_DLY_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_AMP_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_STEP_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FB_CONST_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SAMPLE_DLY_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SAMPLE_NUM_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FB_DLY_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FLTR_RST_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FILTR_COEFF_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FLUX_FB_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = BIAS_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ROW_ORDER_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ON_BIAS_ADDR or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = OFF_BIAS_ADDR else
-                           '0';
-
-
-
-
-
-
-
 
 end behave;

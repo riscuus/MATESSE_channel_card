@@ -74,55 +74,109 @@ package utils is
     constant DAUGHTER_CARD_ID : t_half_word := x"ffff";
 
 
-    -- The addresses of each param id
-    constant ROW_LEN_ADDR       : natural := 48; -- (0x30) Affects row_selector (how many pulses to spend on each row)
-    constant NUM_ROWS_ADDR      : natural := 49; -- (0x31) Affects row_selector (to cycle #num_rows)
-    constant NUM_COLS_REP_ADDR  : natural := 173;-- (0xAD) Affects frame builder. (num of columns to be reported)
-    constant RET_DATA_S_ADDR    : natural := 83; -- (0x53) Affects the data_frame_builder (num in header)
-    constant SA_BIAS_ADDR       : natural := 16; -- (0x10) Affects bias_setter (SA bias)
-    constant RET_DAT_ADDR       : natural := 22; -- (0x16) Start Acquisition
-    constant SERVO_MODE_ADDR    : natural := 27; -- (0x1B) Affects feedback_setter (can get values from feedback calculator, constant, or ramp)
-    constant RAMP_DLY_ADDR      : natural := 28; -- (0x1C) Affects ramp_generator
-    constant RAMP_AMP_ADDR      : natural := 29; -- (0x1D) Affects ramp_generator
-    constant RAMP_STEP_ADDR     : natural := 30; -- (0x1E) Affects ramp_generator
-    constant FB_CONST_ADDR      : natural := 31; -- (0x1F) Affects the feedback_setter. The values for constant feedback. SQ1??
-    constant SAMPLE_DLY_ADDR    : natural := 50; -- (0x32) Affects sample_selector
-    constant SAMPLE_NUM_ADDR    : natural := 51; -- (0x33) Affects sample_selector
-    constant FB_DLY_ADDR        : natural := 52; -- (0x34) Affects feedback_setter
-    constant FLTR_RST_ADDR      : natural := 20; -- (0x14) Affects butterworth_filter (direct). NOT IMPLEMENTED
-    constant FILTR_COEFF_ADDR   : natural := 26; -- (0x1A) Affects butterworth_filter
-    constant FLUX_FB_ADDR       : natural := 32; -- (0x20) Affects feedback_setter. SA feedback
-    constant BIAS_ADDR          : natural := 33; -- (0x21) Affects bias_setter (TES bias)
-    constant ROW_ORDER_ADDR     : natural := 1;  -- (0x01) Affects row_selector
-    constant ON_BIAS_ADDR       : natural := 2;  -- (0x02) Affects row_activator
-    constant OFF_BIAS_ADDR      : natural := 3;  -- (0x03) Affects row_activator
+    -- The params id (MCE based)
+    constant ROW_ORDER_ID       : natural := 1;  -- (0x01) Affects row_selector
+    constant ON_BIAS_ID         : natural := 2;  -- (0x02) Affects row_activator
+    constant OFF_BIAS_ID        : natural := 3;  -- (0x03) Affects row_activator
+    constant SA_BIAS_ID         : natural := 16; -- (0x10) Affects channels controller (SA bias)
+    constant FLTR_RST_ID        : natural := 20; -- (0x14) Affects butterworth_filter (direct). NOT IMPLEMENTED
+    constant RET_DATA_ID        : natural := 22; -- (0x16) Start Acquisition
+    constant DATA_MODE_ID       : natural := 23; -- (0x17) Affects channels controller
+    constant FILTR_COEFF_ID     : natural := 26; -- (0x1A) Affects butterworth_filter
+    constant SERVO_MODE_ID      : natural := 27; -- (0x1B) Affects channels controlller (can get values from feedback calculator, constant, or ramp)
+    constant RAMP_DLY_ID        : natural := 28; -- (0x1C) Affects ramp_generator
+    constant RAMP_AMP_ID        : natural := 29; -- (0x1D) Affects ramp_generator
+    constant RAMP_STEP_ID       : natural := 30; -- (0x1E) Affects ramp_generator
+    --constant FB_CONST_ID        : natural := 31; -- (0x1F) Affects channels controller (SQ1 FB)
+    --constant FLUX_FB_ID         : natural := 32; -- (0x20) Affects channels controller. SF, SB, FF, FB
+    constant BIAS_ID            : natural := 33; -- (0x21) Affects bias_setter (TES bias)
+    constant ROW_LEN_ID         : natural := 48; -- (0x30) Affects row_selector (how many pulses to spend on each row)
+    constant NUM_ROWS_ID        : natural := 49; -- (0x31) Affects row_selector (to cycle #num_rows)
+    constant SAMPLE_DLY_ID      : natural := 50; -- (0x32) Affects sample_selector
+    constant SAMPLE_NUM_ID      : natural := 51; -- (0x33) Affects sample_selector
+    constant FB_DLY_ID          : natural := 52; -- (0x34) Affects feedback_setter
+    constant RET_DATA_S_ID      : natural := 83; -- (0x53) Affects the data_frame_builder (num in header)
+    constant ADC_OFFSET_0_ID    : natural := 104; -- (0x68) ADC offset for column 0 (different gain for each row)
+    constant ADC_OFFSET_1_ID    : natural := 105; -- (0x68) ADC offset for column 1 (different gain for each row)
+    constant GAIN_0_ID          : natural := 120; -- (0x78) Gain for column 0 (different gain for each row)
+    constant GAIN_1_ID          : natural := 121; -- (0x78) Gain for column 1 (different gain for each row)
+    constant DATA_RATE_ID       : natural := 160; -- (0xA0) Affects the data_frame_builder
+    constant NUM_COLS_REP_ID    : natural := 173; -- (0xAD) Affects frame builder. (num of columns to be reported)
+    constant SA_FB_ID           : natural := 249; -- (0xF9) Affects channels controller (CUSTOM)
+    constant SQ1_BIAS_ID        : natural := 250; -- (0xFA) Affects channels controller (CUSTOM)
+    constant SQ1_FB_ID          : natural := 251; -- (0xFB) Affects channels controller (CUSTOM)
 
 
     -- Number of words that the parameter occupies in the RAM memory
     type t_param_id_to_size is array (0 to 255) of natural;
     constant PARAM_ID_TO_SIZE : t_param_id_to_size :=
      (
-            ROW_LEN_ADDR        => 1,
-            NUM_ROWS_ADDR       => 1,
-            RET_DATA_S_ADDR     => 2,
-            SA_BIAS_ADDR        => MAX_CHANNELS,
-            SERVO_MODE_ADDR     => MAX_CHANNELS,
-            RAMP_DLY_ADDR       => 1,
-            RAMP_AMP_ADDR       => 1,
-            RAMP_STEP_ADDR      => 1,
-            FB_CONST_ADDR       => MAX_CHANNELS,
-            SAMPLE_DLY_ADDR     => 1,
-            SAMPLE_NUM_ADDR     => 1,
-            FB_DLY_ADDR         => 1,
-            FILTR_COEFF_ADDR    => IIR_FILTER_POLES * 2,
-            FLUX_FB_ADDR        => MAX_ROWS,
-            BIAS_ADDR           => MAX_CHANNELS,
-            ROW_ORDER_ADDR      => MAX_ROWS,
-            ON_BIAS_ADDR        => MAX_ROWS,
-            OFF_BIAS_ADDR       => MAX_ROWS,
-            NUM_COLS_REP_ADDR   => 1,
-            others              => 0
+            ROW_ORDER_ID    => MAX_ROWS,
+            ON_BIAS_ID      => MAX_ROWS,
+            OFF_BIAS_ID     => MAX_ROWS,
+            SA_BIAS_ID      => MAX_CHANNELS,
+            FLTR_RST_ID     => 1,
+            RET_DATA_ID     => 1,
+            FILTR_COEFF_ID  => IIR_FILTER_POLES * 2,
+            SERVO_MODE_ID   => MAX_CHANNELS,
+            RAMP_DLY_ID     => 1,
+            RAMP_AMP_ID     => 1,
+            RAMP_STEP_ID    => 1,
+            --FB_CONST_ID     => MAX_CHANNELS,
+            --FLUX_FB_ID      => MAX_ROWS,
+            BIAS_ID         => MAX_CHANNELS,
+            ROW_LEN_ID      => 1,
+            NUM_ROWS_ID     => 1,
+            SAMPLE_DLY_ID   => 1,
+            SAMPLE_NUM_ID   => 1,
+            FB_DLY_ID       => 1,
+            RET_DATA_S_ID   => 2,
+            ADC_OFFSET_0_ID => MAX_ROWS,
+            ADC_OFFSET_1_ID => MAX_ROWS,
+            GAIN_0_ID       => MAX_ROWS,
+            GAIN_1_ID       => MAX_ROWS,
+            DATA_RATE_ID    => 1,
+            NUM_COLS_REP_ID => 1,
+            SA_FB_ID        => MAX_CHANNELS,
+            SQ1_BIAS_ID     => MAX_CHANNELS,
+            SQ1_FB_ID       => MAX_CHANNELS,
+            others          => 0
         );
+
+    -- Addresses of the params in the RAM
+    type t_param_id_to_addr is array (0 to 255) of natural;
+    constant PARAM_ID_TO_ADDR : t_param_id_to_addr :=
+    (
+        ROW_ORDER_ID    => 0  * MAX_ROWS,
+        ON_BIAS_ID      => 1  * MAX_ROWS,
+        OFF_BIAS_ID     => 2  * MAX_ROWS,
+        SA_BIAS_ID      => 3  * MAX_ROWS,
+        FLTR_RST_ID     => 4  * MAX_ROWS,
+        RET_DATA_ID     => 5  * MAX_ROWS,
+        FILTR_COEFF_ID  => 6  * MAX_ROWS,
+        SERVO_MODE_ID   => 7  * MAX_ROWS,
+        RAMP_DLY_ID     => 8  * MAX_ROWS,
+        RAMP_AMP_ID     => 9  * MAX_ROWS,
+        RAMP_STEP_ID    => 10 * MAX_ROWS,
+        --FB_CONST_ID      0 * MAX_ROWS,
+        --FLUX_FB_ID       0 * MAX_ROWS,
+        BIAS_ID         => 11 * MAX_ROWS,
+        ROW_LEN_ID      => 12 * MAX_ROWS,
+        NUM_ROWS_ID     => 13 * MAX_ROWS,
+        SAMPLE_DLY_ID   => 14 * MAX_ROWS,
+        SAMPLE_NUM_ID   => 15 * MAX_ROWS,
+        FB_DLY_ID       => 16 * MAX_ROWS,
+        RET_DATA_S_ID   => 17 * MAX_ROWS,
+        ADC_OFFSET_0_ID => 18 * MAX_ROWS,
+        ADC_OFFSET_1_ID => 19 * MAX_ROWS,
+        GAIN_0_ID       => 20 * MAX_ROWS,
+        GAIN_1_ID       => 21 * MAX_ROWS,
+        DATA_RATE_ID    => 22 * MAX_ROWS,
+        NUM_COLS_REP_ID => 23 * MAX_ROWS,
+        SA_FB_ID        => 24 * MAX_ROWS,
+        SQ1_BIAS_ID     => 25 * MAX_ROWS,
+        SQ1_FB_ID       => 26 * MAX_ROWS,
+    );
 
 
     -- The possible servo modes
