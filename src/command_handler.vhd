@@ -238,9 +238,19 @@ begin
 
                 when update_param_state =>
 
-                    -- Check special case
+                    -- Check special cases
                     if (to_integer(unsigned(param_id_reg)) = RET_DATA_S_ID) then
                         acquisition_configured <= '1';
+                    elsif (to_integer(unsigned(param_id_reg)) = SA_FB_ID) then
+                        set_SF <= '1';
+                    elsif (to_integer(unsigned(param_id_reg)) = SA_BIAS_ID) then
+                        set_SB <= '1';
+                    elsif (to_integer(unsigned(param_id_reg)) = SQ1_FB_ID) then
+                        set_FF <= '1';
+                    elsif (to_integer(unsigned(param_id_reg)) = SQ1_BIAS_ID) then
+                        set_FB <= '1';
+                    elsif (to_integer(unsigned(param_id_reg)) = BIAS_ID) then
+                        set_TES_bias <= '1';
                     end if;
 
                     update_param_pulse <= '0';
