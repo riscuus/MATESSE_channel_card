@@ -143,6 +143,9 @@ begin
                         packet_payload_reg <= packet_payload;
                         
                         state <= check_card_id;
+                    elsif (acquisition_on_reg = '1' and last_data_frame_pulse = '1') then
+                        -- We were on an acquisition and the last data frame has already sent. We stop the acquisition logic
+                        acquisition_on_reg <= '0';
                     else
                         state <= state;
                     end if;
