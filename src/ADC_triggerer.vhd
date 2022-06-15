@@ -29,12 +29,14 @@ library concept;
 use concept.utils.all;
 
 entity ADC_triggerer is
+    generic(
+        trigg_clk_cycles        : natural := 20 -- The ADC is triggered every "trigg_clk_cycles". 20 for 5MHz
+    );
     port(
-        clk                     : in std_logic; -- 100mhz clock                                                                           
+        clk                     : in std_logic; -- 100mhz clock
         rst                     : in std_logic; -- asynchronous reset
 
         frame_active            : in std_logic; -- Signal that indicates that the acquisition has started
-        trigg_clk_cycles        : in natural;
         ADC_start_pulse         : out std_logic -- Pulse to trigger the ADC
     );
 
