@@ -31,13 +31,11 @@ entity feedback_calculator is
         clk                 : in std_logic; -- 5mhz clock                                                                           
         rst                 : in std_logic; -- asynchronous reset
 
-        acc_sample          : in t_word; -- The accumulated sample received from the sample_accumulator
-        acc_sample_valid    : in std_logic; -- Pulse to indicate that the acc sample is already valid
-        acc_sample_row      : in natural; -- The row the acc sample belongs to
+        acc_sample          : in t_channel_record; -- Contains the acc sample from the sample_accumulator, a signal indicating if its valid and the row it belongs to
         sa_fb_gain          : in integer; -- The gain to be applied to the acc sample
-        write_row_num       : out natural; -- The address in the ram memory to write the calc_fb
-        write_en            : out std_logic; -- Enable signal to write in the ram memory
-        calc_fb             : out t_word -- The calculated fb = acc_sample * sa_fb_gain
+        fb_sample           : out t_channel_record -- Contains the fb value, signal indicating if it is valid and the row
+                                                -- The value is simply the acc value * gain
+                                                -- The valid signal is also use to enable the ram write
     );
 
 end feedback_calculator;
@@ -52,7 +50,7 @@ architecture behave of feedback_calculator is
 
 begin
 
-acc_sample_int <= to_integer(signed(acc_sample));
+acc_sample_int <= to_integer(signed(acc_sample.value));
 
 main_logic : process(clk, rst)
 begin
@@ -61,21 +59,21 @@ begin
     elsif (rising_edge(clk)) then
         case state is
             when idle =>
-                write_en <= '0';
-                write_row_num <= 0;
-                calc_fb <= (others => '0');
+                fb_sample.valid <= '0';
+                fb_sample.row_num <= 0;
+                fb_sample.value <= (others => '0');
 
-                if(acc_sample_valid = '1') then
-                    calc_fb <= std_logic_vector(to_signed(acc_sample_int * sa_fb_gain, calc_fb'length)); 
-                    write_row_num <= acc_sample_row;
-                    write_en <= '1';
+                if(acc_sample.valid = '1') then
+                    fb_sample.value <= std_logic_vector(to_signed(acc_sample_int * sa_fb_gain, fb_sample.value'length)); 
+                    fb_sample.row_num <= acc_sample.row_num;
+                    fb_sample.valid <= '1';
 
                     state <= write_ram;
                 else
                     state <= state;
                 end if;
             when write_ram =>
-                write_en <= '0';
+                fb_sample.valid <= '0';
                 state <= idle;
             when others =>
                 state <= idle;
