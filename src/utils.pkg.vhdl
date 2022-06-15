@@ -102,81 +102,94 @@ package utils is
     constant GAIN_1_ID          : natural := 121; -- (0x78) Gain for column 1 (different gain for each row)
     constant DATA_RATE_ID       : natural := 160; -- (0xA0) Affects the data_frame_builder
     constant NUM_COLS_REP_ID    : natural := 173; -- (0xAD) Affects frame builder. (num of columns to be reported)
+    -- Custom params
     constant SA_FB_ID           : natural := 249; -- (0xF9) Affects channels controller (CUSTOM)
     constant SQ1_BIAS_ID        : natural := 250; -- (0xFA) Affects channels controller (CUSTOM)
     constant SQ1_FB_ID          : natural := 251; -- (0xFB) Affects channels controller (CUSTOM)
+    constant CNV_LEN_ID         : natural := 252; -- (0xFC) Affects ADC gate controller (CUSTOM)
+    constant SCK_DLY_ID         : natural := 253; -- (0xFD) Affects ADC gate controller (CUSTOM)
+    constant SCK_HALF_PERIOD_ID : natural := 254; -- (0xFE) Affects ADC gate controller (CUSTOM)
 
 
     -- Number of words that the parameter occupies in the RAM memory
     type t_param_id_to_size is array (0 to 255) of natural;
     constant PARAM_ID_TO_SIZE : t_param_id_to_size :=
      (
-            ROW_ORDER_ID    => MAX_ROWS,
-            ON_BIAS_ID      => MAX_ROWS,
-            OFF_BIAS_ID     => MAX_ROWS,
-            SA_BIAS_ID      => MAX_CHANNELS,
-            FLTR_RST_ID     => 1,
-            RET_DATA_ID     => 1,
-            FILTR_COEFF_ID  => IIR_FILTER_POLES * 2,
-            SERVO_MODE_ID   => MAX_CHANNELS,
-            RAMP_DLY_ID     => 1,
-            RAMP_AMP_ID     => 1,
-            RAMP_STEP_ID    => 1,
-            --FB_CONST_ID     => MAX_CHANNELS,
-            --FLUX_FB_ID      => MAX_ROWS,
-            BIAS_ID         => MAX_CHANNELS,
-            ROW_LEN_ID      => 1,
-            NUM_ROWS_ID     => 1,
-            SAMPLE_DLY_ID   => 1,
-            SAMPLE_NUM_ID   => 1,
-            FB_DLY_ID       => 1,
-            RET_DATA_S_ID   => 2,
-            ADC_OFFSET_0_ID => MAX_ROWS,
-            ADC_OFFSET_1_ID => MAX_ROWS,
-            GAIN_0_ID       => MAX_ROWS,
-            GAIN_1_ID       => MAX_ROWS,
-            DATA_RATE_ID    => 1,
-            NUM_COLS_REP_ID => 1,
-            SA_FB_ID        => MAX_CHANNELS,
-            SQ1_BIAS_ID     => MAX_CHANNELS,
-            SQ1_FB_ID       => MAX_CHANNELS,
-            others          => 0
+            ROW_ORDER_ID        => MAX_ROWS,
+            ON_BIAS_ID          => MAX_ROWS,
+            OFF_BIAS_ID         => MAX_ROWS,
+            SA_BIAS_ID          => MAX_CHANNELS,
+            FLTR_RST_ID         => 1,
+            RET_DATA_ID         => 1,
+            DATA_MODE_ID        => 1,
+            FILTR_COEFF_ID      => IIR_FILTER_POLES * 2,
+            SERVO_MODE_ID       => MAX_CHANNELS,
+            RAMP_DLY_ID         => 1,
+            RAMP_AMP_ID         => 1,
+            RAMP_STEP_ID        => 1,
+            --FB_CONST_ID       => MAX_CHANNELS,
+            --FLUX_FB_ID        => MAX_ROWS,
+            BIAS_ID             => 4,
+            ROW_LEN_ID          => 1,
+            NUM_ROWS_ID         => 1,
+            SAMPLE_DLY_ID       => 1,
+            SAMPLE_NUM_ID       => 1,
+            FB_DLY_ID           => 1,
+            RET_DATA_S_ID       => 2,
+            ADC_OFFSET_0_ID     => MAX_ROWS,
+            ADC_OFFSET_1_ID     => MAX_ROWS,
+            GAIN_0_ID           => MAX_ROWS,
+            GAIN_1_ID           => MAX_ROWS,
+            DATA_RATE_ID        => 1,
+            NUM_COLS_REP_ID     => 1,
+            SA_FB_ID            => MAX_CHANNELS,
+            SQ1_BIAS_ID         => MAX_CHANNELS,
+            SQ1_FB_ID           => MAX_CHANNELS,
+            CNV_LEN_ID          => 1,
+            SCK_DLY_ID          => 1,
+            SCK_HALF_PERIOD_ID  => 1,
+            others              => 0
         );
 
     -- Addresses of the params in the RAM
     type t_param_id_to_addr is array (0 to 255) of natural;
     constant PARAM_ID_TO_ADDR : t_param_id_to_addr :=
     (
-        ROW_ORDER_ID    => 0  * MAX_ROWS,
-        ON_BIAS_ID      => 1  * MAX_ROWS,
-        OFF_BIAS_ID     => 2  * MAX_ROWS,
-        SA_BIAS_ID      => 3  * MAX_ROWS,
-        FLTR_RST_ID     => 4  * MAX_ROWS,
-        RET_DATA_ID     => 5  * MAX_ROWS,
-        FILTR_COEFF_ID  => 6  * MAX_ROWS,
-        SERVO_MODE_ID   => 7  * MAX_ROWS,
-        RAMP_DLY_ID     => 8  * MAX_ROWS,
-        RAMP_AMP_ID     => 9  * MAX_ROWS,
-        RAMP_STEP_ID    => 10 * MAX_ROWS,
-        --FB_CONST_ID      0 * MAX_ROWS,
-        --FLUX_FB_ID       0 * MAX_ROWS,
-        BIAS_ID         => 11 * MAX_ROWS,
-        ROW_LEN_ID      => 12 * MAX_ROWS,
-        NUM_ROWS_ID     => 13 * MAX_ROWS,
-        SAMPLE_DLY_ID   => 14 * MAX_ROWS,
-        SAMPLE_NUM_ID   => 15 * MAX_ROWS,
-        FB_DLY_ID       => 16 * MAX_ROWS,
-        RET_DATA_S_ID   => 17 * MAX_ROWS,
-        ADC_OFFSET_0_ID => 18 * MAX_ROWS,
-        ADC_OFFSET_1_ID => 19 * MAX_ROWS,
-        GAIN_0_ID       => 20 * MAX_ROWS,
-        GAIN_1_ID       => 21 * MAX_ROWS,
-        DATA_RATE_ID    => 22 * MAX_ROWS,
-        NUM_COLS_REP_ID => 23 * MAX_ROWS,
-        SA_FB_ID        => 24 * MAX_ROWS,
-        SQ1_BIAS_ID     => 25 * MAX_ROWS,
-        SQ1_FB_ID       => 26 * MAX_ROWS,
+        ROW_ORDER_ID        => 0  * MAX_ROWS,
+        ON_BIAS_ID          => 1  * MAX_ROWS,
+        OFF_BIAS_ID         => 2  * MAX_ROWS,
+        SA_BIAS_ID          => 3  * MAX_ROWS,
+        FLTR_RST_ID         => 4  * MAX_ROWS,
+        RET_DATA_ID         => 5  * MAX_ROWS,
+        FILTR_COEFF_ID      => 6  * MAX_ROWS,
+        SERVO_MODE_ID       => 7  * MAX_ROWS,
+        RAMP_DLY_ID         => 8  * MAX_ROWS,
+        RAMP_AMP_ID         => 9  * MAX_ROWS,
+        RAMP_STEP_ID        => 10 * MAX_ROWS,
+        --FB_CONST_ID       => 0 * MAX_ROWS,
+        --FLUX_FB_ID        => 0 * MAX_ROWS,
+        BIAS_ID             => 11 * MAX_ROWS,
+        ROW_LEN_ID          => 12 * MAX_ROWS,
+        NUM_ROWS_ID         => 13 * MAX_ROWS,
+        SAMPLE_DLY_ID       => 14 * MAX_ROWS,
+        SAMPLE_NUM_ID       => 15 * MAX_ROWS,
+        FB_DLY_ID           => 16 * MAX_ROWS,
+        RET_DATA_S_ID       => 17 * MAX_ROWS,
+        ADC_OFFSET_0_ID     => 18 * MAX_ROWS,
+        ADC_OFFSET_1_ID     => 19 * MAX_ROWS,
+        GAIN_0_ID           => 20 * MAX_ROWS,
+        GAIN_1_ID           => 21 * MAX_ROWS,
+        DATA_RATE_ID        => 22 * MAX_ROWS,
+        NUM_COLS_REP_ID     => 23 * MAX_ROWS,
+        SA_FB_ID            => 24 * MAX_ROWS,
+        SQ1_BIAS_ID         => 25 * MAX_ROWS,
+        SQ1_FB_ID           => 26 * MAX_ROWS,
+        CNV_LEN_ID          => 27 * MAX_ROWS,
+        SCK_DLY_ID          => 28 * MAX_ROWS,
+        SCK_HALF_PERIOD_ID  => 29 * MAX_ROWS,
+        others              => 0
     );
+
 
 
     -- The possible servo modes
