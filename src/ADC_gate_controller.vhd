@@ -3,7 +3,7 @@
 -- Engineer: Iban Ibanez, Albert Risco
 -- 
 -- Create Date: 05.02.2020
--- Module Name: ADC_controller.vhd
+-- Module Name: ADC_gate_controller.vhd
 -- Project Name: channel_card_v1
 -- Target Devices: Spartan 7 xc7s25csga324-1
 -- Tool Versions: Vivado 2019.1
@@ -26,23 +26,25 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity ADC_controller IS
-    port(   clk             : in std_logic; -- 100MHz clock
-            rst             : in std_logic; -- Async reset
-            start_pulse     : in std_logic; -- Input pulse that indicates that a new conversion must start
-            CNV             : out std_logic; -- Output CNV pulse 30ns min high
-            SCK             : out std_logic; -- Serial output clock, min period 18.2 ns
-            CNV_LENGTH      : in positive;
-            SCK_DELAY       : in positive;
-            SCK_HALF_PERIOD : in positive
-            );
-end ADC_controller;
+entity ADC_gate_controller is
+    port(
+        clk             : in std_logic; -- 100MHz clock
+        rst             : in std_logic; -- Async reset
+
+        cnv_len         : in positive;
+        sck_dly         : in positive;
+        sck_half_period : in positive;
+
+        start_pulse     : in std_logic; -- Input pulse that indicates that a new conversion must start
+
+        CNV             : out std_logic; -- Output CNV pulse 30ns min high
+        SCK             : out std_logic -- Serial output clock, min period 18.2 ns
+    );
+end ADC_gate_controller;
 
 
-architecture behave OF ADC_controller IS
-    --constant CNV_LENGTH : positive := 4;
-    --constant SCK_DELAY : positive := 4;
-    --constant SCK_HALF_PERIOD : positive := 1;
+architecture behave OF ADC_gate_controller is
+
     constant NUM_OF_SCK_CYCLES : positive := 8;
 
     signal CNV_counter : natural := 0;
@@ -82,7 +84,7 @@ begin
                         state <= state;
                     end if;
                 when CNV_active =>
-                    if(CNV_counter = CNV_LENGTH - 1) then
+                    if(CNV_counter = cnv_len - 1) then
                         CNV <= '0';
                         CNV_counter <= 0;
                         state <= wait_serial_clk;
@@ -91,7 +93,7 @@ begin
                         state <= state;
                     end if;
                 when wait_serial_clk =>
-                    if(wait_SCK_counter = SCK_DELAY - 1) then
+                    if(wait_SCK_counter = sck_dly - 1) then
                         SCK <= '1';
                         wait_SCK_counter <= 0;
                         state <= SCK_active;
@@ -100,7 +102,7 @@ begin
                         state <= state;
                     end if;
                 when SCK_active => 
-                    if(SCK_counter = SCK_HALF_PERIOD - 1) then 
+                    if(SCK_counter = sck_half_period - 1) then 
                         SCK_counter <= 0;
                         SCK <= '0';
                         state <= SCK_non_active;
@@ -109,7 +111,7 @@ begin
                         state <= state;
                     end if;
                 when SCK_non_active =>
-                    if(SCK_counter = SCK_HALF_PERIOD - 1) then
+                    if(SCK_counter = sck_half_period - 1) then
                         SCK_counter <= 0;
                         if(SCK_cycles_counter = NUM_OF_SCK_CYCLES - 1) then
                             SCK_cycles_counter <= 0;
