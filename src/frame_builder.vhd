@@ -32,7 +32,7 @@ entity frame_builder is
         rst                     : in std_logic; -- asynchronous reset
 
         -- Param buffers
-        ret_data_setup          : in t_param_array(0 to PARAM_ID_TO_SIZE(RET_DATA_S_ADDR) - 1);
+        ret_data_setup          : in t_param_array(0 to PARAM_ID_TO_SIZE(RET_DATA_S_ID) - 1);
         data_rate               : in natural;
         num_rows                : in natural;
         num_cols                : in natural;
