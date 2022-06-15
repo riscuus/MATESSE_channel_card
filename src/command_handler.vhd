@@ -67,8 +67,13 @@ entity command_handler is
         -- Interface with TES bias setter
         set_TES_bias            : out std_logic;
 
+        -- Interface with row_activator
+        update_off_value        : out std_logic;
 
+        -- Interface with frame_builder
         last_data_frame_pulse   : in std_logic; -- The last data frame during an acquisition has been sent. Used when stop
+        stop_received           : out std_logic := '0'; -- Pulse indicating that while an acquisition the stop cmd was received
+
         acquisition_on          : out std_logic -- Signal to indicate the loop controller module to start a new acquisition
 
     );
@@ -77,7 +82,7 @@ end command_handler;
 
 architecture behave of command_handler is
     type stateType is (init, idle, check_card_id, check_type, check_param_id, check_payload_size, wait_read_data,
-                       read_ram_data, write_ram_data, update_param_state, start_acquisition, stop_acquisition, 
+                       read_ram_data, write_ram_data, update_special_param, update_param_state, start_acquisition, stop_acquisition, 
                        wait_last_data_frame, setup_ok_reply, setup_err_reply, wait_packet_sender_ready, send_reply);
     signal state : stateType;
 
@@ -125,7 +130,13 @@ begin
                     -- Outputs
                     reply_err_ok            <= '0';
                     reply_payload_size      <= 0;
-                    param_id_address        <= 0;
+                    param_id_to_update      <= 0;
+                    set_SF                  <= '0';
+                    set_SB                  <= '0';
+                    set_FF                  <= '0';
+                    set_FB                  <= '0';
+                    set_TES_bias            <= '0';
+                    update_off_value        <= '0';
 
                     state <= idle;
 
@@ -161,14 +172,15 @@ begin
                 -- Type
                 when check_type =>
                     if (acquisition_on_reg = '1') then
-                        if ( packet_type_reg = cmd_st and to_integer(unsigned(param_id_reg)) = RET_DAT_ADDR) then -- Stop acquisition
+                        if ( packet_type_reg = cmd_st and to_integer(unsigned(param_id_reg)) = RET_DATA_ID) then -- Stop acquisition
+                            stop_received <= '1';
                             state <= stop_acquisition;
                         else -- While in acquisition ignore all packets that are not stop
                             state <= idle;
                         end if;
                     else 
                         if (packet_type_reg = cmd_go) then
-                            if (acquisition_configured = '1' and to_integer(unsigned(param_id_reg)) = RET_DAT_ADDR) then
+                            if (acquisition_configured = '1' and to_integer(unsigned(param_id_reg)) = RET_DATA_ID) then
                                 state <= start_acquisition;
                             else
                                 reply_err_word(0) <= '1'; -- ER_CODE = cmd_go without previous configuration
@@ -188,7 +200,7 @@ begin
                 when check_param_id =>
                     if (correct_param_id = '1') then
                         ram_address_reg <= to_integer(unsigned(param_id_reg(7 downto 0))); 
-                        param_id_address <= PARAM_ID_TO_ADDR(to_integer(unsigned(param_id_reg(7 downto 0)))); 
+                        param_id_to_update <= to_integer(unsigned(param_id_reg(7 downto 0))); 
                         param_id_size <= PARAM_ID_TO_SIZE(to_integer(unsigned(param_id_reg(7 downto 0))));
                         
                         if (packet_type_reg = cmd_rb) then -- We either read the param or write it
@@ -244,20 +256,41 @@ begin
                     -- Check special cases
                     if (to_integer(unsigned(param_id_reg)) = RET_DATA_S_ID) then
                         acquisition_configured <= '1';
+                        state <= update_special_param;
                     elsif (to_integer(unsigned(param_id_reg)) = SA_FB_ID) then
                         set_SF <= '1';
+                        state <= update_special_param;
                     elsif (to_integer(unsigned(param_id_reg)) = SA_BIAS_ID) then
                         set_SB <= '1';
+                        state <= update_special_param;
                     elsif (to_integer(unsigned(param_id_reg)) = SQ1_FB_ID) then
                         set_FF <= '1';
+                        state <= update_special_param;
                     elsif (to_integer(unsigned(param_id_reg)) = SQ1_BIAS_ID) then
                         set_FB <= '1';
+                        state <= update_special_param;
                     elsif (to_integer(unsigned(param_id_reg)) = BIAS_ID) then
                         set_TES_bias <= '1';
+                        state <= update_special_param;
+                    elsif (to_integer(unsigned(param_id_reg)) = OFF_BIAS_ID) then
+                        update_off_value <= '1';
+                        state <= update_special_param;
+                    else
+                        state <= setup_ok_reply;
                     end if;
 
                     update_param_pulse <= '0';
-                    state <= setup_ok_reply;
+                
+                when update_special_param =>
+                        acquisition_configured <= '0';
+                        set_SF              <= '0';
+                        set_SB              <= '0';
+                        set_FF              <= '0';
+                        set_FB              <= '0';
+                        set_TES_bias        <= '0';
+                        update_off_value    <= '0';
+
+                        state <= setup_ok_reply;
 
                 -- Acquire data
                 when start_acquisition =>
@@ -267,6 +300,7 @@ begin
 
                 -- Stop acquisition
                 when stop_acquisition =>
+                    stop_received <= '0';
                     acquisition_on_reg <= '0';
 
                     state <= wait_last_data_frame;
