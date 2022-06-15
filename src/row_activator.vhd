@@ -8,7 +8,7 @@
 -- Target Devices: Spartan 7 xc7s25csga324-1
 -- Tool Versions: Vivado 2019.1
 -- Description: This component is in charge of physically activating the current active row
---              When acquisition is off, if the update_off pulse is activated, logic is applied to set the bias_off to all DACS
+--              When acquisition is off, if the update_off_value pulse is activated, logic is applied to set the bias_off to all DACS
 --              When acquisition is on, when new_row starts we deactivate the current DAC (set its value to bias_off) 
 --              and activate the next one
 
@@ -31,19 +31,19 @@ use concept.utils.all;
 
 entity row_activator is
     port(
-        clk             : in std_logic; -- 5mhz clock                                                                           
-        rst             : in std_logic; -- asynchronous reset
+        clk                 : in std_logic; -- 5mhz clock                                                                           
+        rst                 : in std_logic; -- asynchronous reset
 
-        new_row         : in std_logic;    -- Pulse that indicates that a new row has started
-        row_num         : in natural;      -- Signal that indicates in which row we currently are
-        acquisition_on  : in std_logic;    -- Signal that indicates that the acquisition is currently active
-        on_bias         : in t_param_array(0 to MAX_ROWS - 1); -- Value to be set to the row when it is active
-        off_bias        : in t_param_array(0 to MAX_ROWS - 1); -- Value to be set to the row when it is deactivated
-        num_rows        : in natural; -- Num of rows that are going to be multiplexed
-        update_off      : in std_logic;    -- Pulse used to set the off value to all DAC when acquisition is off
-        DAC_start_pulse : out std_logic; -- Signal to start the DAC_gate_controller logic
-        DAC_sel         : out natural; -- From 0 to 2, to select one of the 3 dacs
-        DAC_data        : out std_logic_vector(17 downto 0) -- 2 bits of address + 16 bits of voltage data
+        new_row             : in std_logic;    -- Pulse that indicates that a new row has started
+        row_num             : in natural;      -- Signal that indicates in which row we currently are
+        acquisition_on      : in std_logic;    -- Signal that indicates that the acquisition is currently active
+        on_bias             : in t_param_array(0 to MAX_ROWS - 1); -- Value to be set to the row when it is active
+        off_bias            : in t_param_array(0 to MAX_ROWS - 1); -- Value to be set to the row when it is deactivated
+        num_rows            : in natural; -- Num of rows that are going to be multiplexed
+        update_off_value    : in std_logic;    -- Pulse used to set the off value to all DAC when acquisition is off
+        DAC_start_pulse     : out std_logic; -- Signal to start the DAC_gate_controller logic
+        DAC_sel             : out natural; -- From 0 to 2, to select one of the 3 dacs
+        DAC_data            : out std_logic_vector(17 downto 0) -- 2 bits of address + 16 bits of voltage data
     );
 
 end row_activator;
@@ -95,7 +95,7 @@ begin
             when idle =>
                 if (new_row = '1') then
                     state <= deactivate_current;
-                elsif (acquisition_on = '0' and update_off = '1') then
+                elsif (acquisition_on = '0' and update_off_value = '1') then
                     state <= deactivate_all;
                 else
                     state <= state;

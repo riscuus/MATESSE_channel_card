@@ -25,11 +25,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity ADC_simulator is
     Port ( 
         clk     : in std_logic; -- 100Mhz clock
-        nrst    : in std_logic; -- Async reset
+        rst     : in std_logic; -- Async reset
         nCNV    : in std_logic; -- CNV signal active low for the ADC
         SCK     : in std_logic; -- Serial clock for the ADC
-        SDO     : out std_logic; -- Serial data output
-        data    : in std_logic_vector(15 downto 0) -- Data to be sent through the serial output
+        data    : in std_logic_vector(15 downto 0); -- Data to be sent through the serial output
+        SDO     : out std_logic -- Serial data output
     );
 end ADC_simulator;
 
@@ -43,9 +43,9 @@ architecture Behavioral of ADC_simulator is
 
 begin
 
-    activate_module : process (nrst, clk)
+    activate_module : process (rst, clk)
     begin
-        if(nrst = '1') then
+        if(rst = '1') then
             cnv_high <= '0';
         elsif (rising_edge(clk)) then
             if(nCNV = '1') then
