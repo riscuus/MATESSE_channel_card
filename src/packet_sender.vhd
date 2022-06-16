@@ -61,7 +61,7 @@ entity packet_sender is
 end packet_sender;
 
 architecture behave of packet_sender is
-    type stateType is (idle, send_data_packet, send_reply_packet, wait_packet_builder_busy, wait_packet_builder_ready);
+    type stateType is (idle, wait_packet_builder_busy, wait_packet_builder_ready, wait_packet_sent);
     signal state : stateType;
 
 
@@ -87,42 +87,52 @@ begin
 
                     -- Command handler and frame builder will not collide when sending packets, but in case we give priority to the data packets
                     if (send_data_frame_pulse = '1') then
-                        state <= send_data_packet;
+                        packet_type <= data;
+                        payload_size <= data_frame_payload_size;
+                        packet_payload <= data_frame_payload;
+
                     elsif (send_reply_pulse = '1') then
-                        state <= send_reply_packet;
+                        packet_type <= reply;
+                        card_id <= DAUGHTER_CARD_ID;
+                        param_id <= std_logic_vector(to_unsigned(reply_param_id, param_id'length));
+                        cmd_type <= reply_cmd_type;
+                        err_ok <= reply_err_ok;
+                        payload_size <= reply_payload_size;
+                        packet_payload <= reply_payload;
+                    end if;
+
+                    if (send_data_frame_pulse = '1' or send_reply_pulse = '1') then
+                        -- Means it is busy -> wait until ready and activate params_valid
+                        if (builder_ready = '0') then
+                            state <= wait_packet_builder_ready;
+                        -- Means it is already ready -> activate and wait until busy
+                        else
+                            params_valid <= '1';
+                            state <= wait_packet_builder_busy;
+                        end if;
+
                     else
                         state <= state;
                     end if;
 
-                when send_data_packet =>
-                    -- Set corresponding data
-                    packet_type <= data;
-                    payload_size <= data_frame_payload_size;
-                    packet_payload <= data_frame_payload;
-
-                    state <= wait_packet_builder_ready;
-                
-                when send_reply_packet =>
-                    -- Set corresponding data
-                    packet_type <= reply;
-                    card_id <= DAUGHTER_CARD_ID;
-                    param_id <= std_logic_vector(to_unsigned(reply_param_id, param_id'length));
-                    cmd_type <= reply_cmd_type;
-                    err_ok <= reply_err_ok;
-                    payload_size <= reply_payload_size;
-                    packet_payload <= reply_payload;
-                    params_valid <= '1';
-
-                    state <= wait_packet_builder_ready;
+                when wait_packet_builder_ready =>
+                    if (builder_ready = '1') then
+                        params_valid <= '1';
+                        state <= wait_packet_builder_busy;
+                    else
+                        state <= state;
+                    end if;
 
                 when wait_packet_builder_busy =>
                     if (builder_ready = '0') then
-                        state <= wait_packet_builder_ready;
+                        params_valid <= '0';
+                        state <= wait_packet_sent;
                     else
                         state <= state;
                     end if;
-                
-                when wait_packet_builder_ready =>
+
+                when wait_packet_sent => 
+                    -- Packet has been sent
                     if (builder_ready = '1') then
                         state <= idle;
                     else
