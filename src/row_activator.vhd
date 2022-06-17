@@ -52,8 +52,7 @@ architecture behave of row_activator is
 
     constant DAC_DLY : positive := 10; -- Cycles we must wait between DAC start pulses
 
-    type stateType is (idle, deactivate_current, wait_deactivation, activate_next, wait_activation,
-                       deactivate_all);
+    type stateType is (idle, wait_deactivation, wait_activation, deactivate_all);
     signal state : stateType;
 
     -- Signal used to activate the generation of the DAC_start_pulse
@@ -94,25 +93,19 @@ begin
         case state is
             when idle =>
                 if (new_row = '1') then
-                    state <= deactivate_current;
+                    state <= wait_deactivation;
                 elsif (acquisition_on = '0' and update_off_value = '1') then
                     state <= deactivate_all;
                 else
                     state <= state;
                 end if;
             
-            when deactivate_current =>
-                state <= wait_deactivation;
-
             when wait_deactivation =>
                 if (clk_counter = DAC_DLY) then
-                    state <= activate_next;
+                    state <= wait_activation;
                 else
                     state <= state;
                 end if;
-
-            when activate_next =>
-                state <= wait_activation;
 
             when wait_activation =>
                 if (clk_counter = DAC_DLY) then
@@ -158,9 +151,7 @@ end process;
 
 -- Combinatory assignments
 
-gen_start_pulse <= '1' when state = deactivate_current or
-                            state = wait_deactivation or
-                            state = activate_next or
+gen_start_pulse <= '1' when state = wait_deactivation or
                             state = wait_activation or
                             state = deactivate_all else
                    '0';
@@ -168,9 +159,9 @@ gen_start_pulse <= '1' when state = deactivate_current or
 selected_row <= selected_row_acq_off when state = deactivate_all else
                 selected_row_acq_on;
 
-selected_row_acq_on <= num_rows - 1 when row_num = 0  and (state = deactivate_current or state = wait_deactivation) else
-                       row_num - 1  when row_num /= 0 and (state = deactivate_current or state = wait_deactivation) else
-                       row_num      when state = activate_next or state = wait_activation else
+selected_row_acq_on <= num_rows - 1 when row_num = 0  and state = wait_deactivation else
+                       row_num - 1  when row_num /= 0 and state = wait_deactivation else
+                       row_num      when state = wait_activation else
                        0;
 
 selected_row_acq_off <= row_counter;
@@ -180,8 +171,8 @@ address <= "00" when selected_row = 0 or selected_row = 4 or selected_row = 8 el
            "10" when selected_row = 2 or selected_row = 6 or selected_row = 10 else -- DAC C
            "11"; -- DAC D
 
-v_data <= on_bias(selected_row)(15 downto 0)   when state = activate_next or state = wait_activation else
-          off_bias(selected_row)(15 downto 0)  when state = deactivate_current or state = wait_deactivation or state = deactivate_all else
+v_data <= on_bias(selected_row)(15 downto 0)   when state = wait_activation else
+          off_bias(selected_row)(15 downto 0)  when state = wait_deactivation or state = deactivate_all else
           (others => '0');
 
 DAC_sel <= 0 when selected_row < 4 else
