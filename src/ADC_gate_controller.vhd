@@ -115,7 +115,12 @@ begin
                         SCK_counter <= 0;
                         if(SCK_cycles_counter = NUM_OF_SCK_CYCLES - 1) then
                             SCK_cycles_counter <= 0;
-                            state <= wait_start_pulse;
+                            if (start_pulse = '1') then
+                                CNV <= '1';
+                                state <= CNV_active;
+                            else
+                                state <= wait_start_pulse;
+                            end if;
                         else
                             SCK_cycles_counter <= SCK_cycles_counter + 1;
                             SCK <= '1';
