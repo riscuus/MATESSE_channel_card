@@ -55,13 +55,16 @@ acc_sample_int <= to_integer(signed(acc_sample.value));
 main_logic : process(clk, rst)
 begin
     if (rst = '1') then
+
+        fb_sample.valid <= '0';
+        fb_sample.row_num <= 0;
+        fb_sample.value <= (others => '0');
+
         state <= idle;
     elsif (rising_edge(clk)) then
         case state is
             when idle =>
                 fb_sample.valid <= '0';
-                fb_sample.row_num <= 0;
-                fb_sample.value <= (others => '0');
 
                 if(acc_sample.valid = '1') then
                     fb_sample.value <= std_logic_vector(to_signed(acc_sample_int * sa_fb_gain, fb_sample.value'length)); 
