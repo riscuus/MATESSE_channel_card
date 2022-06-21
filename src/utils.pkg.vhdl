@@ -190,6 +190,22 @@ package utils is
         others              => 0
     );
 
+-- Default values for params
+    constant ON_BIAS_DEF            : t_param_array(0 to PARAM_ID_TO_SIZE(ON_BIAS_ID) - 1) := (others => (others => '1'));
+    constant OFF_BIAS_DEF           : t_param_array(0 to PARAM_ID_TO_SIZE(OFF_BIAS_ID) - 1) := (others => (others => '0'));
+    constant SA_BIAS_DEF            : t_param_array(0 to PARAM_ID_TO_SIZE(SA_BIAS_ID) - 1) := (others => (others => '0'));
+    constant ROW_LEN_DEF            : t_param_array(0 to PARAM_ID_TO_SIZE(ROW_LEN_ID) - 1) := (0 => std_logic_vector(to_unsigned(50, t_word'length)));
+    constant NUM_ROWS_DEF           : t_param_array(0 to PARAM_ID_TO_SIZE(NUM_ROWS_ID) - 1) := (0 => std_logic_vector(to_unsigned(MAX_ROWS, t_word'length)));
+    constant SAMPLE_DLY_DEF         : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_DLY_ID) - 1) := (0 => std_logic_vector(to_unsigned(25, t_word'length)));
+    constant SAMPLE_NUM_DEF         : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_NUM_ID) - 1) := (0 => std_logic_vector(to_unsigned(15, t_word'length)));
+    constant FB_DLY_DEF             : t_param_array(0 to PARAM_ID_TO_SIZE(FB_DLY_ID) - 1) := (0 => std_logic_vector(to_unsigned(23, t_word'length)));
+    constant GAIN_0_DEF             : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1) := (others => std_logic_vector(to_signed(-3, t_word'length)));
+    constant GAIN_1_DEF             : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_1_ID) - 1) := (others => std_logic_vector(to_signed(-2, t_word'length)));
+    constant DATA_RATE_DEF          : t_param_array(0 to PARAM_ID_TO_SIZE(DATA_RATE_ID) - 1) := (0 => std_logic_vector(to_unsigned(2, t_word'length)));
+    constant NUM_COLS_REP_DEF       : t_param_array(0 to PARAM_ID_TO_SIZE(NUM_COLS_REP_ID) - 1) := (0 => std_logic_vector(to_unsigned(1, t_word'length)));
+    constant CNV_LEN_DEF            : t_param_array(0 to PARAM_ID_TO_SIZE(CNV_LEN_ID) - 1) := (0 => std_logic_vector(to_unsigned(3, t_word'length)));
+    constant SCK_DLY_DEF            : t_param_array(0 to PARAM_ID_TO_SIZE(SCK_DLY_ID) - 1) := (0 => std_logic_vector(to_unsigned(1, t_word'length)));
+    constant SCK_HALF_PERIOD_DEF    : t_param_array(0 to PARAM_ID_TO_SIZE(SCK_HALF_PERIOD_ID) - 1) := (0 => std_logic_vector(to_unsigned(1, t_word'length)));
 
 
     -- The possible servo modes
