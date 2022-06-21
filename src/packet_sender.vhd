@@ -102,6 +102,7 @@ begin
                     end if;
 
                     if (send_data_frame_pulse = '1' or send_reply_pulse = '1') then
+                        ready <= '0';
                         -- Means it is busy -> wait until ready and activate params_valid
                         if (builder_ready = '0') then
                             state <= wait_packet_builder_ready;
