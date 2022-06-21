@@ -110,6 +110,22 @@ begin
     main_state_process : process(clk, rst)
     begin
         if (rst = '1') then
+
+            ram_write           <= '0';
+            send_reply_pulse    <= '0';
+            reply_err_ok        <= '0';
+            reply_payload_size  <= 0;
+            param_data          <= (others => (others =>'0'));
+            update_param_pulse  <= '0';
+            param_id_to_update  <= 0;
+            set_SF              <= '0';
+            set_SB              <= '0';
+            set_FF              <= '0';
+            set_FB              <= '0';
+            set_TES_bias        <= '0';
+            update_off_value    <= '0';
+            stop_received       <= '0';
+
             state <= init;
         elsif (rising_edge(clk)) then
             case state is
@@ -256,7 +272,7 @@ begin
                     -- Check special cases
                     if (to_integer(unsigned(param_id_reg)) = RET_DATA_S_ID) then
                         acquisition_configured <= '1';
-                        state <= update_special_param;
+                        state <= setup_ok_reply;
                     elsif (to_integer(unsigned(param_id_reg)) = SA_FB_ID) then
                         set_SF <= '1';
                         state <= update_special_param;
@@ -282,7 +298,6 @@ begin
                     update_param_pulse <= '0';
                 
                 when update_special_param =>
-                        acquisition_configured <= '0';
                         set_SF              <= '0';
                         set_SB              <= '0';
                         set_FF              <= '0';
