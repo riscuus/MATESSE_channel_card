@@ -60,7 +60,7 @@ architecture behave of frame_builder is
 
     constant header_version : natural := 7;
 
-    type stateType is (idle, wait_valid_data, wait_sender_ready, send_data);
+    type stateType is (idle, wait_valid_data, update_payload_state, wait_sender_ready, send_data);
     signal state : stateType;
 
     type t_header_payload is array (0 to (DATA_PKT_HEADER_LENGTH - 1)) of t_word;
@@ -69,15 +69,19 @@ architecture behave of frame_builder is
     signal header_payload   : t_header_payload := (others => (others => '0'));
     signal data_payload     : t_data_payload := (others => (others => '0'));
 
+    signal channels_data_reg : t_channel_record_array := (others => (value => (others => '0'), row_num => 0, valid => '0'));
     signal valid_data           : std_logic := '0';
+    signal valid_data_reg       : std_logic := '0';
     signal last_frame           : std_logic := '0';
-    signal send_reg             : std_logic := '0'; -- Needed to be able to read its state
     signal row_counter          : natural   := 0;
     signal initial_id           : natural   := 0; -- The first frame will have this id
     signal final_id             : natural   := 0; -- The last frame will have this id
     signal frame_id             : natural   := 0; -- The current frame_id (starts at initial_id)
     signal frame_counter        : natural   := 0; -- Counter for the current sent frames (starts at 0 ends at data rate)
     signal total_frame_counter  : natural   := 0; -- Counter for the current total sent frames (starts at 0 ends when acquisition is over)
+    signal valid_row            : std_logic := '0'; -- Signal that indicates that the row_counter is sync whith the current row,
+                                                    -- if not we discard the current frame that has already started and wait until the next one starts
+    signal update_payload : std_logic := '0';
 
 
     -- Header needed signals
@@ -86,7 +90,6 @@ architecture behave of frame_builder is
 begin
 
 -- Simple assigments
-send_data_packet <= send_reg;
 initial_id <= to_integer(unsigned(ret_data_setup(0)));
 final_id <= to_integer(unsigned(ret_data_setup(1)));
 last_frame <= '1' when frame_id = final_id or stop_bit = '1' else '0';
@@ -96,6 +99,7 @@ payload_size <= t_header_payload'length + num_cols * num_rows;
 main_logic : process(clk, rst)
 begin
     if (rst = '1') then
+        send_data_packet <= '0';
         state <= idle;
     elsif (rising_edge(clk)) then
         case state is
@@ -109,39 +113,46 @@ begin
                 end if;
 
             when wait_valid_data =>
-                    if (valid_data = '1') then
-                        -- Valid frame
-                        if (row_counter = num_rows - 1) then
-                            row_counter <= 0;
-                            total_frame_counter <= total_frame_counter + 1;
-                            -- We only send #data_rate valid frames
-                            if (frame_counter = data_rate - 1) then
-                                frame_counter <= 0;
-                                if (sender_ready = '1') then
-                                    send_reg <= '1';
-                                    state <= send_data;
-                                else
-                                    state <= wait_sender_ready;
-                                end if;
-                            else
-                                frame_counter <= frame_counter + 1;
-                            end if;
-                        else
-                            row_counter <= row_counter + 1;
-                            state <= state;
-                        end if;
+                    update_payload <= '0';
+                    -- Sync with the actual row, to send only complete frames
+                    if (valid_data_reg = '1' and valid_row = '1') then
+                            update_payload <= '1';
+                            state <= update_payload_state;
                     end if;
+
+            when update_payload_state =>
+                update_payload <= '0';
+                -- Valid frame
+                if (row_counter = num_rows - 1) then
+                    row_counter <= 0;
+                    total_frame_counter <= total_frame_counter + 1;
+                    -- We only send #data_rate valid frames
+                    if (frame_counter = data_rate - 1) then
+                        frame_counter <= 0;
+                        if (sender_ready = '1') then
+                            send_data_packet <= '1';
+                            state <= send_data;
+                        else
+                            state <= wait_sender_ready;
+                        end if;
+                    else
+                        frame_counter <= frame_counter + 1;
+                    end if;
+                else
+                    row_counter <= row_counter + 1;
+                    state <= wait_valid_data;
+                end if;
 
             when wait_sender_ready =>
                 if (sender_ready = '1') then
-                    send_reg <= '1';
+                    send_data_packet <= '1';
                     state <= send_data;
                 else
                     state <= wait_sender_ready;
                 end if;
 
             when send_data =>
-                send_reg <= '0';
+                send_data_packet <= '0';
                 if (last_frame = '1') then
                     last_frame_sent <= '1';
                     total_frame_counter <= 0;
@@ -158,16 +169,18 @@ begin
     end if;
 end process;
 
--- Frame payload assigment
-process(header_payload, data_payload)
+-- Store channels data in internal register
+process(clk, rst)
 begin
-    for i in 0 to frame_payload'length - 1 loop
-        if (i < t_header_payload'length) then
-            frame_payload(i) <= header_payload(i);
-        else
-            frame_payload(i) <= data_payload(i-t_header_payload'length);
+    if (rst = '1') then
+        channels_data_reg <= (others => (value => (others => '0'), row_num => 0, valid => '0'));
+    elsif (rising_edge(clk)) then
+        valid_data_reg <= valid_data;
+
+        if (valid_data = '1') then
+            channels_data_reg <= channels_data;
         end if;
-    end loop;
+    end if;
 end process;
 
 -- Valid data signal generation
@@ -176,13 +189,19 @@ begin
     valid_data <= '0';
     -- We determine that the data is valid when all channels report valid data. This should always occur as they
     -- are parallel, if not something is wrong
-    for i in 0 to (MAX_CHANNELS - 2) loop
+    if (num_cols = 0) then
+        valid_data <= '0';
+    elsif (num_cols = 1) then
+        valid_data <= channels_data(0).valid;
+    elsif (num_cols >= 2) then
+        for i in 0 to (MAX_CHANNELS - 2) loop
             if (i = 0) then
                 valid_data <= channels_data(i).valid and channels_data(i+1).valid;
-            else
+            elsif (i <= num_cols - 2) then
                 valid_data <= valid_data and channels_data(i+1).valid;
             end if;
-    end loop;
+        end loop;
+    end if;
 end process;
 
 -- Stop bit signal generation
@@ -201,15 +220,42 @@ begin
     end if;
 end process;
 
+-- Valid row generation
+process(row_counter, channels_data_reg)
+begin
+    valid_row <= '0';
+    for i in 0 to (MAX_CHANNELS - 1) loop
+        if (i < num_cols) then
+            if (row_counter = channels_data_reg(i).row_num) then
+                valid_row <= '1';
+            else
+                valid_row <= '0';
+            end if;
+        end if;
+    end loop;
+end process;
+
+-- Frame payload assigment = header_payload + data_payload
+process(header_payload, data_payload)
+begin
+    for i in 0 to frame_payload'length - 1 loop
+        if (i < t_header_payload'length) then
+            frame_payload(i) <= header_payload(i);
+        else
+            frame_payload(i) <= data_payload(i-t_header_payload'length);
+        end if;
+    end loop;
+end process;
+
 -- Data payload assignment from each channel data
 process(clk, rst)
 begin
     if (rst = '1') then
         data_payload <= (others => (others => '0'));
     elsif (rising_edge(clk)) then
-        if ((acquisition_on = '1' or frame_active = '1') and valid_data = '1') then
+        if (update_payload = '1') then
             for i in 0 to (MAX_CHANNELS - 1) loop
-                data_payload((i*num_rows)+channels_data(i).row_num) <= channels_data(i).value;
+                data_payload((i * num_rows) + channels_data_reg(i).row_num) <= channels_data_reg(i).value;
             end loop;
         end if;
     end if;
@@ -221,7 +267,7 @@ begin
     if (rst = '1') then
         header_payload <= (others => (others => '0'));
     elsif (rising_edge(clk)) then
-        if ((acquisition_on = '1' or frame_active = '1') and valid_data = '1') then
+        if (update_payload = '1') then
             -- (0) Status bits
             header_payload(0)(1 downto 0) <= stop_bit & last_frame;
             -- (1) Frame id
