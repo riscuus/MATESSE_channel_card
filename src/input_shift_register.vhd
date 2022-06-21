@@ -44,7 +44,7 @@ architecture Behavioral of input_shift_register is
     signal counter : natural range 0 to 8 := 0;
 
 
-    type StateType is (init, wait_start, wait_sck_on, wait_sck_off, delay_valid_word, valid_word_on);
+    type StateType is (init, wait_sck_on, wait_sck_off, delay_valid_word, valid_word_on);
     signal state : StateType;
 begin
 
@@ -58,9 +58,7 @@ begin
                 when init =>
                     input_word_iddr <= (others => '0');
                     counter <= 0;
-                    state <= wait_start;
 
-                when wait_start =>
                     if(conv_started = '1') then
                         state <= wait_sck_on;
                     else 
