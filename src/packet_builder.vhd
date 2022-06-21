@@ -819,22 +819,14 @@ begin
                 send_param_checksum_word <= '0';
                 checksum_sent <= '0';
                 
-                if (packet_type = cmd_rb or packet_type = cmd_wb or
-                    packet_type = cmd_go or packet_type = cmd_st or
-                    packet_type = cmd_rs or packet_type = data) then
-
+                if (send_payload_word = '1') then
+                    checksum_word_buffer <= checksum_word_buffer xor payload_word_buffer;
                     checksum_state <= wait_for_payload_param;
 
-                elsif (packet_type = reply) then
-                    checksum_state <= wait_for_err_param;
-                else
-                    checksum_state <= checksum_state;
-                end if;
-            
-            when wait_for_err_param =>
-                if (send_param_err_word = '1') then
+                elsif (send_param_err_word = '1') then
                     checksum_word_buffer <= checksum_word_buffer xor err_word_buffer;
                     checksum_state <= wait_for_id_param;
+
                 else
                     checksum_state <= checksum_state;
                 end if;
