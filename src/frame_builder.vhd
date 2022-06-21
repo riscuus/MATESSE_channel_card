@@ -137,6 +137,7 @@ begin
                         end if;
                     else
                         frame_counter <= frame_counter + 1;
+                        state <= wait_valid_data;
                     end if;
                 else
                     row_counter <= row_counter + 1;
