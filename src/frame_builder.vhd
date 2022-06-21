@@ -227,10 +227,16 @@ begin
     valid_row <= '0';
     for i in 0 to (MAX_CHANNELS - 1) loop
         if (i < num_cols) then
-            if (row_counter = channels_data_reg(i).row_num) then
-                valid_row <= '1';
+            if (i = 0) then
+                if (row_counter = channels_data_reg(i).row_num) then
+                    valid_row <= '1';
+                else
+                    valid_row <= '0';
+                end if;
             else
-                valid_row <= '0';
+                if (row_counter /= channels_data_reg(i).row_num) then
+                    valid_row <= '0';
+                end if;
             end if;
         end if;
     end loop;
