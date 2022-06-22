@@ -777,7 +777,8 @@ begin
                 if (word_sent = '1') then 
                     if(packet_type = reply or packet_type = data) then
                         -- For reply and data packets payload size is variable
-                        if (payload_word_counter = payload_size - 1) then
+                        -- If payload size is 0 the packet is not valid, we just set the condition in order to avoid overflow
+                        if (payload_size = 0 or payload_word_counter = payload_size - 1) then
                             payload_sent <= '1';
                             payload_state <= init;
                         else
@@ -877,6 +878,12 @@ end process;
 send_word_logic : process(clk, rst)
 begin
     if (rst = '1') then
+        byte_data <= (others => '0');
+        word_buffer <= (others => '0');
+        word_byte_count <= 0;
+        word_sent <= '0';
+        send_byte <= '0';
+
         word_state <= init;
 
     elsif (rising_edge(clk)) then

@@ -117,7 +117,8 @@ architecture behave of packet_parser is
     signal size_state : size_stateType;
 
     signal payload_size_reg     : natural := 0; -- Register used to set default values
-    signal size_received        : std_logic := '0';
+    signal good_size            : std_logic := '0';
+    signal bad_size             : std_logic := '0';
     signal parse_size           : std_logic := '0';
 
     -- Error/OK parser 
@@ -169,7 +170,7 @@ architecture behave of packet_parser is
     attribute keep of good_type         : signal is "true";
     attribute keep of bad_type          : signal is "true";
     attribute keep of id_received       : signal is "true";
-    attribute keep of size_received     : signal is "true";
+    attribute keep of good_size         : signal is "true";
     attribute keep of payload_received  : signal is "true";
     attribute keep of good_checksum     : signal is "true";
     attribute keep of bad_checksum      : signal is "true";
@@ -268,9 +269,11 @@ begin
             
             when wait_size =>
                 parse_size_cmd <= '0';
-                if (size_received = '1') then
+                if (good_size = '1') then
                     parse_payload_cmd <= '1';
                     cmd_state <= wait_payload;
+                elsif (bad_size = '1') then
+                    cmd_state <= init;
                 else
                     cmd_state <= cmd_state;
                 end if;
@@ -289,7 +292,7 @@ begin
                 if (good_checksum = '1') then
                     params_valid_cmd <= '1';
                     cmd_state <= init; 
-                elsif (bad_checksum = '0') then
+                elsif (bad_checksum = '1') then
                     cmd_state <= init;
                 else
                     cmd_state <= cmd_state;
@@ -325,9 +328,11 @@ begin
 
             when wait_size =>
                 parse_size_reply <= '0';
-                if (size_received = '1') then
+                if (good_size = '1') then
                     parse_err_reply <= '1';
                     reply_state <= wait_err;
+                elsif (bad_size = '1') then
+                    reply_state <= init;
                 else
                     reply_state <= reply_state;
                 end if;
@@ -398,9 +403,11 @@ begin
 
             when wait_size =>
                 parse_size_data <= '0';
-                if (size_received = '1') then
+                if (good_size = '1') then
                     parse_payload_data <= '1';
                     data_state <= wait_payload;
+                elsif (bad_size = '1') then
+                    data_state <= init;
                 else
                     data_state <= data_state;
                 end if;
@@ -578,12 +585,15 @@ size_parser : process(clk, rst)
 begin
     if (rst = '1') then
         size_state <= init;
+        good_size <= '0';
+        bad_size <= '0';
         payload_size_reg <= 0;
 
     elsif (rising_edge(clk)) then
         case size_state is
             when init =>
-                size_received <= '0';
+                good_size <= '0';
+                bad_size <= '0';
 
                 if (parse_size = '1') then
                     size_state <= wait_word;
@@ -593,16 +603,37 @@ begin
 
             when wait_word =>
                 if (word_available = '1') then
-                    if (packet_type_reg = cmd_rb or packet_type_reg = cmd_wb or packet_type_reg = cmd_go or
-                        packet_type_reg = cmd_st or packet_type_reg = cmd_rs) then
-                        payload_size_reg <= to_integer(unsigned(received_word));
-                    elsif (packet_type_reg = reply) then
-                        payload_size_reg <= to_integer(unsigned(received_word)) - 3;
+                    -- Basic check. Here we just check that the size is a feasible size. cmd handler will decide if the size is actually the
+                    -- correct for that packet
+                    if (to_integer(unsigned(received_word)) > 0 and to_integer(unsigned(received_word)) < t_packet_payload'length) then
+                        if (packet_type_reg = cmd_rb or packet_type_reg = cmd_wb or packet_type_reg = cmd_go or
+                            packet_type_reg = cmd_st or packet_type_reg = cmd_rs) then
+
+                            payload_size_reg <= to_integer(unsigned(received_word));
+                            good_size <= '1';
+
+                        elsif (packet_type_reg = reply) then
+                            if (to_integer(unsigned(received_word)) > 3) then
+                                payload_size_reg <= to_integer(unsigned(received_word)) - 3;
+                                good_size <= '1';
+                            else
+                                bad_size <= '1';
+                            end if;
+
+                        else
+                            if (to_integer(unsigned(received_word)) > 1) then
+                                payload_size_reg <= to_integer(unsigned(received_word)) - 1;
+                                good_size <= '1';
+                                size_state <= init;
+                            else
+                                bad_size <= '1';
+                            end if;
+                        end if;
+
                     else
-                        payload_size_reg <= to_integer(unsigned(received_word)) - 1;
+                        bad_size <= '1';
                     end if;
 
-                    size_received <= '1';
                     size_state <= init;
                 else
                     size_state <= size_state;
@@ -702,7 +733,8 @@ begin
                     packet_payload_reg(payload_word_count) <= received_word;
                     
                     if (packet_type_reg = reply or packet_type_reg = data) then
-                        if (payload_word_count = payload_size_reg - 1) then
+                        -- If payload 0 we already know is not a valid packet, but it will be discarded by cmd_handler
+                        if (payload_size_reg = 0 or payload_word_count = payload_size_reg - 1) then
                             payload_received <= '1';
                             payload_state <= init;
                         else 
@@ -777,6 +809,8 @@ begin
             when wait_for_payload_param =>
                 if (parse_payload = '1') then
                     checksum_state <= wait_payload_word;
+                elsif (bad_size = '1') then
+                    checksum_state <= init;
                 else
                     checksum_state <= checksum_state;
                 end if;
