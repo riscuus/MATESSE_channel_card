@@ -157,8 +157,8 @@ begin
                     state <= idle;
 
                 when idle =>
-                    param_data <= (others => (others => '0'));
-                    word_count <= 0;
+                    reply_err_word <= (others => '0');
+                    word_count     <= 0;
 
                     -- New packet received
                     if (params_valid = '1') then
@@ -199,13 +199,13 @@ begin
                             if (acquisition_configured = '1' and to_integer(unsigned(param_id_reg)) = RET_DATA_ID) then
                                 state <= start_acquisition;
                             else
-                                reply_err_word(0) <= '1'; -- ER_CODE = cmd_go without previous configuration
+                                reply_err_word <= ERROR_GO_WITH_NO_SETUP;  -- ER_CODE = cmd_go without previous configuration
                                 state <= setup_err_reply;
                             end if;
                         elsif (packet_type_reg = cmd_rb or packet_type_reg = cmd_wb) then 
                             state <= check_param_id; 
                         elsif (packet_type_reg = cmd_st) then
-                            reply_err_word(4) <= '1';
+                            reply_err_word <= ERROR_ST_WITH_NO_ACQ;
                             state <= setup_err_reply; -- ER_CODE = cmd_st without acquisition starte
                         else -- Not a command, ignore
                             state <= idle;
@@ -225,7 +225,7 @@ begin
                             state <= check_payload_size;
                         end if;
                     else -- Incorrect param id
-                        reply_err_word(2) <= '1'; -- ER_CODE = Incorrect param_id
+                        reply_err_word <= ERROR_INCORRECT_PARAM_ID; -- ER_CODE = Incorrect param_id
                         state <= setup_err_reply;
                     end if;
                 
@@ -234,7 +234,7 @@ begin
                         ram_write <= '1';
                         state <= write_ram_data;
                     else
-                        reply_err_word(3) <= '1'; -- ER_CODE = Incorrect payload size
+                        reply_err_word <= ERROR_INCORRECT_PARAM_SIZE; -- ER_CODE = Incorrect payload size
                         state <= setup_err_reply;
                     end if;
 
@@ -332,6 +332,7 @@ begin
                     if (packet_type_reg = cmd_rb) then
                         reply_payload_size <= param_id_size;
                     else -- For successful non-RB commands, this is always a single zero word
+                        param_data <= (others => (others =>'0'));
                         reply_payload_size <= 1;
                     end if;
                     reply_err_ok <= '0';

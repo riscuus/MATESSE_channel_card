@@ -219,6 +219,12 @@ package utils is
     constant DATA_MODE_FILT_FB  : natural := 2;
     constant DATA_MODE_RAW      : natural := 3;
 
+    -- The possible reply errors
+    constant ERROR_GO_WITH_NO_SETUP     : t_word := x"00000001";
+    constant ERROR_INCORRECT_PARAM_ID   : t_word := x"00000002";
+    constant ERROR_INCORRECT_PARAM_SIZE : t_word := x"00000003";
+    constant ERROR_ST_WITH_NO_ACQ       : t_word := x"00000004";
+
     -- Data structures for frames
     type t_frame_header is array(0 to 42) of t_word;
     type t_frame_data_col is array(0 to 255) of t_word;
