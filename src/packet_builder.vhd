@@ -54,8 +54,17 @@ end packet_builder;
 
 architecture behave of packet_builder is
 
+    -- Packet fields registers
+    signal packet_type_reg    : t_packet_type := undefined;
+    signal card_id_reg        : t_half_word := (others => '0');
+    signal param_id_reg       : t_half_word := (others => '0');
+    signal cmd_type_reg       : t_packet_type := undefined;
+    signal err_ok_reg         : std_logic := '0';
+    signal payload_size_reg   : natural := 0;
+    signal packet_payload_reg : t_packet_payload := (others => (others => '0'));
+
     -- cmd_packet SM signals
-    type cmd_stateType is (init, wait_packet_params, wait_preamble_sent, wait_param_packet_type_sent, 
+    type cmd_stateType is (init, wait_packet_params, check_type, wait_preamble_sent, wait_param_packet_type_sent, 
                            wait_param_id_sent, wait_param_size_sent, wait_payload_sent, wait_checksum_sent);
     signal cmd_state : cmd_stateType;
 
@@ -69,7 +78,7 @@ architecture behave of packet_builder is
     signal builder_ready_cmd            : std_logic := '0';
 
     -- reply_packet SM signals
-    type reply_stateType is (init, wait_packet_params, wait_preamble_sent, wait_param_packet_type_sent, 
+    type reply_stateType is (init, wait_packet_params, check_type, wait_preamble_sent, wait_param_packet_type_sent, 
                              wait_param_size_sent, wait_param_err_sent, wait_param_id_sent, wait_payload_sent, 
                              wait_checksum_sent);
     signal reply_state : reply_stateType;
@@ -84,7 +93,7 @@ architecture behave of packet_builder is
     signal builder_ready_reply              : std_logic := '0';
 
     -- data_packet SM signals
-    type data_stateType is (init, wait_packet_params, wait_preamble_sent, wait_param_packet_type_sent, 
+    type data_stateType is (init, wait_packet_params, check_type, wait_preamble_sent, wait_param_packet_type_sent, 
                             wait_param_size_sent, wait_payload_sent, wait_checksum_sent);
     signal data_state : data_stateType;
 
@@ -173,12 +182,37 @@ begin
 -- Builder ready output
 builder_ready <= builder_ready_cmd and builder_ready_reply and builder_ready_data;
 
+-- Store in internal registers the packet info when fields are valid
+fields_register_process : process(clk, rst)
+begin
+    if (rst = '1') then
+        packet_type_reg    <= undefined;
+        card_id_reg        <= (others => '0');
+        param_id_reg       <= (others => '0');
+        cmd_type_reg       <= undefined;
+        err_ok_reg         <= '0';
+        payload_size_reg   <= 0;
+        packet_payload_reg <= (others => (others => '0'));
+
+    elsif (rising_edge(clk)) then
+        if (params_valid = '1') then
+            packet_type_reg     <= packet_type;
+            card_id_reg         <= card_id;
+            param_id_reg        <= param_id;
+            cmd_type_reg        <= cmd_type;
+            err_ok_reg          <= err_ok;
+            payload_size_reg    <= payload_size;
+            packet_payload_reg  <= packet_payload;
+        end if;
+    end if;
+end process;
+
 -- Command packet
-packet_type_cmd <= '1' when packet_type = cmd_rb or
-                            packet_type = cmd_wb or
-                            packet_type = cmd_go or
-                            packet_type = cmd_st or
-                            packet_type = cmd_rs else
+packet_type_cmd <= '1' when packet_type_reg = cmd_rb or
+                            packet_type_reg = cmd_wb or
+                            packet_type_reg = cmd_go or
+                            packet_type_reg = cmd_st or
+                            packet_type_reg = cmd_rs else
                    '0';
 
 cmd_packet_logic : process(clk, rst)
@@ -201,12 +235,14 @@ begin
             when wait_packet_params =>
                 builder_ready_cmd <= '1';
                 if (params_valid = '1') then
-                    if (packet_type_cmd = '1') then
-                        start_preamble_cmd <= '1';
-                        cmd_state <= wait_preamble_sent;
-                    else
-                        cmd_state <= cmd_state;
-                    end if;
+                    cmd_state <= check_type; -- 1 clk delay to allow registers to store packet fields
+                end if;
+
+            -- check type
+            when check_type =>
+                if (packet_type_cmd = '1') then
+                    start_preamble_cmd <= '1';
+                    cmd_state <= wait_preamble_sent;
                 else
                     cmd_state <= cmd_state;
                 end if;
@@ -298,12 +334,14 @@ begin
             when wait_packet_params =>
                 builder_ready_reply <= '1';
                 if (params_valid = '1') then
-                    if (packet_type = reply) then
-                        start_preamble_reply <= '1';
-                        reply_state <= wait_preamble_sent;
-                    else
-                        reply_state <= reply_state;
-                    end if;
+                    reply_state <= check_type; -- 1 clk delay to allow registers to store packet fields
+                end if;
+
+            -- Check type
+            when check_type => 
+                if (packet_type_reg = reply) then
+                    start_preamble_reply <= '1';
+                    reply_state <= wait_preamble_sent;
                 else
                     reply_state <= reply_state;
                 end if;
@@ -405,12 +443,14 @@ begin
             when wait_packet_params =>
                 builder_ready_data <= '1';
                 if (params_valid = '1') then
-                    if (packet_type = data) then
-                        start_preamble_data <= '1';
-                        data_state <= wait_preamble_sent;
-                    else
-                        data_state <= data_state;
-                    end if;
+                    data_state <= check_type; -- 1 clk delay to allow registers to store packet fields
+                end if;
+
+            -- Check type
+            when check_type =>
+                if (packet_type_reg = data) then
+                    start_preamble_data <= '1';
+                    data_state <= wait_preamble_sent;
                 else
                     data_state <= data_state;
                 end if;
@@ -547,7 +587,7 @@ begin
 
             when wait_start_packet_type =>
                 if (start_param_packet_type = '1') then
-                    case packet_type is
+                    case packet_type_reg is
                         when cmd_rb =>
                             packet_type_word_buffer <= CMD_RB_TYPE;
                         when cmd_wb =>
@@ -607,8 +647,8 @@ begin
 
             when wait_start_id =>
                 if (start_param_id = '1') then
-                    id_word_buffer(15 downto 0) <= param_id;
-                    id_word_buffer(31 downto 16) <= card_id;
+                    id_word_buffer(15 downto 0) <= param_id_reg;
+                    id_word_buffer(31 downto 16) <= card_id_reg;
                     send_param_id_word <= '1';
 
                     id_state <= wait_id_sent;
@@ -649,19 +689,19 @@ begin
             when wait_start_size =>
                 if(start_param_size_cmd = '1') then
                     -- When cmd packet we simply send the payload size "n"
-                    size_word_buffer <= std_logic_vector(to_unsigned(payload_size, 32));
+                    size_word_buffer <= std_logic_vector(to_unsigned(payload_size_reg, 32));
                     send_param_size_word <= '1';
                     size_state <= wait_size_sent;
                 elsif (start_param_size_reply = '1') then
                     -- When reply packet we send the "packet size" instead of the payload size. This is the payload
                     -- plus 3 words
-                    size_word_buffer <= std_logic_vector(to_unsigned(payload_size + 3, 32));
+                    size_word_buffer <= std_logic_vector(to_unsigned(payload_size_reg + 3, 32));
                     send_param_size_word <= '1';
                     size_state <= wait_size_sent;
                 elsif (start_param_size_data = '1') then
                     -- When data packet we send the "packet size" instead of the payload size. This is the payload
                     -- plus 1 word
-                    size_word_buffer <= std_logic_vector(to_unsigned(payload_size + 1, 32));
+                    size_word_buffer <= std_logic_vector(to_unsigned(payload_size_reg + 1, 32));
                     send_param_size_word <= '1';
                     size_state <= wait_size_sent;
                 else
@@ -700,7 +740,7 @@ begin
 
             when wait_start_err =>
                 if (start_param_err_reply = '1') then
-                    case cmd_type is
+                    case cmd_type_reg is
                         when cmd_rb =>
                             err_word_buffer(31 downto 16) <= RB_ASCII;
                         when cmd_wb =>
@@ -714,7 +754,7 @@ begin
                         when others => -- We should never reach this point. Possible improvement: trigger error signal
                     end case;
 
-                    if (err_ok = '1') then
+                    if (err_ok_reg = '1') then
                         err_word_buffer(15 downto 0) <= ER_ASCII; 
                     else
                         err_word_buffer(15 downto 0) <= OK_ASCII;
@@ -768,17 +808,17 @@ begin
                 end if;
 
             when set_payload_word =>
-                payload_word_buffer <= packet_payload(payload_word_counter);
+                payload_word_buffer <= packet_payload_reg(payload_word_counter);
                 send_payload_word <= '1';
                 payload_state <= wait_payload_word_sent;
 
             when wait_payload_word_sent =>
                 send_payload_word <= '0';
                 if (word_sent = '1') then 
-                    if(packet_type = reply or packet_type = data) then
+                    if(packet_type_reg = reply or packet_type_reg = data) then
                         -- For reply and data packets payload size is variable
                         -- If payload size is 0 the packet is not valid, we just set the condition in order to avoid overflow
-                        if (payload_size = 0 or payload_word_counter = payload_size - 1) then
+                        if (payload_size_reg = 0 or payload_word_counter = payload_size_reg - 1) then
                             payload_sent <= '1';
                             payload_state <= init;
                         else
