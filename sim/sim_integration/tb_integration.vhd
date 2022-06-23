@@ -38,7 +38,7 @@ architecture Behavioral of tb_integration is
     constant PARAMS_VALID_START : time := 300 ns; 
     constant DATA_SETUP         : time := 200 ns;
     constant PARAMS_VALID_HIGH  : time := 200 ns;
-    constant PACKET_DELAY       : time := 2 us; -- Time between trying a new packet
+    constant PACKET_DELAY       : time := 1500 us; -- Time between trying a new packet
     constant SIM_DURATION       : time := 200 ms;
 
     -- Clock
@@ -48,8 +48,31 @@ architecture Behavioral of tb_integration is
 
     -- External
     signal sync_frame : std_logic := '0';
+    
+    -- tb -> PC packet builder
+    signal PC_packet_type       : t_packet_type := undefined;
+    signal PC_card_id           : t_half_word := (others => '0');
+    signal PC_param_id          : t_half_word := (others => '0');
+    signal PC_cmd_type          : t_packet_type := undefined;
+    signal PC_err_ok            : std_logic := '0';
+    signal PC_payload_size      : natural := 0;
+    signal PC_packet_payload    : t_packet_payload := (others => (others => '0'));
+    signal PC_params_valid      : std_logic := '0';
+    
+    -- PC builder <-> PC uart module
+    signal PC_send_byte         : std_logic := '0';
+    signal PC_byte_data         : t_byte := (others => '0');
+    signal PC_builder_ready     : std_logic := '0';
+    signal PC_tx_busy           : std_logic := '0';
 
-    -- Parser -> cmd_handler
+    -- PC uart module -> FPGA RX uart module
+    signal rx_uart_serial : std_logic := '0';
+
+    -- FPGA RX uart module <-> packet parser
+    signal rx_busy      : std_logic := '0';
+    signal rx_byte_data : t_byte := (others => '0');
+
+    -- packet parser -> cmd_handler
     signal parser_packet_type       : t_packet_type := cmd_wb;
     signal parser_card_id           : t_half_word := DAUGHTER_CARD_ID;
     signal parser_param_id          : t_half_word := "0000000011111111";
@@ -57,10 +80,9 @@ architecture Behavioral of tb_integration is
     signal parser_err_ok            : std_logic := '0';
     signal parser_payload_size      : natural := 0;
     signal parser_packet_payload    : t_packet_payload := (others => (others => '0'));
-
     signal parser_params_valid      : std_logic := '0';
 
-    -- command_handler -> RAM
+    -- command_handler <-> RAM
     signal ram_read_data            : t_word := (others => '0');
     signal ram_write_data           : t_word := (others => '0');
     signal ram_address              : natural := 0;
@@ -96,6 +118,22 @@ architecture Behavioral of tb_integration is
     -- command_handler -> general
     signal acquisition_on : std_logic := '0';
 
+    -- packet_sender <-> packet_builder
+    signal packet_type      : t_packet_type := undefined;
+    signal card_id          : t_half_word := (others => '0');
+    signal param_id         : t_half_word := (others => '0');
+    signal cmd_type         : t_packet_type := undefined;
+    signal err_ok           : std_logic := '0';
+    signal payload_size     : natural := 0;
+    signal packet_payload   : t_packet_payload := (others => (others => '0'));
+    signal params_valid     : std_logic := '0';
+    signal builder_ready    : std_logic := '0';
+
+    -- packet builder <-> uart_controller
+    signal tx_busy      : std_logic := '0';
+    signal tx_send_byte    : std_logic := '0';
+    signal tx_byte_data    : t_byte := (others => '0');
+
     -- frame_builder -> command_handler 
     signal last_frame_sent    : std_logic := '0';
 
@@ -111,54 +149,61 @@ architecture Behavioral of tb_integration is
     signal adc_cnv  : std_logic := '0';
     signal adc_sck  : std_logic := '0';
 
-    -- ADC_simulator_0 signals
-    signal adc_sim_data_0   : std_logic_vector(15 downto 0) := (others => '0');
-    signal adc_sdo_0        : std_logic := '0';
-
-    -- ADC_simulator_1 signals
-    signal adc_sim_data_1   : std_logic_vector(15 downto 0) := (others => '0');
-    signal adc_sdo_1        : std_logic := '0';
+    -- ADC_simulators signals
+    type t_16_bit_data_array is array(0 to MAX_CHANNELS - 1) of std_logic_vector(15 downto 0);
+    signal adc_sim_data     :  t_16_bit_data_array := (others => (others => '0'));
+    signal adc_sdo          : std_logic_vector(MAX_CHANNELS - 1 downto 0) := (others => '0');
 
     -- ddr_input -> input_shift_register
-    signal ddr_parallel     : std_logic_vector(1 downto 0) := (others => '0');
+    type ddr_parallel_array is array(0 to MAX_CHANNELS - 1) of std_logic_vector(1 downto 0);
+    signal ddr_parallel     : ddr_parallel_array := (others => (others=> '0'));
 
     -- fall_edge_dector (cnv) -> input_shift_register
     signal cnv_fall_pulse : std_logic := '0';
 
     -- input_shift_register -> sample_selector
-    signal valid_word    : std_logic := '0';
-    signal parallel_data : std_logic_vector(15 downto 0) := (others => '0');
+    signal valid_word    : std_logic_vector(MAX_CHANNELS - 1 downto 0) := (others => '0');
+    signal parallel_data : t_16_bit_data_array := (others =>(others => '0'));
 
     -- sample_selector -> sample_accumulator
-    signal valid_sample : std_logic := '0';
-    signal sample_data  : t_adc_sample := (others => '0');
+    signal valid_sample : std_logic_vector(MAX_CHANNELS - 1 downto 0) := (others => '0');
+    signal sample_data  : t_16_bit_data_array := (others => (others => '0'));
     
+
     -- sample_accumulator -> feedback calculator
-    signal acc_sample : t_channel_record := (
-        value => (others => '0'),
-        row_num => 0,
-        valid => '0'
+    signal acc_sample : t_channel_record_array := (
+        others => (
+            value => (others => '0'),
+            row_num => 0,
+            valid => '0'
+        )
     );
 
-    signal acc_sample_stretched : t_channel_record := (
-        value => (others => '0'),
-        row_num => 0,
-        valid => '0'
+    signal acc_sample_stretched : t_channel_record_array := (
+        others => (
+            value => (others => '0'),
+            row_num => 0,
+            valid => '0'
+        )
     );
 
     -- feedback_calculator
-    signal fb_sample : t_channel_record := (
-        value => (others => '0'),
-        row_num => 0,
-        valid => '0'
+    signal fb_sample : t_channel_record_array := (
+        others => (
+            value => (others => '0'),
+            row_num => 0,
+            valid => '0'
+        )
     );
 
     -- feedback reader -> dual ram
-    signal read_address : natural := 0;
-    signal read_data : t_word := (others => '0');
+    type read_address_array is array(0 to MAX_CHANNELS - 1) of natural;
+    signal read_address : read_address_array := (others => 0);
+    type t_word_array is array(0 to MAX_CHANNELS - 1) of t_word;
+    signal read_data : t_word_array := (others => (others => '0'));
 
     -- feedback reader -> channel mux
-    signal sa_fb_data : std_logic_vector(15 downto 0) := (others => '0');
+    signal sa_fb_data : t_16_bit_data_array := (others => (others => '0'));
 
     -- channels -> frame_builder
     signal channels_data : t_channel_record_array := (
@@ -187,10 +232,15 @@ architecture Behavioral of tb_integration is
     signal sample_dly       : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_DLY_ID) - 1) := (others => (others => '0'));
     signal sample_num       : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_NUM_ID) - 1) := (others => (others => '0'));
     signal gain_0           : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1) := (others => (others => '0'));
+    signal gain_1           : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_1_ID) - 1) := (others => (others => '0'));
     signal tes_bias         : t_param_array(0 to PARAM_ID_TO_SIZE(BIAS_ID) - 1) := (others => (others => '0'));
     signal ret_data_s       : t_param_array(0 to PARAM_ID_TO_SIZE(RET_DATA_S_ID) - 1) := (others => (others => '0'));
     signal data_rate        : t_param_array(0 to PARAM_ID_TO_SIZE(DATA_RATE_ID) - 1) := (others => (others => '0'));
     signal num_cols         : t_param_array(0 to PARAM_ID_TO_SIZE(NUM_COLS_REP_ID) - 1) := (others => (others => '0'));
+
+
+    type t_gain_array is array(0 to MAX_CHANNELS - 1) of t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1);
+    signal gain_array : t_gain_array := (others => (others => (others => '0')));
 
 begin
 
@@ -223,6 +273,26 @@ begin
         wait for SIM_DURATION;
     end process;
 
+    -- Sync frame generation
+    sync_frame_generaiton : process
+    begin
+        sync_frame <= '0';
+        wait for 51 * 12 * 2 * T_HALF_CLK_5;
+        sync_frame <= '1';
+        wait for 2 * T_HALF_CLK_5;
+    end process;
+
+    -- ADC data generation
+    adc_sim_data_gen : process
+    begin
+        adc_sim_data(0) <= std_logic_vector(unsigned(adc_sim_data(0)) + 1);
+        adc_sim_data(1) <= std_logic_vector(unsigned(adc_sim_data(1)) + 2);
+        if (unsigned(adc_sim_data(0)) = to_unsigned(20, adc_sim_data(0)'length)) then
+            adc_sim_data <= (others => (others => '0'));
+        end if;
+        wait for 20 us;
+    end process;
+
     -- Test cases
     packet_params_generation : process
     begin
@@ -230,64 +300,184 @@ begin
         wait for RST_START + RST_PULSE_LENGTH + 100 ns;
 
         -- #1: wrong card_id
-        parser_packet_type      <= cmd_wb;
-        parser_card_id          <= x"0f0f"; -- wrong
-        parser_param_id         <= x"00ff";
-        parser_payload_size     <= 0;
-        parser_packet_payload   <= (others => (others => '0'));
+        PC_packet_type      <= cmd_wb;
+        PC_card_id          <= x"0f0f"; -- wrong
+        PC_param_id         <= x"00ff";
+        PC_payload_size     <= 2;
+        PC_packet_payload   <= (others => (others => '0'));
 
         wait for DATA_SETUP;
-        parser_params_valid <= '1';
+        PC_params_valid <= '1';
         wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
+        PC_params_valid <= '0';
 
-        wait for PACKET_DELAY; 
+        wait for PACKET_DELAY;
 
-        -- #2: wrong packet_type
-        parser_packet_type      <= reply; -- wrong
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"00ff";
-        parser_payload_size     <= 0;
-        parser_packet_payload   <= (others => (others => '0'));
+        -- #2: wrong packet_type (we cmd_handler only accepts commands)
+        PC_packet_type      <= reply; -- wrong
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= x"00ff";
+        PC_payload_size     <= 5;
+        PC_packet_payload   <= (others => (others => '0'));
 
         wait for DATA_SETUP;
-        parser_params_valid <= '1';
+        PC_params_valid <= '1';
         wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
+        PC_params_valid <= '0';
+
         wait for PACKET_DELAY;
 
         -- #3: wrong param_id
-        parser_packet_type      <= cmd_wb;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"00ff"; -- wrong
-        parser_payload_size     <= 0;
-        parser_packet_payload   <= (others => (others => '0'));
+        PC_packet_type      <= cmd_wb;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= x"00ff"; -- wrong
+        PC_payload_size     <= 5;
+        PC_packet_payload   <= (others => (others => '0'));
 
         wait for DATA_SETUP;
-        parser_params_valid <= '1';
+        PC_params_valid <= '1';
         wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
+        PC_params_valid <= '0';
+
         wait for PACKET_DELAY;
 
-        -- #4: Wrong payload size
-        parser_packet_type      <= cmd_wb;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"0002";
-        parser_payload_size     <= 0; -- Wrong
-        parser_packet_payload   <= (others => (others => '0'));
+        -- #4: Wrong payload size (parser will not accept 0 length payload)
+        PC_packet_type      <= cmd_wb;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(ON_BIAS_ID, parser_param_id'length));
+        PC_payload_size     <= 0; -- Wrong
+        PC_packet_payload   <= (others => (others => '0'));
 
         wait for DATA_SETUP;
-        parser_params_valid <= '1';
+        PC_params_valid <= '1';
         wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
+        PC_params_valid <= '0';
         wait for PACKET_DELAY;
 
-        -- #5: Good write
-        parser_packet_type      <= cmd_wb;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"0002";
-        parser_payload_size     <= 8; 
-        parser_packet_payload   <= (0 => x"0f0f0f00", 
+        -- #5: Wrong payload size (it does not coincide with the specified size of this parameter, cmd handler should not accept it)
+        PC_packet_type      <= cmd_wb;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(ON_BIAS_ID, parser_param_id'length));
+        PC_payload_size     <= 3; -- Wrong
+        PC_packet_payload   <= (others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+
+        -- #6: Good write
+        PC_packet_type      <= cmd_wb;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(ON_BIAS_ID, parser_param_id'length));
+        PC_payload_size     <= MAX_ROWS; 
+        PC_packet_payload   <= (0  => x"0f0f0f00", 
+                                1  => x"0f0f0f01",
+                                2  => x"0f0f0f02",
+                                3  => x"0f0f0f03",
+                                4  => x"0f0f0f04",
+                                5  => x"0f0f0f05",
+                                6  => x"0f0f0f06",
+                                7  => x"0f0f0f07",
+                                8  => x"0f0f0f08",
+                                9  => x"0f0f0f09",
+                                10 => x"0f0f0f10",
+                                11 => x"0f0f0f11",
+                                others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+
+        -- #7: Good read
+        PC_packet_type      <= cmd_rb;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(ON_BIAS_ID, parser_param_id'length));
+        PC_payload_size     <= 1; 
+        PC_packet_payload   <= (others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+
+        -- #8: Wrong start acquisition (Wrong parameter)
+        PC_packet_type      <= cmd_go;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(ON_BIAS_ID, parser_param_id'length));
+        PC_payload_size     <= 1; 
+        PC_packet_payload   <= (others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+
+        -- #9: Wrong start acquisition (Good address but no previous setup)
+        PC_packet_type      <= cmd_go;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(RET_DATA_ID, parser_param_id'length));
+        PC_payload_size     <= 1; 
+        PC_packet_payload   <= (others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+
+        -- #10: Wrong stop acquisition (acquisition_on = '0')
+        PC_packet_type      <= cmd_st;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(RET_DATA_ID, parser_param_id'length));
+        PC_payload_size     <= 1; 
+        PC_packet_payload   <= (others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+
+        -- #11: Set acquisition config 
+        PC_packet_type      <= cmd_wb;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(RET_DATA_S_ID, parser_param_id'length));
+        PC_payload_size     <= 2; 
+        PC_packet_payload   <= (0 => std_logic_vector(to_unsigned(3, t_word'length)), 
+                                1 => std_logic_vector(to_unsigned(6, t_word'length)),
+                                others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+
+        -- #12: Good start acquisition (with current parameters it should last around 6000us until the last frame put in module, and 7500 until it is sent)
+        PC_packet_type      <= cmd_go;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(RET_DATA_ID, parser_param_id'length));
+        PC_payload_size     <= 1; 
+        PC_packet_payload   <= (others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+
+        -- #13: Good write but has to be ignored because acquisition is on
+        PC_packet_type      <= cmd_wb;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(ON_BIAS_ID, parser_param_id'length));
+        PC_payload_size     <= 8; 
+        PC_packet_payload   <= (0 => x"0f0f0f00", 
                                     1 => x"0f0f0f01",
                                     2 => x"0f0f0f02",
                                     3 => x"0f0f0f03",
@@ -298,144 +488,148 @@ begin
                                     others => (others => '0'));
 
         wait for DATA_SETUP;
-        parser_params_valid <= '1';
+        PC_params_valid <= '1';
         wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
+        PC_params_valid <= '0';
         wait for PACKET_DELAY;
 
-        -- #6: Good read
-        parser_packet_type      <= cmd_rb;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"0002";
-        parser_payload_size     <= 1; 
-        parser_packet_payload   <= (others => (others => '0'));
+        ---- #14: Bad write but has to be ignored because acquisition is on (wrong param id)
+        --PC_packet_type      <= cmd_wb;
+        --PC_card_id          <= DAUGHTER_CARD_ID;
+        --PC_param_id         <= x"00ff"; -- wrong
+        --PC_payload_size     <= 1;
+        --PC_packet_payload   <= (others => (others => '0'));
+
+        --wait for DATA_SETUP;
+        --PC_params_valid <= '1';
+        --wait for PARAMS_VALID_HIGH;
+        --PC_params_valid <= '0';
+        --wait for PACKET_DELAY;
+
+
+        -- #15: bad start acquisition (acq already on)
+        PC_packet_type      <= cmd_go;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(RET_DATA_ID, parser_param_id'length));
+        PC_payload_size     <= 1; 
+        PC_packet_payload   <= (others => (others => '0'));
 
         wait for DATA_SETUP;
-        parser_params_valid <= '1';
+        PC_params_valid <= '1';
         wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
-        wait for PACKET_DELAY;
+        PC_params_valid <= '0';
+        wait for 2 * PACKET_DELAY;
 
-        -- #7: Wrong start acquisition (Wrong parameter)
-        parser_packet_type      <= cmd_go;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"0002";
-        parser_payload_size     <= 1; 
-        parser_packet_payload   <= (others => (others => '0'));
+        -- #16: Good start acquisition (But sender still busy)
+        PC_packet_type      <= cmd_go;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(RET_DATA_ID, parser_param_id'length));
+        PC_payload_size     <= 1; 
+        PC_packet_payload   <= (others => (others => '0'));
 
         wait for DATA_SETUP;
-        parser_params_valid <= '1';
+        PC_params_valid <= '1';
         wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
-        wait for PACKET_DELAY;
+        PC_params_valid <= '0';
+        wait for 2 * PACKET_DELAY;
 
-        -- #8: Wrong start acquisition (Good address but no previous setup)
-        parser_packet_type      <= cmd_go;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"0016";
-        parser_payload_size     <= 1; 
-        parser_packet_payload   <= (others => (others => '0'));
+        -- #17: Good stop (It should finish before last frame and set the corresponding bits)
+        PC_packet_type      <= cmd_st;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= x"0016";
+        PC_payload_size     <= 1; 
+        PC_packet_payload   <= (others => (others => '0'));
 
         wait for DATA_SETUP;
-        parser_params_valid <= '1';
+        PC_params_valid <= '1';
         wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
+        PC_params_valid <= '0';
         wait for PACKET_DELAY;
 
-        -- #9: Wrong stop acquisition (acquisition_on = '0')
-        parser_packet_type      <= cmd_st;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"0016";
-        parser_payload_size     <= 1; 
-        parser_packet_payload   <= (others => (others => '0'));
+        --wait for 200 ns;
+        --wait for 20 ns;
 
-        wait for DATA_SETUP;
-        parser_params_valid <= '1';
-        wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
-        wait for PACKET_DELAY;
-
-        -- #10: Set acquisition config 
-        parser_packet_type      <= cmd_wb;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"0053";
-        parser_payload_size     <= 2; 
-        parser_packet_payload   <= (0 => x"0f0f0f00", 
-                                    1 => x"0f0f0f01",
-                                    others => (others => '0'));
-
-        wait for DATA_SETUP;
-        parser_params_valid <= '1';
-        wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
-        wait for PACKET_DELAY;
-
-        -- #11: Good start acquisition
-        parser_packet_type      <= cmd_go;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"0016";
-        parser_payload_size     <= 1; 
-        parser_packet_payload   <= (others => (others => '0'));
-
-        wait for DATA_SETUP;
-        parser_params_valid <= '1';
-        wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
-        wait for PACKET_DELAY;
-
-        -- #12: Good write but has to be ignored because acquisition is on
-        parser_packet_type      <= cmd_wb;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"0002";
-        parser_payload_size     <= 8; 
-        parser_packet_payload   <= (0 => x"0f0f0f00", 
-                                    1 => x"0f0f0f01",
-                                    2 => x"0f0f0f02",
-                                    3 => x"0f0f0f03",
-                                    4 => x"0f0f0f04",
-                                    5 => x"0f0f0f05",
-                                    6 => x"0f0f0f06",
-                                    7 => x"0f0f0f07",
-                                    others => (others => '0'));
-
-        wait for DATA_SETUP;
-        parser_params_valid <= '1';
-        wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
-        wait for PACKET_DELAY;
-
-        -- #13: Bad write but has to be ignored because acquisition is on (wrong param id)
-        parser_packet_type      <= cmd_wb;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"00ff"; -- wrong
-        parser_payload_size     <= 0;
-        parser_packet_payload   <= (others => (others => '0'));
-
-        wait for DATA_SETUP;
-        parser_params_valid <= '1';
-        wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
-        wait for PACKET_DELAY;
-
-        -- #14: Good stop
-        parser_packet_type      <= cmd_st;
-        parser_card_id          <= DAUGHTER_CARD_ID;
-        parser_param_id         <= x"0016";
-        parser_payload_size     <= 1; 
-        parser_packet_payload   <= (others => (others => '0'));
-
-        wait for DATA_SETUP;
-        parser_params_valid <= '1';
-        wait for PARAMS_VALID_HIGH;
-        parser_params_valid <= '0';
-        wait for PACKET_DELAY;
-
-        wait for 200 ns;
-        wait for 20 ns;
-
-        wait for PACKET_DELAY;
+        --wait for PACKET_DELAY;
+        wait;
 
     end process;
+
+
+    -- (PC) TX packet builder
+    PC_builder_module : entity concept.packet_builder
+        port map(
+            clk             => sys_clk_5,
+            rst             => sys_rst,
+
+            packet_type     => PC_packet_type,
+            card_id         => PC_card_id,
+            param_id        => PC_param_id,
+            cmd_type        => PC_cmd_type,
+            err_ok          => PC_err_ok,
+            payload_size    => PC_payload_size,
+            packet_payload  => PC_packet_payload,
+                       
+            params_valid    => PC_params_valid,
+            tx_busy         => PC_tx_busy,
+            send_byte       => PC_send_byte,
+            byte_data       => PC_byte_data,
+            builder_ready   => PC_builder_ready
+        );
+
+    -- (PC) TX uart module
+    PC_uart_module : entity concept.uart_controller
+        port map(
+            clk          => sys_clk_100,
+            rst          => sys_rst,
+
+            tx_ena       => PC_send_byte,
+            tx_data      => PC_byte_data,
+            rx           => '0',
+            rx_busy      => open,
+            rx_error     => open,
+            rx_data      => open,
+            tx_busy      => PC_tx_busy,
+            tx           => rx_uart_serial
+        );
+    
+    -- (FPGA) RX uart module
+    uart_controller_module : entity concept.uart_controller
+        port map(
+            clk         => sys_clk_100,
+            rst         => sys_rst,
+
+            tx_ena      => tx_send_byte,
+            tx_data     => tx_byte_data,
+
+            rx          => rx_uart_serial,
+            rx_busy     => rx_busy,
+            rx_error    => open,
+            rx_data     => rx_byte_data,
+
+            tx_busy     => tx_busy,
+            tx          => open
+        );
+    
+    
+    -- Packet parser
+    packet_parser : entity concept.packet_parser
+        port map(
+            clk             => sys_clk_5,
+            rst             => sys_rst,
+
+            packet_type     => parser_packet_type,
+            card_id         => parser_card_id,
+            param_id        => parser_param_id,
+            cmd_type        => open,
+            err_ok          => open,
+            payload_size    => parser_payload_size,
+            packet_payload  => parser_packet_payload,
+
+            rx_busy         => rx_busy,
+            byte_data       => rx_byte_data,
+            params_valid    => parser_params_valid
+        );
+
 
     command_handler_module : entity concept.command_handler
         port map(
@@ -507,18 +701,40 @@ begin
             data_frame_payload     => data_packet_payload,
                                 
             -- Interface with packet_builder
-            builder_ready          => '0',
-            packet_type            => open,
-            card_id                => open,
-            param_id               => open,
-            cmd_type               => open,
-            err_ok                 => open,
-            payload_size           => open,
-            packet_payload         => open,
-            params_valid           => open,
+            builder_ready          => builder_ready,
+            packet_type            => packet_type,
+            card_id                => card_id,
+            param_id               => param_id,
+            cmd_type               => cmd_type,
+            err_ok                 => err_ok,
+            payload_size           => payload_size,
+            packet_payload         => packet_payload,
+            params_valid           => params_valid,
 
             ready                  => packet_sender_ready
         );
+
+    packet_builder_module : entity concept.packet_builder
+        port map(
+            clk             => sys_clk_5,
+            rst             => sys_rst,
+
+            packet_type     => packet_type,
+            card_id         => card_id,
+            param_id        => param_id,
+            cmd_type        => cmd_type,
+            err_ok          => err_ok,
+            payload_size    => payload_size,
+            packet_payload  => packet_payload,
+
+            params_valid    => params_valid,
+
+            tx_busy         => tx_busy,
+            send_byte       => tx_send_byte,
+            byte_data       => tx_byte_data, 
+            builder_ready   => builder_ready
+        );
+
 
     bram_wrapper_module : entity concept.BRAM_single_wrapper
         port map(
@@ -614,31 +830,6 @@ begin
             SCK             => adc_sck
         );
 
-
-
-    ADC_simulator_0 : entity concept.ADC_simulator
-        port map(
-            clk     => sys_clk_100,
-            rst     => sys_rst,
-                    
-            nCNV    => adc_cnv,
-            SCK     => adc_sck,
-            data    => adc_sim_data_0,
-                    
-            SDO     => adc_sdo_0
-        );
-
-
-    ddr_input_module : entity concept.ddr_input
-        port map(
-            clock        => sys_clk_100,
-            reset        => sys_rst,
-
-            output_en    => '1',
-            ddr_in       => adc_sdo_0,
-            parallel_out => ddr_parallel
-        );
-
     fall_edge_detector_CNV : entity concept.FallEdgeDetector
         port map (
             clk             => sys_clk_100,
@@ -646,93 +837,123 @@ begin
             signal_in       => adc_cnv,
             signal_out      => cnv_fall_pulse
         );
-    
-    input_shift_register_module : entity concept.input_shift_register
-        port map(
-            clk                     => sys_clk_100,
-            rst                     => sys_rst,
 
-            serial_clk              => adc_sck,
-            iddr_parallel_output    => ddr_parallel,
-            conv_started            => cnv_fall_pulse,
-            valid_word              => valid_word,
-            parallel_data           => parallel_data
-        );
+    gain_array(0) <= gain_0; 
+    gain_array(1) <= gain_1;
 
-    sample_selector_module : entity concept.sample_selector
-        port map(
-            clk                     => sys_clk_100,
-            rst                     => sys_rst,
+    channels_readout : for i in 0 to MAX_CHANNELS - 1 generate
 
-            sample_dly              => to_integer(unsigned(sample_dly(0))),
-            sample_num              => to_integer(unsigned(sample_num(0))),
-            new_row                 => new_row,
-            valid_word              => valid_word,
-            parallel_data           => parallel_data,
-            valid_sample            => valid_sample,
-            sample_data             => sample_data
-        );
+        ADC_simulator : entity concept.ADC_simulator
+            port map(
+                clk     => sys_clk_100,
+                rst     => sys_rst,
+                        
+                nCNV    => adc_cnv,
+                SCK     => adc_sck,
+                data    => adc_sim_data(i),
+                        
+                SDO     => adc_sdo(i)
+            );
 
-    sample_accumulator_module : entity concept.sample_accumulator
-        port map(
-            clk                     => sys_clk_100,
-            rst                     => sys_rst,
 
-            sample_num              => to_integer(unsigned(sample_num(0))),
-            valid_sample            => valid_sample,
-            sample                  => sample_data,
-            row_num                 => row_num,
-            acc_sample              => acc_sample
-        );
+        ddr_input_module : entity concept.ddr_input
+            port map(
+                clock        => adc_sck,
+                reset        => sys_rst,
 
-    pulse_stretcher : entity concept.pulse_stretcher
-        port map(
-            clk                 => sys_clk_100,
-            rst                 => sys_rst,
+                output_en    => '1',
+                ddr_in       => adc_sdo(i),
+                parallel_out => ddr_parallel(i)
+            );
 
-            fast_pulse          => acc_sample.valid,
-            stretched_pulse     => acc_sample_stretched.valid
-        );
+        
+        input_shift_register_module : entity concept.input_shift_register
+            port map(
+                clk                     => sys_clk_100,
+                rst                     => sys_rst,
 
-    acc_sample_stretched.value      <= acc_sample.value;
-    acc_sample_stretched.row_num    <= acc_sample_stretched.row_num;
+                serial_clk              => adc_sck,
+                iddr_parallel_output    => ddr_parallel(i),
+                conv_started            => adc_cnv,
+                valid_word              => valid_word(i),
+                parallel_data           => parallel_data(i)
+            );
 
-    feedback_calculator_module : entity concept.feedback_calculator
-        port map(
-            clk                 => sys_clk_5,
-            rst                 => sys_rst,
+        sample_selector_module : entity concept.sample_selector
+            port map(
+                clk                     => sys_clk_100,
+                rst                     => sys_rst,
 
-            acc_sample          => acc_sample_stretched,
-            sa_fb_gain          => to_integer(signed(gain_0(0))),
-            fb_sample           => fb_sample
-        );
+                sample_dly              => to_integer(unsigned(sample_dly(0))),
+                sample_num              => to_integer(unsigned(sample_num(0))),
+                new_row                 => new_row,
+                valid_word              => valid_word(i),
+                parallel_data           => parallel_data(i),
+                valid_sample            => valid_sample(i),
+                sample_data             => sample_data(i)
+            );
 
-    bram_dual_wrapper_module : entity concept.bram_dual_wrapper
-        port map(
-            clk             => sys_clk_5,
-            rst             => sys_rst,
+        sample_accumulator_module : entity concept.sample_accumulator
+            port map(
+                clk                     => sys_clk_100,
+                rst                     => sys_rst,
 
-            write_address   => fb_sample.row_num,
-            write_data      => fb_sample.value,
-            write_pulse     => fb_sample.valid,
-            read_address    => read_address,
-            read_data       => read_data
-        );
-    
-    feedback_reader_module : entity concept.feedback_reader
-        port map(
-            clk             => sys_clk_5,
-            rst             => sys_rst,
+                sample_num              => to_integer(unsigned(sample_num(0))),
+                valid_sample            => valid_sample(i),
+                sample                  => sample_data(i),
+                row_num                 => row_num,
+                acc_sample              => acc_sample(i)
+            );
 
-            new_row         => new_row,
-            row_num         => row_num,
-            num_rows        => to_integer(unsigned(num_rows(0))),
+        pulse_stretcher : entity concept.pulse_stretcher
+            port map(
+                clk                 => sys_clk_100,
+                rst                 => sys_rst,
 
-            read_address    => read_address,
-            read_data       => read_data,
+                fast_pulse          => acc_sample(i).valid,
+                stretched_pulse     => acc_sample_stretched(i).valid
+            );
 
-            sa_fb_data      => sa_fb_data
-        );
+        acc_sample_stretched(i).value      <= acc_sample(i).value;
+        acc_sample_stretched(i).row_num    <= acc_sample(i).row_num;
+
+        feedback_calculator_module : entity concept.feedback_calculator
+            port map(
+                clk                 => sys_clk_5,
+                rst                 => sys_rst,
+
+                acc_sample          => acc_sample_stretched(i),
+                sa_fb_gain          => to_integer(signed(gain_array(i)(0))),
+                fb_sample           => fb_sample(i)
+            );
+
+        bram_dual_wrapper_module : entity concept.bram_dual_wrapper
+            port map(
+                clk             => sys_clk_5,
+                rst             => sys_rst,
+
+                write_address   => fb_sample(i).row_num,
+                write_data      => fb_sample(i).value,
+                write_pulse     => fb_sample(i).valid,
+                read_address    => read_address(i),
+                read_data       => read_data(i)
+            );
+        
+        feedback_reader_module : entity concept.feedback_reader
+            port map(
+                clk             => sys_clk_5,
+                rst             => sys_rst,
+
+                new_row         => new_row,
+                row_num         => row_num,
+                num_rows        => to_integer(unsigned(num_rows(0))),
+
+                read_address    => read_address(i),
+                read_data       => read_data(i),
+
+                sa_fb_data      => sa_fb_data(i)
+            );
+    end generate;
 
     TES_bias_setter_module : entity concept.TES_bias_setter
         port map(
@@ -745,7 +966,7 @@ begin
             DAC_data                => open
         );
 
-    channels_data(0) <= fb_sample;
+    channels_data <= fb_sample;
 
     frame_builder_module : entity concept.frame_builder
         port map(
@@ -807,7 +1028,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => (others => std_logic_vector(to_unsigned(3, t_word'length))),
             param_data          => servo_mode
         );
 
@@ -824,7 +1045,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => FB_DLY_DEF,
             param_data          => fb_dly
         );
 
@@ -841,7 +1062,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => NUM_ROWS_DEF,
             param_data          => num_rows
         );
 
@@ -858,7 +1079,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => ROW_LEN_DEF,
             param_data          => row_len
         );
 
@@ -875,7 +1096,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => ON_BIAS_DEF,
             param_data          => on_bias
         );
 
@@ -892,7 +1113,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => OFF_BIAS_DEF,
             param_data          => off_bias
         );
 
@@ -909,7 +1130,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => CNV_LEN_DEF,
             param_data          => cnv_len
         );
 
@@ -926,7 +1147,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => SCK_DLY_DEF,
             param_data          => sck_dly
         );
 
@@ -943,7 +1164,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => SCK_HALF_PERIOD_DEF,
             param_data          => sck_half_period
         );
 
@@ -960,7 +1181,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => SAMPLE_DLY_DEF,
             param_data          => sample_dly
         );
 
@@ -977,7 +1198,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => SAMPLE_NUM_DEF,
             param_data          => sample_num
         );
 
@@ -994,8 +1215,25 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => GAIN_0_DEF,
             param_data          => gain_0
+        );
+
+    -- GAIN_1_ID
+    gain_1_buffer : entity concept.param_buffer
+        generic map(
+            param_size          => PARAM_ID_TO_SIZE(GAIN_1_ID),
+            param_id            => GAIN_1_ID
+        )                       
+        port map(               
+            clk                 => sys_clk_5,
+            rst                 => sys_rst,
+                                
+            update              => update_param_pulse,
+            param_id_to_update  => param_id_to_update,
+            update_data         => param_data,
+            default_value       => GAIN_1_DEF,
+            param_data          => gain_1
         );
 
     -- BIAS_ID
@@ -1045,7 +1283,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => DATA_RATE_DEF,
             param_data          => data_rate
         );
 
@@ -1062,7 +1300,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => NUM_COLS_REP_DEF,
             param_data          => num_cols
         );
 
