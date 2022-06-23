@@ -60,7 +60,7 @@ architecture behave of frame_builder is
 
     constant header_version : natural := 7;
 
-    type stateType is (idle, wait_valid_data, update_payload_state, wait_sender_ready, send_data);
+    type stateType is (idle, wait_valid_data, update_payload_state, wait_sender_ready, send_data, wait_acq_off);
     signal state : stateType;
 
     type t_header_payload is array (0 to (DATA_PKT_HEADER_LENGTH - 1)) of t_word;
@@ -81,7 +81,8 @@ architecture behave of frame_builder is
     signal total_frame_counter  : natural   := 0; -- Counter for the current total sent frames (starts at 0 ends when acquisition is over)
     signal valid_row            : std_logic := '0'; -- Signal that indicates that the row_counter is sync whith the current row,
                                                     -- if not we discard the current frame that has already started and wait until the next one starts
-    signal update_payload : std_logic := '0';
+    signal update_payload       : std_logic := '0';
+    signal update_status_bits   : std_logic := '0';
 
 
     -- Header needed signals
@@ -158,10 +159,16 @@ begin
                     last_frame_sent <= '1';
                     total_frame_counter <= 0;
                     frame_id <= initial_id;
-                    state <= idle;
+                    state <= wait_acq_off;
                 else
                     frame_id <= frame_id + 1;
                     state <= wait_valid_data;
+                end if;
+            
+            when wait_acq_off =>
+                if (acquisition_on = '0') then
+                    last_frame_sent <= '0';
+                    state <= idle;
                 end if;
 
             when others =>
@@ -211,8 +218,11 @@ begin
     if (rst = '1') then
         stop_bit <= '0';
     elsif (rising_edge(clk)) then
+        update_status_bits <= '0';
+
         if (stop_received = '1') then
             stop_bit <= '1';
+            update_status_bits <= '1';
         end if;
         -- We start a new acquisition, restart stop bit
         if (state = idle) then
@@ -274,6 +284,13 @@ begin
     if (rst = '1') then
         header_payload <= (others => (others => '0'));
     elsif (rising_edge(clk)) then
+        -- Special case, as the stop can be received any time, we must be able to trigger the update at any time
+        if (update_status_bits = '1') then
+            -- (0) Status bits
+            header_payload(0)(1 downto 0) <= stop_bit & last_frame;
+        end if;
+
+        -- General update triggered for each valid data
         if (update_payload = '1') then
             -- (0) Status bits
             header_payload(0)(1 downto 0) <= stop_bit & last_frame;
