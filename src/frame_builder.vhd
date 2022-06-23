@@ -271,6 +271,8 @@ begin
         data_payload <= (others => (others => '0'));
     elsif (rising_edge(clk)) then
         if (update_payload = '1') then
+            -- We assign all channels even if they do not report their data. Is later through the size of the frame where 
+            -- we decide which data to report
             for i in 0 to (MAX_CHANNELS - 1) loop
                 data_payload((i * num_rows) + channels_data_reg(i).row_num) <= channels_data_reg(i).value;
             end loop;
