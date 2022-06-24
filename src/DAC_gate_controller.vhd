@@ -3,7 +3,7 @@
 -- Engineer: Iban Ibanez, Albert Risco
 -- 
 -- Create Date: 05/02/2020
--- Module Name: DAC_controller
+-- Module Name: DAC_gate_controller
 -- Project Name: channel_card_v1
 -- Target Devices: Spartan 7 xc7s25csga324-1
 -- Tool Versions: Vivado 2019.1
@@ -21,7 +21,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity DAC_controller IS
+entity DAC_gate_controller is
     port(   clock                   : in std_logic;
             rst                     : in std_logic;
             start_conv_pulse        : in std_logic;
@@ -29,10 +29,10 @@ entity DAC_controller IS
             CLK                     : out std_logic;
             LDAC                    : out std_logic
             );
-end DAC_controller;
+end DAC_gate_controller;
 
 
-architecture behave of DAC_controller is
+architecture behave of DAC_gate_controller is
 
     
     signal CLK_reg : std_logic;
