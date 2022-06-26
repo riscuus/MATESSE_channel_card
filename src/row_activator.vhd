@@ -30,6 +30,9 @@ library concept;
 use concept.utils.all;
 
 entity row_activator is
+    generic(
+        DAC_DLY : positive := 5
+    );
     port(
         clk                 : in std_logic; -- 5mhz clock                                                                           
         rst                 : in std_logic; -- asynchronous reset
@@ -49,8 +52,6 @@ entity row_activator is
 end row_activator;
 
 architecture behave of row_activator is
-
-    constant DAC_DLY : positive := 10; -- Cycles we must wait between DAC start pulses
 
     type stateType is (idle, wait_deactivation, wait_activation, deactivate_all);
     signal state : stateType;
@@ -101,21 +102,21 @@ begin
                 end if;
             
             when wait_deactivation =>
-                if (clk_counter = DAC_DLY) then
+                if (clk_counter = DAC_DLY - 1) then
                     state <= wait_activation;
                 else
                     state <= state;
                 end if;
 
             when wait_activation =>
-                if (clk_counter = DAC_DLY) then
+                if (clk_counter = DAC_DLY - 1) then
                     state <= idle;
                 else
                     state <= state;
                 end if;
 
             when deactivate_all =>
-                if (clk_counter = DAC_DLY) then
+                if (clk_counter = DAC_DLY - 1) then
                     if (row_counter = num_rows - 1) then
                         state <= idle;
                     else
