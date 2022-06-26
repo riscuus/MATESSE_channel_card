@@ -4,6 +4,11 @@ use     IEEE.numeric_std.all;
 
 package utils is
 
+    function get_BRAM_ADDR_BITS(DATA_BITS : positive) return positive;
+    function get_BRAM_write_enable_BITS(DATA_BITS : positive) return positive;
+    function bits_req(val : natural) return natural;
+    function total_inputs(val : natural) return natural;
+
     -- Basic constraints
     constant MAX_CHANNELS           : natural := 2; -- Max channels that the daughter board can handle
     constant MAX_ROWS               : natural := 12; -- Max rows that the daughter board can handle
@@ -42,11 +47,44 @@ package utils is
 
     type t_channel_record_array is array(0 to MAX_CHANNELS - 1) of t_channel_record;
 
+
     ----------------------------------------------------------------
     -- Constants
     ----------------------------------------------------------------
 
+    -- Basic definitions
+    constant DAC_DATA_SIZE : natural := 16;
+    constant DAC_ADDR_SIZE : natural := 2;
 
+    constant ADC_DATA_SIZE : natural := 16;
+
+    constant NUM_ROW_DACS  : natural := 3;
+    
+    -- The possible servo modes
+    constant SERVO_MODE_CONST   : natural := 0;
+    constant SERVO_MODE_RAMP    : natural := 2;
+    constant SERVO_MODE_PID     : natural := 3;
+
+    constant NUM_SERVO_MODES    : natural := 3;
+
+    constant NUM_CHANNEL_LINES  : natural := 6; -- (calc_fb, ramp, SF, SB, FF, FB)
+    constant LINE_SEL_SIZE      : natural := bits_req(NUM_CHANNEL_LINES);
+    type t_line_sel_array is array(0 to MAX_CHANNELS - 1) of unsigned(LINE_SEL_SIZE - 1 downto 0);
+
+
+    -- The possible data modes
+    constant DATA_MODE_ERROR    : natural := 0;
+    constant DATA_MODE_FB       : natural := 1;
+    constant DATA_MODE_FILT_FB  : natural := 2;
+    constant DATA_MODE_RAW      : natural := 3;
+
+    constant NUM_DATA_MODES     : natural := 4; -- (error, fb, filt_fb, raw)
+
+    -- The possible reply errors
+    constant ERROR_GO_WITH_NO_SETUP     : t_word := x"00000001";
+    constant ERROR_INCORRECT_PARAM_ID   : t_word := x"00000002";
+    constant ERROR_INCORRECT_PARAM_SIZE : t_word := x"00000003";
+    constant ERROR_ST_WITH_NO_ACQ       : t_word := x"00000004";
 
     -- Packet constants
     constant PREAMBLE_1 : t_word := x"A5A5A5A5";
@@ -199,31 +237,14 @@ package utils is
     constant SAMPLE_DLY_DEF         : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_DLY_ID) - 1) := (0 => std_logic_vector(to_unsigned(25, t_word'length)));
     constant SAMPLE_NUM_DEF         : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_NUM_ID) - 1) := (0 => std_logic_vector(to_unsigned(15, t_word'length)));
     constant FB_DLY_DEF             : t_param_array(0 to PARAM_ID_TO_SIZE(FB_DLY_ID) - 1) := (0 => std_logic_vector(to_unsigned(23, t_word'length)));
-    constant GAIN_0_DEF             : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1) := (others => std_logic_vector(to_signed(-3, t_word'length)));
-    constant GAIN_1_DEF             : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_1_ID) - 1) := (others => std_logic_vector(to_signed(-2, t_word'length)));
+    constant GAIN_0_DEF             : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1) := (others => std_logic_vector(to_signed(-1, t_word'length)));
+    constant GAIN_1_DEF             : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_1_ID) - 1) := (others => std_logic_vector(to_signed(2, t_word'length)));
     constant DATA_RATE_DEF          : t_param_array(0 to PARAM_ID_TO_SIZE(DATA_RATE_ID) - 1) := (0 => std_logic_vector(to_unsigned(2, t_word'length)));
     constant NUM_COLS_REP_DEF       : t_param_array(0 to PARAM_ID_TO_SIZE(NUM_COLS_REP_ID) - 1) := (0 => std_logic_vector(to_unsigned(1, t_word'length)));
     constant CNV_LEN_DEF            : t_param_array(0 to PARAM_ID_TO_SIZE(CNV_LEN_ID) - 1) := (0 => std_logic_vector(to_unsigned(3, t_word'length)));
     constant SCK_DLY_DEF            : t_param_array(0 to PARAM_ID_TO_SIZE(SCK_DLY_ID) - 1) := (0 => std_logic_vector(to_unsigned(1, t_word'length)));
     constant SCK_HALF_PERIOD_DEF    : t_param_array(0 to PARAM_ID_TO_SIZE(SCK_HALF_PERIOD_ID) - 1) := (0 => std_logic_vector(to_unsigned(1, t_word'length)));
-
-
-    -- The possible servo modes
-    constant SERVO_MODE_CONST   : natural := 0;
-    constant SERVO_MODE_RAMP    : natural := 2;
-    constant SERVO_MODE_PID     : natural := 3;
-
-    -- The possible data modes
-    constant DATA_MODE_ERROR    : natural := 0;
-    constant DATA_MODE_FB       : natural := 1;
-    constant DATA_MODE_FILT_FB  : natural := 2;
-    constant DATA_MODE_RAW      : natural := 3;
-
-    -- The possible reply errors
-    constant ERROR_GO_WITH_NO_SETUP     : t_word := x"00000001";
-    constant ERROR_INCORRECT_PARAM_ID   : t_word := x"00000002";
-    constant ERROR_INCORRECT_PARAM_SIZE : t_word := x"00000003";
-    constant ERROR_ST_WITH_NO_ACQ       : t_word := x"00000004";
+    constant SERVO_MODE_DEF         : t_param_array(0 to PARAM_ID_TO_SIZE(SERVO_MODE_ID) - 1) := (others => std_logic_vector(to_unsigned(SERVO_MODE_PID, t_word'length)));
 
     -- Data structures for frames
     type t_frame_header is array(0 to 42) of t_word;
@@ -235,8 +256,9 @@ package utils is
     -- Postive array, for generic
     type T_POSITIVE_ARRAY is array(natural range <>) of positive;
 
-    function get_BRAM_ADDR_BITS(DATA_BITS : positive) return positive;
-    function get_BRAM_write_enable_BITS(DATA_BITS : positive) return positive;
+
+    
+
 
 
 end package;
@@ -285,6 +307,25 @@ package body utils is
             return  2;   
         end if;
         return 1;
+    end function;
+
+    -- Returns number of bits required to represent val in binary vector
+    function bits_req(val : natural) return natural is
+      variable res_v    : natural;  -- Result
+      variable remain_v : natural;  -- Remainder used in iteration
+    begin
+      res_v := 0;
+      remain_v := val;
+      while remain_v > 0 loop  -- Iteration for each bit required
+        res_v := res_v + 1;
+        remain_v := remain_v / 2;
+      end loop;
+      return res_v;
+    end function;
+
+    function total_inputs(val : natural) return natural is
+    begin
+        return to_integer(shift_left(to_unsigned(1, val + 1), val));
     end function;
 
 
