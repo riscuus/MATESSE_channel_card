@@ -137,10 +137,31 @@ architecture Behavioral of tb_integration is
     -- frame_builder -> command_handler 
     signal last_frame_sent    : std_logic := '0';
 
+    -- channels controller signals
+    signal channels_ctr_DAC_start_pulse : std_logic := '0';
+    signal channels_DAC_addr        : std_logic_vector(DAC_ADDR_SIZE - 1 downto 0) := (others => '0');
+    signal channels_line_selector   : t_line_sel_array := (others => (others => '0'));
+    signal channels_data_selector   : unsigned(bits_req(NUM_DATA_MODES) - 1 downto 0) := (others => '0');
+
+    -- channels DAC
+    signal channels_DAC_CS      : std_logic := '0';
+    signal channels_DAC_CLK     : std_logic := '0';
+    signal channels_DAC_LDAC    : std_logic := '0';
+
     -- row_selector signals
     signal new_row      : std_logic := '0';
     signal row_num      : natural   := 0;
     signal frame_active : std_logic := '0';
+
+    -- row_activator signals
+    signal row_activator_DAC_start_pulse    : std_logic := '0';
+    signal row_activator_DAC_sel            : unsigned(bits_req(NUM_ROW_DACS) - 1 downto 0) := (others => '0');
+    signal row_activator_DAC_data           : std_logic_vector(DAC_DATA_SIZE + DAC_ADDR_SIZE - 1 downto 0) := (others => '0');
+
+    -- row_activator_DAC_gate_controller signals
+    signal row_activator_DAC_CS     : std_logic := '0';
+    signal row_activator_DAC_CLK    : std_logic := '0';
+    signal row_activator_DAC_LDAC   : std_logic := '0';
 
     -- ADC_triggerer -> ADC_gate_controller
     signal ADC_start_pulse : std_logic := '0';
@@ -205,7 +226,11 @@ architecture Behavioral of tb_integration is
     -- feedback reader -> channel mux
     signal sa_fb_data : t_16_bit_data_array := (others => (others => '0'));
 
-    -- channels -> frame_builder
+    -- channel mux -> data serializer
+    type t_channels_line_data_array is array(0 to MAX_CHANNELS - 1) of std_logic_vector(DAC_DATA_SIZE - 1 downto 0);
+    signal channels_line_data : t_channels_line_data_array := (others => (others => '0'));
+
+    -- channels readout -> frame_builder
     signal channels_data : t_channel_record_array := (
         others => (
             value => (others => '0'),
@@ -217,6 +242,15 @@ architecture Behavioral of tb_integration is
     signal send_data_packet         : std_logic := '0';
     signal data_packet_payload_size : natural := 0;
     signal data_packet_payload      : t_packet_payload := (others => (others => '0'));
+
+    -- TES_bias_setter signals
+    signal TES_bias_DAC_start_pulse : std_logic := '0';
+    signal TES_bias_DAC_data : std_logic_vector(DAC_DATA_SIZE + DAC_ADDR_SIZE - 1 downto 0) := (others => '0');
+
+    -- TES_bias_DAC_gate_controller signals
+    signal TES_bias_DAC_CS      : std_logic := '0';
+    signal TES_bias_DAC_CLK     : std_logic := '0';
+    signal TES_bias_DAC_LDAC    : std_logic := '0';
 
     -- Param buffers signals
     signal data_mode        : t_param_array(0 to PARAM_ID_TO_SIZE(DATA_MODE_ID) - 1) := (others => (others => '0'));
@@ -237,6 +271,10 @@ architecture Behavioral of tb_integration is
     signal ret_data_s       : t_param_array(0 to PARAM_ID_TO_SIZE(RET_DATA_S_ID) - 1) := (others => (others => '0'));
     signal data_rate        : t_param_array(0 to PARAM_ID_TO_SIZE(DATA_RATE_ID) - 1) := (others => (others => '0'));
     signal num_cols         : t_param_array(0 to PARAM_ID_TO_SIZE(NUM_COLS_REP_ID) - 1) := (others => (others => '0'));
+    signal sa_fb_cte        : t_param_array(0 to PARAM_ID_TO_SIZE(SA_FB_ID) - 1) := (others => (others => '0'));
+    signal sa_bias_cte      : t_param_array(0 to PARAM_ID_TO_SIZE(SA_BIAS_ID) - 1) := (others => (others => '0'));
+    signal sq1_fb_cte       : t_param_array(0 to PARAM_ID_TO_SIZE(SQ1_FB_ID) - 1) := (others => (others => '0'));
+    signal sq1_bias_cte     : t_param_array(0 to PARAM_ID_TO_SIZE(SQ1_BIAS_ID) - 1) := (others => (others => '0'));
 
 
     type t_gain_array is array(0 to MAX_CHANNELS - 1) of t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1);
@@ -546,6 +584,47 @@ begin
         PC_params_valid <= '0';
         wait for PACKET_DELAY;
 
+        -- #18: Good write sa bias cte 
+        PC_packet_type      <= cmd_wb;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(SA_BIAS_ID, PC_param_id'length));
+        PC_payload_size     <= PARAM_ID_TO_SIZE(SA_BIAS_ID); 
+        PC_packet_payload   <= (0 => x"0000F1F0", 1 => x"0000F1F1", others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+        
+        -- #19: Good write (set ch0 -> servo_mode_const, ch1 -> servo_mode_PID)
+        PC_packet_type      <= cmd_wb;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(SERVO_MODE_ID, PC_param_id'length));
+        PC_payload_size     <= PARAM_ID_TO_SIZE(SERVO_MODE_ID); 
+        PC_packet_payload   <= (0 => std_logic_vector(to_unsigned(SERVO_MODE_CONST, t_word'length)), 
+                                1 => std_logic_vector(to_unsigned(SERVO_MODE_PID, t_word'length)), 
+                                others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+
+        -- #16: Good start acquisition (But sender still busy)
+        PC_packet_type      <= cmd_go;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(RET_DATA_ID, parser_param_id'length));
+        PC_payload_size     <= 1; 
+        PC_packet_payload   <= (others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for 2 * PACKET_DELAY;
+
         --wait for 200 ns;
         --wait for 20 ns;
 
@@ -752,8 +831,8 @@ begin
             clk                 => sys_clk_5,
             rst                 => sys_rst,
 
-            data_mode           => to_integer(unsigned(data_mode(0))),
-            servo_mode          => to_integer(unsigned(servo_mode(0))),
+            data_mode           => data_mode(0)(bits_req(NUM_DATA_MODES) - 1 downto 0),
+            servo_mode          => servo_mode,
             fb_dly              => to_integer(unsigned(fb_dly(0))),
 
             new_row             => new_row,
@@ -764,12 +843,23 @@ begin
             set_FF              => set_FF,
             set_FB              => set_FB,
 
-            DAC_start_pulse     => open,
-            DAC_address         => open,
-            line_sel            => open,
-            data_sel            => open
+            DAC_start_pulse     => channels_ctr_DAC_start_pulse,
+            DAC_address         => channels_DAC_addr,
+            line_sel            => channels_line_selector,
+            data_sel            => channels_data_selector
         );
 
+    channels_DAC_gate_ctrl : entity concept.DAC_gate_controller
+        port map(
+            clk                 => sys_clk_100,
+            rst                 => sys_rst,
+            
+            start_conv_pulse    => channels_ctr_DAC_start_pulse,
+            CS                  => channels_DAC_CS,
+            SCLK                => channels_DAC_CLK,
+            LDAC                => channels_DAC_LDAC
+        );
+    
     row_selector_module : entity concept.row_selector
         port map(
             clk             => sys_clk_5,
@@ -797,9 +887,36 @@ begin
             off_bias            => off_bias,
             num_rows            => to_integer(unsigned(num_rows(0))),
             update_off_value    => update_off_value, 
-            DAC_start_pulse     => open,
-            DAC_sel             => open,
-            DAC_data            => open
+            DAC_start_pulse     => row_activator_DAC_start_pulse,
+            DAC_sel             => row_activator_DAC_sel,
+            DAC_data            => row_activator_DAC_data
+        );
+
+    row_activator_DAC_gate_ctrl : entity concept.DAC_gate_controller
+        port map(
+            clk                 => sys_clk_100,
+            rst                 => sys_rst,
+            
+            start_conv_pulse    => row_activator_DAC_start_pulse,
+            CS                  => row_activator_DAC_CS,
+            SCLK                => row_activator_DAC_CLK,
+            LDAC                => row_activator_DAC_LDAC
+        );
+
+    -- TODO: implement demux for row_activator CS
+    
+    row_activator_data_serializer : entity concept.data_serializer_wrapper
+        port map(
+            clk             => sys_clk_100,
+            rst             => sys_rst,
+
+            gate_read       => row_activator_DAC_CS,
+            data_clk        => row_activator_DAC_CLK,
+            valid           => '1',
+            parallel_data   => row_activator_DAC_data,
+            busy_flag       => '0',
+            DAC_start_pulse => row_activator_DAC_start_pulse,
+            serial_data     => open
         );
 
     ADC_triggerer_module : entity concept.ADC_triggerer
@@ -953,6 +1070,39 @@ begin
 
                 sa_fb_data      => sa_fb_data(i)
             );
+
+        channel_mux : entity concept.mux
+            generic map(
+                DATA_SIZE   => DAC_DATA_SIZE,
+                SEL_SIZE    => LINE_SEL_SIZE -- Req bits for 6 inputs (calc_fb, ramp, SF, SB, FF, FB)
+            )             
+            port map(     
+                selector                                                                                            => channels_line_selector(i),
+                data_in(1 * DAC_DATA_SIZE - 1 downto 0 * DAC_DATA_SIZE)                                             => sa_fb_data(i),
+                data_in(2 * DAC_DATA_SIZE - 1 downto 1 * DAC_DATA_SIZE)                                             => (others => '0'), -- Ramp not implemented yet
+                data_in(3 * DAC_DATA_SIZE - 1 downto 2 * DAC_DATA_SIZE)                                             => sa_fb_cte(i)(DAC_DATA_SIZE - 1 downto 0),
+                data_in(4 * DAC_DATA_SIZE - 1 downto 3 * DAC_DATA_SIZE)                                             => sa_bias_cte(i)(DAC_DATA_SIZE - 1 downto 0),
+                data_in(5 * DAC_DATA_SIZE - 1 downto 4 * DAC_DATA_SIZE)                                             => sq1_fb_cte(i)(DAC_DATA_SIZE - 1 downto 0),
+                data_in(6 * DAC_DATA_SIZE - 1 downto 5 * DAC_DATA_SIZE)                                             => sq1_bias_cte(i)(DAC_DATA_SIZE - 1 downto 0),
+                data_in(total_inputs(bits_req(NUM_CHANNEL_LINES)) * DAC_DATA_SIZE - 1 downto 6 * DAC_DATA_SIZE)    => (others => '0'),
+                data_out                                                                                            => channels_line_data(i)
+            );
+
+        channel_data_serializer : entity concept.data_serializer_wrapper
+            port map(
+                clk             => sys_clk_5,
+                rst             => sys_rst,
+
+                gate_read                                                               => channels_DAC_CS,
+                data_clk                                                                => channels_DAC_CLK,
+                valid                                                                   => '1',
+                parallel_data(DAC_DATA_SIZE - 1 downto 0)                               => channels_line_data(i),
+                parallel_data(DAC_DATA_SIZE + DAC_ADDR_SIZE - 1 downto DAC_DATA_SIZE)   => channels_DAC_addr,
+                busy_flag                                                               => '0',
+                DAC_start_pulse                                                         => channels_ctr_DAC_start_pulse,
+                serial_data                                                             => open
+            );
+
     end generate;
 
     TES_bias_setter_module : entity concept.TES_bias_setter
@@ -962,8 +1112,32 @@ begin
 
             set_bias                => set_TES_bias,
             TES_bias                => tes_bias,
-            DAC_start_pulse         => open,
-            DAC_data                => open
+            DAC_start_pulse         => TES_bias_DAC_start_pulse,
+            DAC_data                => TES_bias_DAC_data
+        );
+
+    TES_bias_DAC_gate_controller : entity concept.DAC_gate_controller
+        port map(
+            clk                 => sys_clk_100,
+            rst                 => sys_rst,
+            start_conv_pulse    => TES_bias_DAC_start_pulse,
+            CS                  => TES_bias_DAC_CS,
+            SCLK                => TES_bias_DAC_CLK,
+            LDAC                => TES_bias_DAC_LDAC 
+        );
+
+    TES_bias_data_serializer : entity concept.data_serializer_wrapper
+        port map(
+            clk             => sys_clk_5,
+            rst             => sys_rst,
+
+            gate_read       => TES_bias_DAC_CS,
+            data_clk        => TES_bias_DAC_CLK,
+            valid           => '1',
+            parallel_data   => TES_bias_DAC_data,
+            busy_flag       => '0',
+            DAC_start_pulse => TES_bias_DAC_start_pulse,
+            serial_data     => open
         );
 
     channels_data <= fb_sample;
@@ -1028,7 +1202,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => std_logic_vector(to_unsigned(3, t_word'length))),
+            default_value       => SERVO_MODE_DEF,
             param_data          => servo_mode
         );
 
@@ -1302,6 +1476,74 @@ begin
             update_data         => param_data,
             default_value       => NUM_COLS_REP_DEF,
             param_data          => num_cols
+        );
+
+    -- SA_FB_ID
+    sa_fb_buffer : entity concept.param_buffer
+        generic map(
+            param_size          => PARAM_ID_TO_SIZE(SA_FB_ID),
+            param_id            => SA_FB_ID
+        )                       
+        port map(               
+            clk                 => sys_clk_5,
+            rst                 => sys_rst,
+                                
+            update              => update_param_pulse,
+            param_id_to_update  => param_id_to_update,
+            update_data         => param_data,
+            default_value       => (others => (others => '0')),
+            param_data          => sa_fb_cte
+        );
+
+    -- SA_BIAS_ID
+    sa_bias_buffer : entity concept.param_buffer
+        generic map(
+            param_size          => PARAM_ID_TO_SIZE(SA_BIAS_ID),
+            param_id            => SA_BIAS_ID
+        )                       
+        port map(               
+            clk                 => sys_clk_5,
+            rst                 => sys_rst,
+                                
+            update              => update_param_pulse,
+            param_id_to_update  => param_id_to_update,
+            update_data         => param_data,
+            default_value       => (others => (others => '0')),
+            param_data          => sa_bias_cte
+        );
+
+    -- SQ1_FB_ID
+    sq1_fb_buffer : entity concept.param_buffer
+        generic map(
+            param_size          => PARAM_ID_TO_SIZE(SQ1_FB_ID),
+            param_id            => SQ1_FB_ID
+        )                       
+        port map(               
+            clk                 => sys_clk_5,
+            rst                 => sys_rst,
+                                
+            update              => update_param_pulse,
+            param_id_to_update  => param_id_to_update,
+            update_data         => param_data,
+            default_value       => (others => (others => '0')),
+            param_data          => sq1_fb_cte
+        );
+
+    -- SQ1_BIAS_ID
+    sq1_bias_buffer : entity concept.param_buffer
+        generic map(
+            param_size          => PARAM_ID_TO_SIZE(SQ1_BIAS_ID),
+            param_id            => SQ1_BIAS_ID
+        )                       
+        port map(               
+            clk                 => sys_clk_5,
+            rst                 => sys_rst,
+                                
+            update              => update_param_pulse,
+            param_id_to_update  => param_id_to_update,
+            update_data         => param_data,
+            default_value       => (others => (others => '0')),
+            param_data          => sq1_bias_cte
         );
 
 end Behavioral;
