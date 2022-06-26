@@ -42,7 +42,7 @@ entity row_activator is
         num_rows            : in natural; -- Num of rows that are going to be multiplexed
         update_off_value    : in std_logic;    -- Pulse used to set the off value to all DAC when acquisition is off
         DAC_start_pulse     : out std_logic; -- Signal to start the DAC_gate_controller logic
-        DAC_sel             : out natural; -- From 0 to 2, to select one of the 3 dacs
+        DAC_sel             : out unsigned(bits_req(NUM_ROW_DACS) - 1 downto 0); -- From 0 to 2, to select one of the 3 dacs
         DAC_data            : out std_logic_vector(17 downto 0) -- 2 bits of address + 16 bits of voltage data
     );
 
@@ -175,9 +175,9 @@ v_data <= on_bias(selected_row)(15 downto 0)   when state = wait_activation else
           off_bias(selected_row)(15 downto 0)  when state = wait_deactivation or state = deactivate_all else
           (others => '0');
 
-DAC_sel <= 0 when selected_row < 4 else
-           1 when selected_row >= 4 and selected_row < 8 else
-           2;
+DAC_sel <= to_unsigned(0, DAC_sel'length) when selected_row < 4 else
+           to_unsigned(1, DAC_sel'length) when selected_row >= 4 and selected_row < 8 else
+           to_unsigned(2, DAC_sel'length);
 
 DAC_data <= address & v_data;
 
