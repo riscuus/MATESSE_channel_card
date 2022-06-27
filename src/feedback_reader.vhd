@@ -28,6 +28,9 @@ library concept;
 use concept.utils.all;
 
 entity feedback_reader is
+    generic(
+        DATA_SIZE : natural := 16;
+    )
     port(
         clk             : in std_logic; -- 100MHz clock                                                                           
         rst             : in std_logic; -- asynchronous reset
@@ -38,9 +41,9 @@ entity feedback_reader is
 
         -- Interface with the dual ram
         read_address    : out natural; -- The row number from which we will read its feedback value in the ram
-        read_data       : in t_word;   -- The data read from the ram
+        read_data       : in std_logic_vector(DATA_SIZE - 1 downto 0);   -- The data read from the ram
         
-        sa_fb_data      : out std_logic_vector(15 downto 0) -- The voltage value to be set in the DAC 
+        sa_fb_data      : out std_logic_vector(DATA_SIZE - 1 downto 0) -- The voltage value to be set in the DAC 
     );
 
 end feedback_reader;
@@ -50,7 +53,7 @@ architecture behave of feedback_reader is
     type stateType is (init, idle, wait_read_data, read_ram_data);
     signal state : stateType;
 
-    signal next_fb_value : std_logic_vector(15 downto 0) := (others => '0');
+    signal next_fb_value : std_logic_vector(DATA_SIZE downto 0) := (others => '0');
 
 begin
 
@@ -85,7 +88,7 @@ begin
                 state <= read_ram_data;
 
             when read_ram_data =>
-                next_fb_value <= read_data(15 downto 0);
+                next_fb_value <= read_data;
                 state <= idle;
 
             when others =>
