@@ -8,6 +8,7 @@ package utils is
     function get_BRAM_write_enable_BITS(DATA_BITS : positive) return positive;
     function bits_req(val : natural) return natural;
     function total_inputs(val : natural) return natural;
+    function sel_size_to_input(constant sel_size : positive) return positive;
 
     -- Basic constraints
     constant MAX_CHANNELS           : natural := 2; -- Max channels that the daughter board can handle
@@ -326,6 +327,12 @@ package body utils is
     function total_inputs(val : natural) return natural is
     begin
         return to_integer(shift_left(to_unsigned(1, val + 1), val));
+    end function;
+
+    function sel_size_to_input(constant sel_size : positive) return positive is
+    begin
+        -- The number of inputs is 2 power the length of the selector vector (s) = 2^s
+        return to_integer(shift_left(to_unsigned(1, SEL_SIZE + 1), SEL_SIZE));
     end function;
 
 

@@ -55,7 +55,7 @@ begin
         wait for 3 us;
     end process;
 
-    mux_module : entity concept.mux
+    demux_module : entity concept.demux
         generic map(
             DATA_SIZE => 16,
             SEL_SIZE => 2
