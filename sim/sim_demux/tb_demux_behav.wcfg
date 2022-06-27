@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_demux_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="conv_utility" />
+            <top_module name="tb_demux" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="19500000001fs"></ZoomEndTime>
+      <Cursor1Time time="1550000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="225"></NameColumnWidth>
+      <ValueColumnWidth column_width="58"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="6" />
+   <wvobject fp_name="/tb_demux/data" type="array">
+      <obj_property name="ElementShortName">data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_demux/selector" type="array">
+      <obj_property name="ElementShortName">selector[1:0]</obj_property>
+      <obj_property name="ObjectShortName">selector[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_demux/a" type="array">
+      <obj_property name="ElementShortName">a[15:0]</obj_property>
+      <obj_property name="ObjectShortName">a[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_demux/b" type="array">
+      <obj_property name="ElementShortName">b[15:0]</obj_property>
+      <obj_property name="ObjectShortName">b[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_demux/c" type="array">
+      <obj_property name="ElementShortName">c[15:0]</obj_property>
+      <obj_property name="ObjectShortName">c[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_demux/d" type="array">
+      <obj_property name="ElementShortName">d[15:0]</obj_property>
+      <obj_property name="ObjectShortName">d[15:0]</obj_property>
+   </wvobject>
+</wave_config>

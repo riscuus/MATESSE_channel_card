@@ -2,12 +2,12 @@
 -- Company: NASA Goddard Space Flight Center
 -- Engineer: Albert Risco
 -- 
--- Create Date: 06.23.2022
--- Module Name: mux.vhd
+-- Create Date: 06.27.2022
+-- Module Name: demux.vhd
 -- Project Name: channel_card_v1
 -- Target Devices: Spartan 7 xc7s25csga324-1
 -- Tool Versions: Vivado 2019.1
--- Description: This component is a generic multiplexer that can be setup through the generic parameters
+-- Description: This component is a generic demultiplexer that can be setup through the generic parameters
 
 -- 
 -- Dependencies: 
@@ -58,8 +58,8 @@ entity mux is
     );
     port(
         selector    : in unsigned(SEL_SIZE - 1 downto 0);
-        data_in     : in std_logic_vector(DATA_SIZE * conv_utility.sel_size_to_input(SEL_SIZE) - 1 downto 0);
-        data_out    : out std_logic_vector(DATA_SIZE - 1 downto 0)
+        data_in     : in std_logic_vector(DATA_SIZE - 1 downto 0);
+        data_out    : out std_logic_vector(DATA_SIZE * conv_utility.sel_size_to_input(SEL_SIZE) - 1 downto 0)
     );
 
 end mux;
@@ -68,11 +68,12 @@ architecture behave of mux is
 
 begin
 
-select_process : process(selector, data_in) 
+select_process : process(selector, data_in)
 begin
+    data_out <= (others => '0');
     for i in 0 to conv_utility.sel_size_to_input(SEL_SIZE) - 1 loop
         if (i = to_integer(selector)) then
-            data_out <= data_in((to_integer(selector) + 1) * DATA_SIZE - 1 downto to_integer(selector) * DATA_SIZE);
+            data_out((to_integer(selector) + 1) * DATA_SIZE - 1 downto to_integer(selector) * DATA_SIZE) <= data_in;
         end if;
     end loop;
 end process;
