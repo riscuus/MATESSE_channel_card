@@ -12,12 +12,12 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="18020815000000fs"></ZoomStartTime>
-      <ZoomEndTime time="18028520000001fs"></ZoomEndTime>
-      <Cursor1Time time="18022130000000fs"></Cursor1Time>
+      <ZoomStartTime time="32982490000000fs"></ZoomStartTime>
+      <ZoomEndTime time="33013390000001fs"></ZoomEndTime>
+      <Cursor1Time time="32987640000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="229"></NameColumnWidth>
+      <NameColumnWidth column_width="225"></NameColumnWidth>
       <ValueColumnWidth column_width="58"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="20" />
@@ -582,7 +582,6 @@
    <wvobject fp_name="group1511" type="group">
       <obj_property name="label">row_activator</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_integration/row_activator_module/on_bias" type="array">
          <obj_property name="ElementShortName">on_bias[0:11][31:0]</obj_property>
          <obj_property name="ObjectShortName">on_bias[0:11][31:0]</obj_property>
@@ -614,10 +613,12 @@
       <wvobject fp_name="/tb_integration/row_activator_module/address" type="array">
          <obj_property name="ElementShortName">address[1:0]</obj_property>
          <obj_property name="ObjectShortName">address[1:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_integration/row_activator_module/v_data" type="array">
          <obj_property name="ElementShortName">v_data[15:0]</obj_property>
          <obj_property name="ObjectShortName">v_data[15:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_integration/row_activator_module/DAC_data" type="array">
          <obj_property name="ElementShortName">DAC_data[17:0]</obj_property>
@@ -690,6 +691,7 @@
    <wvobject fp_name="group3341" type="group">
       <obj_property name="label">Channel 0</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="group1599" type="group">
          <obj_property name="label">adc_simulator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
@@ -816,7 +818,6 @@
       <wvobject fp_name="group963" type="group">
          <obj_property name="label">channel_mux</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/selector" type="array">
             <obj_property name="ElementShortName">selector[2:0]</obj_property>
             <obj_property name="ObjectShortName">selector[2:0]</obj_property>
@@ -960,6 +961,7 @@
          <wvobject fp_name="vbus1148" type="vbus">
             <obj_property name="label">sa_bias_cte[63:48]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">HEXRADIX</obj_property>
             <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[63]" type="logic">
                <obj_property name="ElementShortName">[63]</obj_property>
                <obj_property name="ObjectShortName">[63]</obj_property>
@@ -1236,6 +1238,27 @@
             <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
       </wvobject>
+      <wvobject fp_name="group3016" type="group">
+         <obj_property name="label">data_serializer</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_data_serializer/parallel_data" type="array">
+            <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_data_serializer/DAC_start_pulse" type="logic">
+            <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
+            <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_data_serializer/data_clk" type="logic">
+            <obj_property name="ElementShortName">data_clk</obj_property>
+            <obj_property name="ObjectShortName">data_clk</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_data_serializer/serial_data" type="logic">
+            <obj_property name="ElementShortName">serial_data</obj_property>
+            <obj_property name="ObjectShortName">serial_data</obj_property>
+         </wvobject>
+      </wvobject>
    </wvobject>
    <wvobject fp_name="group3342" type="group">
       <obj_property name="label">Channel 1</obj_property>
@@ -1363,7 +1386,6 @@
       <wvobject fp_name="group305" type="group">
          <obj_property name="label">channel_mux</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/selector" type="array">
             <obj_property name="ElementShortName">selector[2:0]</obj_property>
             <obj_property name="ObjectShortName">selector[2:0]</obj_property>
@@ -1648,7 +1670,29 @@
          <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_out" type="array">
             <obj_property name="ElementShortName">data_out[15:0]</obj_property>
             <obj_property name="ObjectShortName">data_out[15:0]</obj_property>
-            <obj_property name="Radix">HEXRADIX</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group2993" type="group">
+         <obj_property name="label">data_serializer</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_data_serializer/parallel_data" type="array">
+            <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_data_serializer/DAC_start_pulse" type="logic">
+            <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
+            <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_data_serializer/data_clk" type="logic">
+            <obj_property name="ElementShortName">data_clk</obj_property>
+            <obj_property name="ObjectShortName">data_clk</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_data_serializer/serial_data" type="logic">
+            <obj_property name="ElementShortName">serial_data</obj_property>
+            <obj_property name="ObjectShortName">serial_data</obj_property>
          </wvobject>
       </wvobject>
    </wvobject>
@@ -1699,7 +1743,6 @@
       <wvobject fp_name="group1199" type="group">
          <obj_property name="label">channels_DAC_controller</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/channels_DAC_gate_ctrl/start_conv_pulse" type="logic">
             <obj_property name="ElementShortName">start_conv_pulse</obj_property>
             <obj_property name="ObjectShortName">start_conv_pulse</obj_property>
@@ -1797,9 +1840,10 @@
    <wvobject fp_name="group1684" type="group">
       <obj_property name="label">TES_bias_setter</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_integration/TES_bias_setter_module/TES_bias" type="array">
-         <obj_property name="ElementShortName">TES_bias[3:0][31:0]</obj_property>
-         <obj_property name="ObjectShortName">TES_bias[3:0][31:0]</obj_property>
+         <obj_property name="ElementShortName">TES_bias[0:3][31:0]</obj_property>
+         <obj_property name="ObjectShortName">TES_bias[0:3][31:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_integration/TES_bias_setter_module/set_bias" type="logic">
          <obj_property name="ElementShortName">set_bias</obj_property>
@@ -1812,6 +1856,45 @@
       <wvobject fp_name="/tb_integration/TES_bias_setter_module/DAC_data" type="array">
          <obj_property name="ElementShortName">DAC_data[17:0]</obj_property>
          <obj_property name="ObjectShortName">DAC_data[17:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="group3025" type="group">
+         <obj_property name="label">TES_bias_DAC_ctrl</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/TES_bias_DAC_gate_controller/CS" type="logic">
+            <obj_property name="ElementShortName">CS</obj_property>
+            <obj_property name="ObjectShortName">CS</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/TES_bias_DAC_gate_controller/SCLK" type="logic">
+            <obj_property name="ElementShortName">SCLK</obj_property>
+            <obj_property name="ObjectShortName">SCLK</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/TES_bias_DAC_gate_controller/LDAC" type="logic">
+            <obj_property name="ElementShortName">LDAC</obj_property>
+            <obj_property name="ObjectShortName">LDAC</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group3029" type="group">
+         <obj_property name="label">TES_bias_data_serializer</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/TES_bias_data_serializer/DAC_start_pulse" type="logic">
+            <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
+            <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/TES_bias_data_serializer/parallel_data" type="array">
+            <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/TES_bias_data_serializer/data_clk" type="logic">
+            <obj_property name="ElementShortName">data_clk</obj_property>
+            <obj_property name="ObjectShortName">data_clk</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/TES_bias_data_serializer/serial_data" type="logic">
+            <obj_property name="ElementShortName">serial_data</obj_property>
+            <obj_property name="ObjectShortName">serial_data</obj_property>
+         </wvobject>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group313" type="group">

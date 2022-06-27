@@ -584,7 +584,20 @@ begin
         PC_params_valid <= '0';
         wait for PACKET_DELAY;
 
-        -- #18: Good write sa bias cte 
+        -- #18: Good write sa fb cte 
+        PC_packet_type      <= cmd_wb;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(SA_FB_ID, PC_param_id'length));
+        PC_payload_size     <= PARAM_ID_TO_SIZE(SA_FB_ID); 
+        PC_packet_payload   <= (0 => x"01010100", 1 => x"01010101", others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+
+        -- #19: Good write sa bias cte 
         PC_packet_type      <= cmd_wb;
         PC_card_id          <= DAUGHTER_CARD_ID;
         PC_param_id         <= std_logic_vector(to_unsigned(SA_BIAS_ID, PC_param_id'length));
@@ -596,8 +609,9 @@ begin
         wait for PARAMS_VALID_HIGH;
         PC_params_valid <= '0';
         wait for PACKET_DELAY;
+
         
-        -- #19: Good write (set ch0 -> servo_mode_const, ch1 -> servo_mode_PID)
+        -- #20: Good write (set ch0 -> servo_mode_const, ch1 -> servo_mode_PID)
         PC_packet_type      <= cmd_wb;
         PC_card_id          <= DAUGHTER_CARD_ID;
         PC_param_id         <= std_logic_vector(to_unsigned(SERVO_MODE_ID, PC_param_id'length));
@@ -612,7 +626,20 @@ begin
         PC_params_valid <= '0';
         wait for PACKET_DELAY;
 
-        -- #16: Good start acquisition (But sender still busy)
+        -- #21: Good write TES bias 
+        PC_packet_type      <= cmd_wb;
+        PC_card_id          <= DAUGHTER_CARD_ID;
+        PC_param_id         <= std_logic_vector(to_unsigned(BIAS_ID, PC_param_id'length));
+        PC_payload_size     <= PARAM_ID_TO_SIZE(BIAS_ID); 
+        PC_packet_payload   <= (0 => x"FFFFFFF0", 1 => x"FFFFFFF1", 2 => x"FFFFFFF2", 3 => x"FFFFFFF3", others => (others => '0'));
+
+        wait for DATA_SETUP;
+        PC_params_valid <= '1';
+        wait for PARAMS_VALID_HIGH;
+        PC_params_valid <= '0';
+        wait for PACKET_DELAY;
+
+        -- #22: Good start acquisition
         PC_packet_type      <= cmd_go;
         PC_card_id          <= DAUGHTER_CARD_ID;
         PC_param_id         <= std_logic_vector(to_unsigned(RET_DATA_ID, parser_param_id'length));
@@ -1090,7 +1117,7 @@ begin
 
         channel_data_serializer : entity concept.data_serializer_wrapper
             port map(
-                clk             => sys_clk_5,
+                clk             => sys_clk_100,
                 rst             => sys_rst,
 
                 gate_read                                                               => channels_DAC_CS,
@@ -1128,7 +1155,7 @@ begin
 
     TES_bias_data_serializer : entity concept.data_serializer_wrapper
         port map(
-            clk             => sys_clk_5,
+            clk             => sys_clk_100,
             rst             => sys_rst,
 
             gate_read       => TES_bias_DAC_CS,
