@@ -27,17 +27,21 @@ library concept;
 use concept.utils.all;
 
 entity row_selector is
+    generic(
+        MAX_NUM_ROWS    : natural;
+        MAX_ROW_LEN     : natural
+    );
     port(
         clk                     : in std_logic; -- 5mhz clock                                                                           
         rst                     : in std_logic; -- asynchronous reset
 
         sync_frame              : in std_logic; -- Pulse that indicates when a new frame must start
         acquisition_on          : in std_logic; -- Signal that indicates that we can accept sync_frame pulses
-        num_rows                : in natural;   -- Parameter that indicates how many rows do we have to select
-        row_len                 : in natural;   -- Parameter that indicates how much time do we spend on each row, in 5Mhz clocks
+        num_rows                : in unsigned(bits_req(MAX_NUM_ROWS) - 1 downto 0);   -- Parameter that indicates how many rows do we have to select
+        row_len                 : in unsigned(bits_req(MAX_ROW_LEN) - 1 downto 0);   -- Parameter that indicates how much time do we spend on each row, in 5Mhz clocks
 
         new_row                 : out std_logic;    -- Pulse that indicates that a new row has started
-        row_num                 : out natural;      -- Signal that indicates in which row we currently are
+        row_num                 : out unsigned(bits_req(MAX_NUM_ROWS - 1) - 1 downto 0);      -- Signal that indicates in which row we currently are
         frame_active            : out std_logic     -- Signal that is active until the acquisition is off and the frame is over
     );
 
@@ -48,7 +52,7 @@ architecture behave of row_selector is
     type stateType is (idle, wait_sync_frame, wait_next_row);
     signal state : stateType;
 
-    signal row_num_reg : natural := 0;
+    signal row_num_reg : unsigned(row_num'range) := (others => '0');
     signal clk_counter : natural := 0;
 
 begin
@@ -64,7 +68,7 @@ begin
     elsif (rising_edge(clk)) then
         case state is
             when idle =>
-                row_num_reg <= 0;
+                row_num_reg <= (others => '0');
                 new_row <= '0';
 
                 if (acquisition_on = '1') then
@@ -88,7 +92,7 @@ begin
                     clk_counter <= 0;
                     if (row_num_reg = num_rows - 1) then -- Check if this row was the last one
                         if (acquisition_on = '1') then -- Continue with next frame
-                            row_num_reg <= 0;
+                            row_num_reg <= (others => '0');
                             state <= wait_sync_frame;
                         else -- Return to idle
                             state <= idle;

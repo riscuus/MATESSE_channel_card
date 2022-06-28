@@ -28,6 +28,13 @@ library concept;
 use concept.utils.all;
 
 entity command_handler is
+    generic(
+        MAX_PAYLOAD_SIZE        : natural;
+        MAX_REPLY_PAYLOAD_SIZE  : natural;
+        RAM_ADDR_WIDTH          : natural;
+        PARAM_ID_WIDTH          : natural;
+        MAX_PARAM_ID_SIZE       : natural
+    );
     port(
         clk                     : in std_logic; -- 5MHz clock                                                                           
         rst                     : in std_logic; -- Asynchronous reset
@@ -36,14 +43,14 @@ entity command_handler is
         packet_type             : in t_packet_type; -- We will only store commands
         card_id                 : in t_half_word; -- We will only store commands that are sent to this card
         param_id                : in t_half_word; -- The param of the command
-        payload_size            : in natural; -- Received payload size
+        payload_size            : in unsigned(bits_req(MAX_PAYLOAD_SIZE) - 1 downto 0); -- Received payload size
         packet_payload          : in t_packet_payload; -- The data (if any) of the param to be stored
         params_valid            : in std_logic;
 
         -- Interface with the RAM
         ram_read_data           : in t_word;
         ram_write_data          : out t_word;
-        ram_address             : out natural;
+        ram_address             : out unsigned(RAM_ADDR_WIDTH - 1 downto 0);
         ram_write               : out std_logic;
 
         -- Interface with the packet sender
@@ -51,12 +58,12 @@ entity command_handler is
         send_reply_pulse        : out std_logic; -- Signal to indicate the packet sender to send a new reply
         reply_cmd_type          : out t_packet_type;
         reply_err_ok            : out std_logic; -- Signal that will be used by the packet_sender to define the err_ok param of the reply packets
-        reply_payload_size      : out natural; -- The size that the reply packet payload will have
+        reply_payload_size      : out unsigned(bits_req(MAX_REPLY_PAYLOAD_SIZE) - 1 downto 0); -- The size that the reply packet payload will have
         param_data              : out t_packet_payload; -- Used for the reply and for updating the params buffers
 
         -- Interface with param buffers
         update_param_pulse      : out std_logic;
-        param_id_to_update      : out natural;
+        param_id_to_update      : out unsigned(PARAM_ID_WIDTH - 1 downto 0);
 
         -- Interface with channels controller
         set_SF                  : out std_logic;
@@ -72,7 +79,7 @@ entity command_handler is
 
         -- Interface with frame_builder
         last_data_frame_pulse   : in std_logic; -- The last data frame during an acquisition has been sent. Used when stop
-        stop_received           : out std_logic := '0'; -- Pulse indicating that while an acquisition the stop cmd was received
+        stop_received           : out std_logic; -- Pulse indicating that while an acquisition the stop cmd was received
 
         acquisition_on          : out std_logic -- Signal to indicate the loop controller module to start a new acquisition
 
@@ -90,18 +97,18 @@ architecture behave of command_handler is
     signal packet_type_reg      : t_packet_type := undefined;
     signal card_id_reg          : t_half_word := (others => '0');
     signal param_id_reg         : t_half_word := (others => '0');
-    signal payload_size_reg     : natural := 0;
+    signal payload_size_reg     : unsigned(payload_size'range) := (others => '0');
     signal packet_payload_reg   : t_packet_payload := (others => (others => '0'));
 
     -- Internal registers to know current state
     signal acquisition_on_reg       : std_logic := '0'; -- Allows us to also read the current value
     signal acquisition_configured   : std_logic := '0'; -- Active when the user has setup the command ret_dat_s
-    signal param_id_size            : natural := 0; -- # of words that the param occupies in the RAM
-    signal ram_address_reg          : natural := 0;
-    signal word_count               : natural := 0; -- Counter for reading the param words from the RAM
+    signal param_id_size            : unsigned(MAX_PARAM_ID_SIZE - 1 downto 0) := (others => '0'); -- # of words that the param occupies in the RAM
+    signal ram_address_reg          : unsigned(ram_address'range) := (others => '0');
+    signal word_count               : unsigned(MAX_PARAM_ID_SIZE - 1 downto 0) := (others => '0'); -- Counter for reading the param words from the RAM
     signal correct_param_id         : std_logic := '0';
 
-    signal reply_err_word   : t_word := (others => '0');
+    signal reply_err_word           : t_word := (others => '0');
 
 begin
 
@@ -114,10 +121,10 @@ begin
             ram_write           <= '0';
             send_reply_pulse    <= '0';
             reply_err_ok        <= '0';
-            reply_payload_size  <= 0;
+            reply_payload_size  <= (others => '0');
             param_data          <= (others => (others =>'0'));
             update_param_pulse  <= '0';
-            param_id_to_update  <= 0;
+            param_id_to_update  <= (others => '0');
             set_SF              <= '0';
             set_SB              <= '0';
             set_FF              <= '0';
@@ -134,19 +141,19 @@ begin
                     -- Signals
                     acquisition_on_reg      <= '0';
                     acquisition_configured  <= '0';
-                    ram_address_reg         <= 0;
+                    ram_address_reg         <= (others => '0');
                     reply_err_word          <= (others => '0');
 
                     packet_type_reg         <= undefined;
                     card_id_reg             <= (others => '0');
                     param_id_reg            <= (others => '0');
-                    payload_size_reg        <= 0;
+                    payload_size_reg        <= (others => '0');
                     packet_payload_reg      <= (others => (others => '0'));
 
                     -- Outputs
                     reply_err_ok            <= '0';
-                    reply_payload_size      <= 0;
-                    param_id_to_update      <= 0;
+                    reply_payload_size      <= (others => '0');
+                    param_id_to_update      <= (others => '0');
                     set_SF                  <= '0';
                     set_SB                  <= '0';
                     set_FF                  <= '0';
@@ -158,7 +165,7 @@ begin
 
                 when idle =>
                     reply_err_word <= (others => '0');
-                    word_count     <= 0;
+                    word_count     <= (others => '0');
 
                     -- New packet received
                     if (params_valid = '1') then
@@ -215,9 +222,9 @@ begin
                 -- Param id
                 when check_param_id =>
                     if (correct_param_id = '1') then
-                        ram_address_reg <= to_integer(unsigned(param_id_reg(7 downto 0))); 
-                        param_id_to_update <= to_integer(unsigned(param_id_reg(7 downto 0))); 
-                        param_id_size <= PARAM_ID_TO_SIZE(to_integer(unsigned(param_id_reg(7 downto 0))));
+                        ram_address_reg <= resize(unsigned(param_id_reg), ram_address_reg'length); 
+                        param_id_to_update <= resize(unsigned(param_id_reg), param_id_to_update'length); 
+                        param_id_size <= to_unsigned(PARAM_ID_TO_SIZE(to_integer(unsigned(param_id_reg(7 downto 0)))), param_id_size'length);
                         
                         if (packet_type_reg = cmd_rb) then -- We either read the param or write it
                             state <= wait_read_data;
@@ -245,7 +252,7 @@ begin
                     state <= read_ram_data;
 
                 when read_ram_data =>
-                    param_data(word_count) <= ram_read_data;
+                    param_data(to_integer(word_count)) <= ram_read_data;
                     if (word_count = param_id_size - 1) then
                         state <= setup_ok_reply;
                     else
@@ -255,7 +262,7 @@ begin
                     end if;
                 
                 when write_ram_data =>
-                    param_data(word_count) <= packet_payload_reg(word_count); -- We already set the param data for the later update
+                    param_data(to_integer(word_count)) <= packet_payload_reg(to_integer(word_count)); -- We already set the param data for the later update
 
                     if (word_count = param_id_size - 1) then
                         ram_write <= '0';
@@ -330,10 +337,10 @@ begin
 
                 when setup_ok_reply =>
                     if (packet_type_reg = cmd_rb) then
-                        reply_payload_size <= param_id_size;
+                        reply_payload_size <= resize(param_id_size, reply_payload_size'length);
                     else -- For successful non-RB commands, this is always a single zero word
                         param_data <= (others => (others =>'0'));
-                        reply_payload_size <= 1;
+                        reply_payload_size <= to_unsigned(1, reply_payload_size'length);
                     end if;
                     reply_err_ok <= '0';
 
@@ -342,7 +349,7 @@ begin
 
                 when setup_err_reply =>
                     reply_err_ok <= '1';
-                    reply_payload_size <= 1;
+                    reply_payload_size <= to_unsigned(1, reply_payload_size'length);
                     param_data(0) <= reply_err_word;
 
                     state <= wait_packet_sender_ready;
@@ -369,7 +376,7 @@ begin
     acquisition_on      <= acquisition_on_reg;
     ram_address         <= ram_address_reg;
     reply_cmd_type      <= packet_type_reg;
-    ram_write_data      <= packet_payload_reg(word_count);
+    ram_write_data      <= packet_payload_reg(to_integer(word_count));
     
     -- Conbinational conditional assigments
     correct_param_id    <= '1' when to_integer(unsigned(param_id_reg(7 downto 0))) = ROW_ORDER_ID    or

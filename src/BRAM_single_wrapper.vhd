@@ -34,36 +34,33 @@ library concept;
 use concept.utils.all;
 
 entity BRAM_single_wrapper is
+    generic(
+        DATA_WIDTH  : natural; -- (32)  1 <-> 72
+        BRAM_SIZE   : string;  -- ("18Kb")  "18Kb" or "36Kb"
+        READ_DEPTH  : natural; -- (512)  512, 1024, 2048, 4096, 8192, 16384, 32768
+        ADDR_WIDTH  : natural; -- (9)  9 <-> 15
+        WE_WIDTH    : natural  -- (4)  1, 2, 4, 8
+    );
     port(
         clk                     : in std_logic; -- 5MHz clock                                                                           
         rst                     : in std_logic; -- Asynchronous reset
 
-        address                 : in natural;
-        write_data              : in t_word;
+        address                 : in unsigned(ADDR_WIDTH - 1 downto 0);
+        write_data              : in std_logic_vector(DATA_WIDTH - 1 downto 0);
         write_pulse             : in std_logic;
-        read_data               : out t_word
+        read_data               : out std_logic_vector(DATA_WIDTH - 1 downto 0)
     );
 
 end BRAM_single_wrapper;
 
 architecture behave of BRAM_single_wrapper is
---COMPONENT bram_single_param
---  PORT (
---    clka : IN STD_LOGIC;
---    ena : IN STD_LOGIC;
---    wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
---    addra : IN STD_LOGIC_VECTOR(8 DOWNTO 0);
---    dina : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
---    douta : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
---  );
---END COMPONENT;
 
-signal address_vector : std_logic_vector(8 downto 0) := (others => '0');
-signal write_vector   : std_logic_vector(3 downto 0) := (others => '0');
+signal address_vector : std_logic_vector(ADDR_WIDTH - 1 downto 0) := (others => '0');
+signal write_vector   : std_logic_vector(WE_WIDTH - 1 downto 0) := (others => '0');
 
 begin
 
-    address_vector <= std_logic_vector(to_unsigned(address, 9));
+    address_vector <= std_logic_vector(address);
     write_vector   <= (others => write_pulse);
     
     -- BRAM_SINGLE_MACRO: Single Port RAM
@@ -91,27 +88,17 @@ begin
     -- 1           | "36Kb"    | 32768       | 15-bit     | 1-bit --
     -- 1           | "18Kb"    | 16384       | 14-bit     | 1-bit --
     ---------------------------------------------------------------------
-    
---    your_instance_name : bram_single_param
---  PORT MAP (
---    clka => clk,
---    ena => '1',
---    wea(0) => write_pulse,
---    addra => address_vector,
---    dina => write_data,
---    douta => read_data
---  );
   
     BRAM_SINGLE_MACRO_inst : BRAM_SINGLE_MACRO
     generic map (
 
-        BRAM_SIZE => "18Kb",                                -- Target BRAM, "18Kb" or "36Kb"
+        BRAM_SIZE => BRAM_SIZE,                                -- Target BRAM, "18Kb" or "36Kb"
         DEVICE => "7SERIES",                                -- Target Device: "VIRTEX5", "7SERIES", "VIRTEX6, "SPARTAN6"
         DO_REG => 0,                                        -- Optional output register (0 or 1)
         INIT => X"000000000",                               -- Initial values on output port
         INIT_FILE => "NONE",
-        WRITE_WIDTH => t_word'length,                       -- Valid values are 1-72 (37-72 only valid when BRAM_SIZE="36Kb")
-        READ_WIDTH => t_word'length,                        -- Valid values are 1-72 (37-72 only valid when BRAM_SIZE="36Kb")
+        WRITE_WIDTH => DATA_WIDTH,                       -- Valid values are 1-72 (37-72 only valid when BRAM_SIZE="36Kb")
+        READ_WIDTH => DATA_WIDTH,                        -- Valid values are 1-72 (37-72 only valid when BRAM_SIZE="36Kb")
         SRVAL => X"000000000",                              -- Set/Reset value for port output
         WRITE_MODE => "WRITE_FIRST"                        -- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
     )

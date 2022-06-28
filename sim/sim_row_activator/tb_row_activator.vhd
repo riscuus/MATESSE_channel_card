@@ -19,6 +19,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 library concept;
 use concept.utils.all;
@@ -44,12 +45,12 @@ architecture behave of tb_row_activator is
     -- row_selector signals
     signal acquisition_on   : std_logic := '0';
     signal sync_frame       : std_logic := '0';
-    signal num_rows         : natural   := 10;
-    signal row_len          : natural   := 40;
+    signal num_rows         : unsigned(bits_req(MAX_ROWS) - 1 downto 0) := to_unsigned(10, bits_req(MAX_ROWS));
+    signal row_len          : unsigned(bits_req(MAX_ROW_LEN) - 1 downto 0) := to_unsigned(40, bits_req(MAX_ROW_LEN));
 
     -- row_selector -> row_activator
     signal new_row  : std_logic := '0';
-    signal row_num  : natural := 0;
+    signal row_num  : unsigned(bits_req(MAX_ROWS - 1) - 1 downto 0) := (others => '0');
 
     -- row_activator signals
     signal on_bias      : t_param_array(0 to MAX_ROWS - 1) := (0 => x"FFFFFFF0",
@@ -146,6 +147,13 @@ begin
         );
 
     row_activator_module : entity concept.row_activator
+        generic map(
+            MAX_DAC_MODULES_ROW_ACTIVATOR => 4,
+            DAC_DLY                       => 10,
+            MAX_NUM_ROWS                  => MAX_ROWS,
+            VOLTAGE_SIZE                  => 16,
+            ADDR_SIZE                     => 2
+        )
         port map(
             clk                 => sys_clk,
             rst                 => sys_rst,
@@ -156,7 +164,7 @@ begin
             on_bias             => on_bias,
             off_bias            => off_bias,
             num_rows            => num_rows,
-            update_off          => update_off,
+            update_off_value    => update_off,
             DAC_start_pulse     => open,
             DAC_sel             => open,
             DAC_data            => open

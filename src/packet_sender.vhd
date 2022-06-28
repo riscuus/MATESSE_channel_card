@@ -27,21 +27,26 @@ library concept;
 use concept.utils.all;
 
 entity packet_sender is
+    generic(
+        PARAM_ID_WIDTH          : natural;
+        MAX_REPLY_PAYLOAD_SIZE  : natural;
+        MAX_PAYLOAD_SIZE        : natural
+    );
     port(
         clk                         : in std_logic; -- 5MHz clock                                                                           
         rst                         : in std_logic; -- Asynchronous reset
 
         -- Interface with command handler
         send_reply_pulse            : in std_logic; -- Pulse to send a new reply packet
-        reply_param_id              : in natural; -- The param id
+        reply_param_id              : in unsigned(PARAM_ID_WIDTH - 1 downto 0); -- The param id
         reply_cmd_type              : in t_packet_type; -- The cmd type
         reply_err_ok                : in std_logic; -- If err = 1 else 0
-        reply_payload_size          : in natural; -- The size of the payload (in # of words)
+        reply_payload_size          : in unsigned(MAX_REPLY_PAYLOAD_SIZE - 1 downto 0); -- The size of the payload (in # of words)
         reply_payload               : in t_packet_payload; -- The reply packet payload data
 
         -- Interface with frame builder
         send_data_frame_pulse       : in std_logic; -- Pulse to send a new data packet
-        data_frame_payload_size     : in natural; -- The size of the data packet payload (in # of words)
+        data_frame_payload_size     : in unsigned(MAX_PAYLOAD_SIZE - 1 downto 0); -- The size of the data packet payload (in # of words)
         data_frame_payload          : in t_packet_payload; -- The payload of the data packet
 
         -- Interface with packet builder
@@ -51,7 +56,7 @@ entity packet_sender is
         param_id                    : out t_half_word; -- Used in reply packets
         cmd_type                    : out t_packet_type; -- Used in reply packets
         err_ok                      : out std_logic; -- Used in reply packets
-        payload_size                : out natural; -- Size of the payload data (n in MCE)
+        payload_size                : out unsigned(MAX_PAYLOAD_SIZE - 1 downto 0); -- Size of the payload data (n in MCE)
         packet_payload              : out t_packet_payload; -- The payload of the packet
         params_valid                : out std_logic; -- Indicates that the output data is already valid and that the packet can be sent
 
@@ -79,7 +84,7 @@ begin
                     param_id        <= (others => '0');
                     cmd_type        <= undefined;
                     err_ok          <= '0';
-                    payload_size    <= 0;
+                    payload_size    <= (others => '0');
                     packet_payload  <= (others => (others => '0'));
                     params_valid    <= '0';
 
@@ -94,10 +99,10 @@ begin
                     elsif (send_reply_pulse = '1') then
                         packet_type <= reply;
                         card_id <= DAUGHTER_CARD_ID;
-                        param_id <= std_logic_vector(to_unsigned(reply_param_id, param_id'length));
+                        param_id <= std_logic_vector(resize(reply_param_id, param_id'length));
                         cmd_type <= reply_cmd_type;
                         err_ok <= reply_err_ok;
-                        payload_size <= reply_payload_size;
+                        payload_size <= resize(reply_payload_size, payload_size'length);
                         packet_payload <= reply_payload;
                     end if;
 

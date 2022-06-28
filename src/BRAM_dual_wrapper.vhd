@@ -34,29 +34,37 @@ library concept;
 use concept.utils.all;
 
 entity BRAM_dual_wrapper is
+    -- Not all generic combinations are possible, look at the table in Xilinx HDL Libraries Guide
+    generic(
+        DATA_WIDTH : natural;   -- (32)  1 <-> 72
+        BRAM_SIZE : string;     -- ("18Kb")  "18Kb" or "36Kb"
+        READ_DEPTH : natural;   -- (512)  512, 1024, 2048, 4096, 8192, 16384, 32768
+        ADDR_WIDTH : natural;   -- (9)  9 <-> 15
+        WE_WIDTH : natural      -- (4)  1, 2, 4, 8
+    );
     port(
         clk                     : in std_logic; -- 5MHz clock                                                                           
         rst                     : in std_logic; -- Asynchronous reset
 
-        write_address           : in natural;   -- The address to write data
-        write_data              : in t_word;    -- The data to be written
+        write_address           : in unsigned(ADDR_WIDTH - 1 downto 0);   -- The address to write data
+        write_data              : in std_logic_vector(DATA_WIDTH - 1 downto 0);    -- The data to be written
         write_pulse             : in std_logic; -- The write data enable pulse
-        read_address            : in natural;   -- The address to read data
-        read_data               : out t_word    -- The data read
+        read_address            : in unsigned(ADDR_WIDTH - 1 downto 0);   -- The address to read data
+        read_data               : out std_logic_vector(DATA_WIDTH - 1 downto 0)    -- The data read
     );
 
 end BRAM_dual_wrapper;
 
 architecture behave of BRAM_dual_wrapper is
 
-signal write_address_vector : std_logic_vector(8 downto 0) := (others => '0');
-signal write_en_vector      : std_logic_vector(3 downto 0) := (others => '0');
-signal read_address_vector  : std_logic_vector(8 downto 0) := (others => '0');
+signal write_address_vector : std_logic_vector(ADDR_WIDTH - 1 downto 0) := (others => '0');
+signal write_en_vector      : std_logic_vector(WE_WIDTH - 1 downto 0) := (others => '0');
+signal read_address_vector  : std_logic_vector(ADDR_WIDTH - 1 downto 0) := (others => '0');
 
 begin
 
-    write_address_vector    <= std_logic_vector(to_unsigned(write_address, 9));
-    read_address_vector     <= std_logic_vector(to_unsigned(read_address, 9));
+    write_address_vector    <= std_logic_vector(write_address);
+    read_address_vector     <= std_logic_vector(read_address);
     write_en_vector         <= (others => write_pulse);
     
 -- BRAM_SDP_MACRO: Simple Dual Port RAM
@@ -87,11 +95,11 @@ begin
 
 BRAM_SDP_MACRO_inst : BRAM_SDP_MACRO
     generic map (
-        BRAM_SIZE => "18Kb",            -- Target BRAM, "18Kb" or "36Kb"
+        BRAM_SIZE => BRAM_SIZE,            -- Target BRAM, "18Kb" or "36Kb"
         DEVICE => "7SERIES",            -- Target device: "VIRTEX5", "VIRTEX6", "7SERIES", "SPARTAN6"
         DO_REG => 0,                    -- Optional output register (0 or 1)
-        WRITE_WIDTH => t_word'length,   -- Valid values are 1-72 (37-72 only valid when BRAM_SIZE="36Kb")
-        READ_WIDTH => t_word'length,    -- Valid values are 1-72 (37-72 only valid when BRAM_SIZE="36Kb")
+        WRITE_WIDTH => DATA_WIDTH,   -- Valid values are 1-72 (37-72 only valid when BRAM_SIZE="36Kb")
+        READ_WIDTH => DATA_WIDTH,    -- Valid values are 1-72 (37-72 only valid when BRAM_SIZE="36Kb")
         INIT_FILE => "NONE",
         SIM_COLLISION_CHECK => "ALL",   -- Collision check enable "ALL", "WARNING_ONLY",
                                         -- "GENERATE_X_ONLY" or "NONE"

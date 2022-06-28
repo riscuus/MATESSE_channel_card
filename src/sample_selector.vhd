@@ -27,17 +27,22 @@ library concept;
 use concept.utils.all;
 
 entity sample_selector is
+    generic(
+        MAX_SAMPLE_NUM : natural;
+        MAX_SAMPLE_DLY : natural;
+        DATA_WIDTH : natural
+    );
     port(
         clk                     : in std_logic; -- 100MHz clock                                                                           
         rst                     : in std_logic; -- asynchronous reset
 
-        sample_dly              : in natural;   -- Num of samples to be discarted when a new row starts
-        sample_num              : in natural;   -- Num of samples valid
+        sample_dly              : in unsigned(bits_req(MAX_SAMPLE_DLY - 1) - 1 downto 0);   -- Num of samples to be discarted when a new row starts
+        sample_num              : in unsigned(bits_req(MAX_SAMPLE_NUM - 1) - 1 downto 0);   -- Num of samples valid
         new_row                 : in std_logic; -- Pulse that indicates that a new row starts
         valid_word              : in std_logic; -- Pulse that indicates that we have a new sample data
-        parallel_data           : in std_logic_vector(15 downto 0); -- Data comming from the input shift register
+        parallel_data           : in std_logic_vector(DATA_WIDTH - 1 downto 0); -- Data comming from the input shift register
         valid_sample            : out std_logic; -- Signal that indicates that the current sample is valid
-        sample_data             : out t_adc_sample -- Sample data sent to the sample accumulator
+        sample_data             : out std_logic_vector(DATA_WIDTH - 1 downto 0) -- Sample data sent to the sample accumulator
     );
 
 end sample_selector;
@@ -47,7 +52,7 @@ architecture behave of sample_selector is
     type stateType is (idle, wait_sample);
     signal state : stateType;
 
-    signal sample_count     : natural := 0;
+    signal sample_count : unsigned(sample_num'range) := (others => '0');
 
 begin
 
@@ -61,7 +66,7 @@ begin
             when idle =>
                 valid_sample <= '0';
                 sample_data <= (others => '0');
-                sample_count <= 0;
+                sample_count <= (others => '0');
                 if (new_row = '1') then
                     state <= wait_sample;
                 else

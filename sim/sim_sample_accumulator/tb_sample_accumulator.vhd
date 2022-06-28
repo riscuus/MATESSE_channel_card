@@ -18,6 +18,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 library concept;
 use concept.utils.all;
@@ -40,8 +41,8 @@ architecture Behavioral of tb_sample_accumulator is
     signal sys_rst  : std_logic;
 
     -- Sample selector signals
-    signal sample_dly       : natural := 3;
-    signal sample_num       : natural := 5;
+    signal sample_dly       : unsigned(bits_req(MAX_SAMPLE_DLY) - 1 downto 0) := to_unsigned(3, bits_req(MAX_SAMPLE_DLY));
+    signal sample_num       : unsigned(bits_req(MAX_SAMPLE_NUM) - 1 downto 0) := to_unsigned(5, bits_req(MAX_SAMPLE_NUM));
     signal new_row          : std_logic := '0';
     signal valid_word       : std_logic := '0';
     signal parallel_data    : t_adc_sample := (others => '0');
@@ -171,8 +172,8 @@ begin
             sample_num      => sample_num,
             valid_sample    => valid_sample,
             sample          => sample_data,
-            acc_sample      => open,
-            valid           => open
+            row_num         => to_unsigned(3, bits_req(MAX_ROWS)),
+            acc_sample      => open
         );
 
 end Behavioral;

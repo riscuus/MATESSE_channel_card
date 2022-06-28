@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1876000000fs"></ZoomStartTime>
-      <ZoomEndTime time="16476000001fs"></ZoomEndTime>
-      <Cursor1Time time="3826000000fs"></Cursor1Time>
+      <ZoomStartTime time="1342850000fs"></ZoomStartTime>
+      <ZoomEndTime time="2827850001fs"></ZoomEndTime>
+      <Cursor1Time time="1678850000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="255"></NameColumnWidth>
-      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+      <ValueColumnWidth column_width="88"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="14" />
+   <WVObjectSize size="15" />
    <wvobject fp_name="/tb_sample_accumulator/sys_clk" type="logic">
       <obj_property name="ElementShortName">sys_clk</obj_property>
       <obj_property name="ObjectShortName">sys_clk</obj_property>
@@ -28,13 +28,13 @@
       <obj_property name="ElementShortName">sys_rst</obj_property>
       <obj_property name="ObjectShortName">sys_rst</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_sample_accumulator/sample_dly" type="other">
-      <obj_property name="ElementShortName">sample_dly</obj_property>
-      <obj_property name="ObjectShortName">sample_dly</obj_property>
+   <wvobject fp_name="/tb_sample_accumulator/sample_dly" type="array">
+      <obj_property name="ElementShortName">sample_dly[15:0]</obj_property>
+      <obj_property name="ObjectShortName">sample_dly[15:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_sample_accumulator/sample_num" type="other">
-      <obj_property name="ElementShortName">sample_num</obj_property>
-      <obj_property name="ObjectShortName">sample_num</obj_property>
+   <wvobject fp_name="/tb_sample_accumulator/sample_num" type="array">
+      <obj_property name="ElementShortName">sample_num[15:0]</obj_property>
+      <obj_property name="ObjectShortName">sample_num[15:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_sample_accumulator/new_row" type="logic">
       <obj_property name="ElementShortName">new_row</obj_property>
@@ -56,24 +56,31 @@
       <obj_property name="ElementShortName">sample_data[15:0]</obj_property>
       <obj_property name="ObjectShortName">sample_data[15:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_sample_accumulator/sample_accumulator_module/acc_sample" type="array">
-      <obj_property name="ElementShortName">acc_sample[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_sample[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_sample_accumulator/sample_accumulator_module/valid" type="logic">
-      <obj_property name="ElementShortName">valid</obj_property>
-      <obj_property name="ObjectShortName">valid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_sample_accumulator/sample_accumulator_module/acc_sample_int" type="other">
-      <obj_property name="ElementShortName">acc_sample_int</obj_property>
-      <obj_property name="ObjectShortName">acc_sample_int</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_sample_accumulator/sample_accumulator_module/sample_count" type="other">
-      <obj_property name="ElementShortName">sample_count</obj_property>
-      <obj_property name="ObjectShortName">sample_count</obj_property>
+   <wvobject fp_name="/tb_sample_accumulator/sample_accumulator_module/sample_count" type="array">
+      <obj_property name="ElementShortName">sample_count[15:0]</obj_property>
+      <obj_property name="ObjectShortName">sample_count[15:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_sample_accumulator/sample_accumulator_module/state" type="other">
       <obj_property name="ElementShortName">state</obj_property>
       <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_sample_accumulator/sample_accumulator_module/sample" type="array">
+      <obj_property name="ElementShortName">sample[15:0]</obj_property>
+      <obj_property name="ObjectShortName">sample[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_sample_accumulator/sample_accumulator_module/acc_sample_value_reg" type="array">
+      <obj_property name="ElementShortName">acc_sample_value_reg[31:0]</obj_property>
+      <obj_property name="ObjectShortName">acc_sample_value_reg[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_sample_accumulator/sample_accumulator_module/sum_result" type="array">
+      <obj_property name="ElementShortName">sum_result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">sum_result[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_sample_accumulator/sample_accumulator_module/acc_sample" type="array">
+      <obj_property name="ElementShortName">acc_sample</obj_property>
+      <obj_property name="ObjectShortName">acc_sample</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
 </wave_config>

@@ -12,14 +12,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="730000000001fs"></ZoomEndTime>
+      <ZoomEndTime time="701452513968fs"></ZoomEndTime>
       <Cursor1Time time="117000000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="255"></NameColumnWidth>
-      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+      <ValueColumnWidth column_width="88"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="10" />
+   <WVObjectSize size="13" />
    <wvobject fp_name="/tb_row_selector/sys_clk" type="logic">
       <obj_property name="ElementShortName">sys_clk</obj_property>
       <obj_property name="ObjectShortName">sys_clk</obj_property>
@@ -36,13 +36,13 @@
       <obj_property name="ElementShortName">sync_frame</obj_property>
       <obj_property name="ObjectShortName">sync_frame</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_row_selector/num_rows" type="other">
-      <obj_property name="ElementShortName">num_rows</obj_property>
-      <obj_property name="ObjectShortName">num_rows</obj_property>
+   <wvobject fp_name="/tb_row_selector/num_rows" type="array">
+      <obj_property name="ElementShortName">num_rows[3:0]</obj_property>
+      <obj_property name="ObjectShortName">num_rows[3:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_row_selector/row_len" type="other">
-      <obj_property name="ElementShortName">row_len</obj_property>
-      <obj_property name="ObjectShortName">row_len</obj_property>
+   <wvobject fp_name="/tb_row_selector/row_len" type="array">
+      <obj_property name="ElementShortName">row_len[4:0]</obj_property>
+      <obj_property name="ObjectShortName">row_len[4:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_row_selector/row_selector_module/state" type="other">
       <obj_property name="ElementShortName">state</obj_property>
@@ -52,12 +52,24 @@
       <obj_property name="ElementShortName">new_row</obj_property>
       <obj_property name="ObjectShortName">new_row</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_row_selector/row_selector_module/row_num" type="other">
-      <obj_property name="ElementShortName">row_num</obj_property>
-      <obj_property name="ObjectShortName">row_num</obj_property>
+   <wvobject fp_name="/tb_row_selector/row_selector_module/row_num" type="array">
+      <obj_property name="ElementShortName">row_num[3:0]</obj_property>
+      <obj_property name="ObjectShortName">row_num[3:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_row_selector/row_selector_module/clk_counter" type="other">
       <obj_property name="ElementShortName">clk_counter</obj_property>
       <obj_property name="ObjectShortName">clk_counter</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_row_selector/a" type="array">
+      <obj_property name="ElementShortName">a[1:0]</obj_property>
+      <obj_property name="ObjectShortName">a[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_row_selector/b" type="array">
+      <obj_property name="ElementShortName">b[2:0]</obj_property>
+      <obj_property name="ObjectShortName">b[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_row_selector/result" type="logic">
+      <obj_property name="ElementShortName">result</obj_property>
+      <obj_property name="ObjectShortName">result</obj_property>
    </wvobject>
 </wave_config>

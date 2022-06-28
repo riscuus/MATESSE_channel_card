@@ -28,18 +28,18 @@ use concept.utils.all;
 
 entity param_buffer is
     generic(
-        param_size          : natural; -- Number of words that the param value occupies
-        param_id            : natural  -- The id of this parameter
+        PARAM_SIZE          : natural; -- Number of words that the param value occupies
+        PARAM_ID            : unsigned(bits_req(MAX_PARAM_IDS) - 1 downto 0)  -- The id of this parameter
     );
     port(
         clk                 : in std_logic; -- 5mhz clock
         rst                 : in std_logic; -- asynchronous reset
 
         update              : in std_logic; -- Pulse that is broadcasted indicate that the value has to be updated
-        param_id_to_update  : in natural;   -- The id of the parameter that has to be updated
+        param_id_to_update  : in unsigned(PARAM_ID'range);   -- The id of the parameter that has to be updated
         update_data         : in t_packet_payload; -- The data to be updated
-        default_value       : in t_param_array(0 to param_size - 1); -- The initial value that this param should have
-        param_data          : out t_param_array(0 to param_size - 1) -- The current data being provided to the connected block
+        default_value       : in t_param_array(0 to PARAM_SIZE - 1); -- The initial value that this param should have
+        param_data          : out t_param_array(0 to PARAM_SIZE - 1) -- The current data being provided to the connected block
     );
 
 end param_buffer;
@@ -55,8 +55,8 @@ begin
         param_data <= default_value;
 
     elsif (rising_edge(clk)) then
-        if (update = '1' and param_id_to_update = param_id) then
-            for i   in param_data'range loop
+        if (update = '1' and param_id_to_update = PARAM_ID) then
+            for i in param_data'range loop
                 param_data(i) <= update_data(i);
             end loop;
         end if;

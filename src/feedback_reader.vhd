@@ -29,18 +29,20 @@ use concept.utils.all;
 
 entity feedback_reader is
     generic(
-        DATA_SIZE : natural := 16;
-    )
+        DATA_SIZE : natural;
+        MAX_NUM_ROWS : natural;
+        READ_ADDR_SIZE : natural
+    );
     port(
         clk             : in std_logic; -- 100MHz clock                                                                           
         rst             : in std_logic; -- asynchronous reset
 
         new_row         : in std_logic; -- Pulse sent by the row selector indicating the beginning of a new row
-        row_num         : in natural;   -- The number of the new row
-        num_rows        : in natural;   -- The total ammount of rows
+        row_num         : in unsigned(bits_req(MAX_NUM_ROWS - 1) - 1 downto 0);   -- The number of the new row
+        num_rows        : in unsigned(bits_req(MAX_NUM_ROWS) - 1 downto 0);   -- The total ammount of rows.
 
         -- Interface with the dual ram
-        read_address    : out natural; -- The row number from which we will read its feedback value in the ram
+        read_address    : out unsigned(READ_ADDR_SIZE - 1 downto 0); -- The row number from which we will read its feedback value in the ram
         read_data       : in std_logic_vector(DATA_SIZE - 1 downto 0);   -- The data read from the ram
         
         sa_fb_data      : out std_logic_vector(DATA_SIZE - 1 downto 0) -- The voltage value to be set in the DAC 
@@ -53,7 +55,7 @@ architecture behave of feedback_reader is
     type stateType is (init, idle, wait_read_data, read_ram_data);
     signal state : stateType;
 
-    signal next_fb_value : std_logic_vector(DATA_SIZE downto 0) := (others => '0');
+    signal next_fb_value : std_logic_vector(DATA_SIZE - 1 downto 0) := (others => '0');
 
 begin
 
@@ -66,7 +68,7 @@ begin
         case state is
             when init =>
                 sa_fb_data <= (others => '0');
-                read_address <= 0;
+                read_address <= (others => '0');
                 state <= idle;
 
             when idle =>
@@ -74,9 +76,9 @@ begin
                     sa_fb_data <= next_fb_value;
 
                     if(row_num = num_rows - 1) then
-                        read_address <= 0;
+                        read_address <= (others => '0');
                     else
-                        read_address <= row_num + 1; -- We will read already the next row value
+                        read_address <= resize(row_num + 1, read_address'length); -- We will read already the next row value
                     end if;
 
                     state <= wait_read_data;

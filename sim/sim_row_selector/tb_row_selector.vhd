@@ -19,6 +19,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 library concept;
 use concept.utils.all;
@@ -37,16 +38,22 @@ architecture behave of tb_row_selector is
     constant SYNC_FRAME_DLY     : time := 2 us;
     constant SIM_DURATION       : time := 100 ms;
 
+
+    constant MAX_NUM_ROWS : natural := 12;
+    constant MAX_ROW_LEN  : natural := 30;
+
+
     -- Clock
     signal sys_clk  : std_logic;
     signal sys_rst  : std_logic;
 
     signal acquisition_on   : std_logic := '0';
     signal sync_frame       : std_logic := '0';
-    signal num_rows         : natural   := 5;
-    signal row_len          : natural   := 20;
+    signal num_rows         : unsigned(bits_req(MAX_NUM_ROWS) - 1 downto 0)  := to_unsigned(5, bits_req(MAX_NUM_ROWS));
+    signal row_len          : unsigned(bits_req(MAX_ROW_LEN) - 1 downto 0)   := to_unsigned(20, bits_req(MAX_ROW_LEN));
 
 begin
+
 
     -- CLK generation
     clk_generation : process 
@@ -91,6 +98,10 @@ begin
     -- Module
 
     row_selector_module : entity concept.row_selector
+        generic map(
+            MAX_NUM_ROWS    => MAX_NUM_ROWS,
+            MAX_ROW_LEN     => MAX_ROW_LEN
+        )
         port map(
             clk             => sys_clk,
             rst             => sys_rst,
