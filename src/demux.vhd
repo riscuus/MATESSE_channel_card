@@ -28,8 +28,8 @@ use concept.utils.all;
 
 entity demux is
     generic(
-        DATA_SIZE   : positive := 16;
-        SEL_SIZE    : positive := 2
+        DATA_SIZE   : positive;
+        SEL_SIZE    : positive
     );
     port(
         selector    : in unsigned(SEL_SIZE - 1 downto 0);
@@ -45,10 +45,11 @@ begin
 
 select_process : process(selector, data_in)
 begin
-    data_out <= (others => '0');
     for i in 0 to sel_size_to_input(SEL_SIZE) - 1 loop
         if (i = to_integer(selector)) then
-            data_out((to_integer(selector) + 1) * DATA_SIZE - 1 downto to_integer(selector) * DATA_SIZE) <= data_in;
+            data_out((i + 1) * DATA_SIZE - 1 downto i * DATA_SIZE) <= data_in;
+        else
+            data_out((i + 1) * DATA_SIZE - 1 downto i * DATA_SIZE) <= (others => '0');
         end if;
     end loop;
 end process;

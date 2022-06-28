@@ -29,8 +29,8 @@ use concept.utils.all;
 
 entity mux is
     generic(
-        DATA_SIZE   : positive := 16;
-        SEL_SIZE    : positive := 2
+        DATA_SIZE   : positive;
+        SEL_SIZE    : positive
     );
     port(
         selector    : in unsigned(SEL_SIZE - 1 downto 0);
@@ -44,13 +44,6 @@ architecture behave of mux is
 
 begin
 
-select_process : process(selector, data_in) 
-begin
-    for i in 0 to sel_size_to_input(SEL_SIZE) - 1 loop
-        if (i = to_integer(selector)) then
-            data_out <= data_in((to_integer(selector) + 1) * DATA_SIZE - 1 downto to_integer(selector) * DATA_SIZE);
-        end if;
-    end loop;
-end process;
+data_out <= data_in((to_integer(selector) + 1) * DATA_SIZE - 1 downto to_integer(selector) * DATA_SIZE);
 
 end behave;
