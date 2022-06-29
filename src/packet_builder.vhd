@@ -37,7 +37,7 @@ entity packet_builder is
         param_id                : in t_half_word;
         cmd_type                : in t_packet_type; -- Only used in reply packets
         err_ok                  : in std_logic; -- 0 to indicate OK, 1 to indicate error. Only used in reply packets
-        payload_size            : in natural; -- Indicates how many words are in the payload data. MCE "n" param
+        payload_size            : in unsigned(bits_req(MAX_PAYLOAD) - 1 downto 0); -- Indicates how many words are in the payload data. MCE "n" param
         packet_payload          : in t_packet_payload; -- Packet payload. Up to col_num x row_num + 43 header words
 
         params_valid            : in std_logic; -- Indicates that the params are already valid and that the 
@@ -60,7 +60,7 @@ architecture behave of packet_builder is
     signal param_id_reg       : t_half_word := (others => '0');
     signal cmd_type_reg       : t_packet_type := undefined;
     signal err_ok_reg         : std_logic := '0';
-    signal payload_size_reg   : natural := 0;
+    signal payload_size_reg   : unsigned(payload_size'range) := (others => '0');
     signal packet_payload_reg : t_packet_payload := (others => (others => '0'));
 
     -- cmd_packet SM signals
@@ -154,7 +154,7 @@ architecture behave of packet_builder is
     signal payload_state : payload_stateType;
 
     signal payload_word_buffer      : t_word := (others => '0');
-    signal payload_word_counter     : natural := 0;
+    signal payload_word_counter     : unsigned(payload_size'range) := (others => '0');
     signal payload_sent             : std_logic := '0';
     signal send_payload_word        : std_logic := '0';
     signal start_payload            : std_logic := '0';
@@ -174,7 +174,7 @@ architecture behave of packet_builder is
     signal word_state : word_stateType;
 
     signal word_buffer      : t_word := (others => '0');
-    signal word_byte_count  : natural := 0;
+    signal word_byte_count  : unsigned(bits_req(t_word'length/8) - 1 downto 0) := (others => '0');
     signal word_sent        : std_logic := '0';
 
 begin
@@ -191,7 +191,7 @@ begin
         param_id_reg       <= (others => '0');
         cmd_type_reg       <= undefined;
         err_ok_reg         <= '0';
-        payload_size_reg   <= 0;
+        payload_size_reg   <= (others => '0');
         packet_payload_reg <= (others => (others => '0'));
 
     elsif (rising_edge(clk)) then
@@ -689,19 +689,19 @@ begin
             when wait_start_size =>
                 if(start_param_size_cmd = '1') then
                     -- When cmd packet we simply send the payload size "n"
-                    size_word_buffer <= std_logic_vector(to_unsigned(payload_size_reg, 32));
+                    size_word_buffer <= t_word(resize(payload_size_reg, size_word_buffer'length));
                     send_param_size_word <= '1';
                     size_state <= wait_size_sent;
                 elsif (start_param_size_reply = '1') then
                     -- When reply packet we send the "packet size" instead of the payload size. This is the payload
                     -- plus 3 words
-                    size_word_buffer <= std_logic_vector(to_unsigned(payload_size_reg + 3, 32));
+                    size_word_buffer <= t_word(resize(payload_size_reg + 3, size_word_buffer'length));
                     send_param_size_word <= '1';
                     size_state <= wait_size_sent;
                 elsif (start_param_size_data = '1') then
                     -- When data packet we send the "packet size" instead of the payload size. This is the payload
                     -- plus 1 word
-                    size_word_buffer <= std_logic_vector(to_unsigned(payload_size_reg + 1, 32));
+                    size_word_buffer <= t_word(resize(payload_size_reg + 1, size_word_buffer'length));
                     send_param_size_word <= '1';
                     size_state <= wait_size_sent;
                 else
@@ -794,7 +794,7 @@ begin
         case payload_state is
             when init =>
                 payload_word_buffer     <= (others => '0');
-                payload_word_counter    <= 0;
+                payload_word_counter    <= (others => '0');
                 send_payload_word       <= '0';
                 payload_sent            <= '0';
 
@@ -808,7 +808,7 @@ begin
                 end if;
 
             when set_payload_word =>
-                payload_word_buffer <= packet_payload_reg(payload_word_counter);
+                payload_word_buffer <= packet_payload_reg(to_integer(payload_word_counter));
                 send_payload_word <= '1';
                 payload_state <= wait_payload_word_sent;
 
@@ -827,7 +827,7 @@ begin
                         end if;
                     else
                         -- For cmd packets the payload size is fixed
-                        if (payload_word_counter = CMD_REPLY_MAX_SIZE - 1) then
+                        if (payload_word_counter = MAX_REPLY_PAYLOAD - 1) then
                             payload_sent <= '1';
                             payload_state <= init;
                         else
@@ -920,7 +920,7 @@ begin
     if (rst = '1') then
         byte_data <= (others => '0');
         word_buffer <= (others => '0');
-        word_byte_count <= 0;
+        word_byte_count <= (others => '0');
         word_sent <= '0';
         send_byte <= '0';
 
@@ -930,7 +930,7 @@ begin
         case word_state is
             when init =>
                 word_buffer <= (others => '0');
-                word_byte_count <= 0;
+                word_byte_count <= (others => '0');
                 word_sent <= '0';
                 send_byte <= '0';
 
@@ -964,14 +964,14 @@ begin
 
             when set_byte =>
                 send_byte <= '0';
-                byte_data <= word_buffer(((word_byte_count + 1) * 8 - 1) downto word_byte_count * 8);
+                byte_data <= word_buffer(((to_integer(word_byte_count) + 1) * 8 - 1) downto to_integer(word_byte_count) * 8);
                 word_state <= wait_tx_and_send_byte;
 
             when wait_tx_and_send_byte =>
                 if (tx_busy = '0') then
                     send_byte <= '1';
-                    if(word_byte_count = 3) then
-                        word_byte_count <= 0;
+                    if(word_byte_count = t_word'length/8 - 1) then
+                        word_byte_count <= (others => '0');
                         word_sent <= '1';
                         word_state <= init;
                     else

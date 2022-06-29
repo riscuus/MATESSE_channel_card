@@ -36,7 +36,7 @@ entity packet_parser is
         param_id                : out t_half_word;
         cmd_type                : out t_packet_type; -- Only used in reply packets
         err_ok                  : out std_logic; -- 0 to indicate OK, 1 to indicate error. Only used in reply packets
-        payload_size            : out natural; -- Indicates how many words are in the payload data. MCE "n" param
+        payload_size            : out unsigned(bits_req(MAX_PAYLOAD) - 1 downto 0); -- Indicates how many words are in the payload data. MCE "n" param
         packet_payload          : out t_packet_payload; -- Packet payload. Up to col_num x row_num + 43 header words
 
         rx_busy                 : in std_logic; -- In order to know if the the TX is available
@@ -116,7 +116,7 @@ architecture behave of packet_parser is
     type size_stateType is (init, wait_word);
     signal size_state : size_stateType;
 
-    signal payload_size_reg     : natural := 0; -- Register used to set default values
+    signal payload_size_reg     : unsigned(payload_size'range) := (others => '0'); -- Register used to set default values
     signal good_size            : std_logic := '0';
     signal bad_size             : std_logic := '0';
     signal parse_size           : std_logic := '0';
@@ -133,7 +133,7 @@ architecture behave of packet_parser is
     signal payload_state : payload_stateType;
 
     signal parse_payload        : std_logic := '0';
-    signal payload_word_count   : natural := 0;
+    signal payload_word_count   : unsigned(bits_req(MAX_PAYLOAD/8) - 1 downto 0) := (others => '0');
     signal payload_received     : std_logic := '0';
     signal packet_payload_reg   : t_packet_payload := (others => (others => '0')); -- Reg used to set default values
 
@@ -587,7 +587,7 @@ begin
         size_state <= init;
         good_size <= '0';
         bad_size <= '0';
-        payload_size_reg <= 0;
+        payload_size_reg <= (others => '0');
 
     elsif (rising_edge(clk)) then
         case size_state is
@@ -609,12 +609,12 @@ begin
                         if (packet_type_reg = cmd_rb or packet_type_reg = cmd_wb or packet_type_reg = cmd_go or
                             packet_type_reg = cmd_st or packet_type_reg = cmd_rs) then
 
-                            payload_size_reg <= to_integer(unsigned(received_word));
+                            payload_size_reg <= resize(unsigned(received_word), payload_size_reg'length);
                             good_size <= '1';
 
                         elsif (packet_type_reg = reply) then
                             if (to_integer(unsigned(received_word)) > 3) then
-                                payload_size_reg <= to_integer(unsigned(received_word)) - 3;
+                                payload_size_reg <= resize(unsigned(received_word) - 3, payload_size_reg'length);
                                 good_size <= '1';
                             else
                                 bad_size <= '1';
@@ -622,7 +622,7 @@ begin
 
                         else
                             if (to_integer(unsigned(received_word)) > 1) then
-                                payload_size_reg <= to_integer(unsigned(received_word)) - 1;
+                                payload_size_reg <= resize(unsigned(received_word) - 1, payload_size_reg'length);
                                 good_size <= '1';
                                 size_state <= init;
                             else
@@ -719,7 +719,7 @@ begin
     elsif (rising_edge(clk)) then
         case payload_state is
             when init =>
-                payload_word_count  <= 0;
+                payload_word_count  <= (others => '0');
                 payload_received    <= '0';
 
                 if (parse_payload = '1') then
@@ -730,7 +730,7 @@ begin
 
             when wait_word =>
                 if (word_available = '1') then
-                    packet_payload_reg(payload_word_count) <= received_word;
+                    packet_payload_reg(to_integer(payload_word_count)) <= received_word;
                     
                     if (packet_type_reg = reply or packet_type_reg = data) then
                         -- If payload 0 we already know is not a valid packet, but it will be discarded by cmd_handler
@@ -742,7 +742,7 @@ begin
                             payload_state <= payload_state;
                         end if;
                     else 
-                        if (payload_word_count = CMD_REPLY_MAX_SIZE - 1) then
+                        if (payload_word_count = MAX_REPLY_PAYLOAD - 1) then
                             payload_received <= '1';
                             payload_state <= init;
                         else 

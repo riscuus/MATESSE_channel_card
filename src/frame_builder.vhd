@@ -32,11 +32,11 @@ entity frame_builder is
         rst                     : in std_logic; -- asynchronous reset
 
         -- Param buffers
-        ret_data_setup          : in t_param_array(0 to PARAM_ID_TO_SIZE(RET_DATA_S_ID) - 1);
-        data_rate               : in natural;
-        num_rows                : in natural;
-        num_cols                : in natural;
-        row_len                 : in natural;
+        ret_data_setup          : in t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(RET_DATA_S_ID)) - 1);
+        data_rate               : in unsigned(bits_req(MAX_DATA_RATE) - 1 downto 0); -- Refers to the ratio between the number of frames discarted and the ones thrown
+        num_rows                : in unsigned(bits_req(MAX_ROWS) - 1 downto 0);
+        num_cols                : in unsigned(bits_req(MAX_CHANNELS) - 1 downto 0);
+        row_len                 : in unsigned(bits_req(MAX_ROW_LEN) - 1 downto 0);
 
         -- Interface with cmd handler and row selector
         acquisition_on          : in std_logic;
@@ -50,7 +50,7 @@ entity frame_builder is
         -- Interface with packet sender
         sender_ready            : in std_logic;
         send_data_packet        : out std_logic;
-        payload_size            : out natural;
+        payload_size            : out unsigned(bits_req(MAX_PAYLOAD) - 1 downto 0);
         frame_payload           : out t_packet_payload -- Composed by the header_payload + data_payload
     );
 
@@ -58,27 +58,27 @@ end frame_builder;
 
 architecture behave of frame_builder is
 
-    constant header_version : natural := 7;
+    constant HEADER_VERSION : natural := 7;
 
     type stateType is (idle, wait_valid_data, update_payload_state, wait_sender_ready, send_data, wait_acq_off);
     signal state : stateType;
 
-    type t_header_payload is array (0 to (DATA_PKT_HEADER_LENGTH - 1)) of t_word;
+    type t_header_payload is array (0 to (DATA_PKT_HEADER_SIZE - 1)) of t_word;
     type t_data_payload is array (0 to (MAX_CHANNELS * MAX_ROWS - 1)) of t_word;
 
     signal header_payload   : t_header_payload := (others => (others => '0'));
     signal data_payload     : t_data_payload := (others => (others => '0'));
 
-    signal channels_data_reg : t_channel_record_array := (others => (value => (others => '0'), row_num => 0, valid => '0'));
+    signal channels_data_reg : t_channel_record_array := (others => (value => (others => '0'), row_num => (others => '0'), valid => '0'));
     signal valid_data           : std_logic := '0';
     signal valid_data_reg       : std_logic := '0';
     signal last_frame           : std_logic := '0';
-    signal row_counter          : natural   := 0;
-    signal initial_id           : natural   := 0; -- The first frame will have this id
-    signal final_id             : natural   := 0; -- The last frame will have this id
-    signal frame_id             : natural   := 0; -- The current frame_id (starts at initial_id)
-    signal frame_counter        : natural   := 0; -- Counter for the current sent frames (starts at 0 ends at data rate)
-    signal total_frame_counter  : natural   := 0; -- Counter for the current total sent frames (starts at 0 ends when acquisition is over)
+    signal row_counter          : unsigned(bits_req(MAX_ROWS - 1) - 1 downto 0) := (others => '0');
+    signal initial_id           : unsigned(FRAME_ID_WIDTH - 1 downto 0) := (others => '0'); -- The first frame will have this id
+    signal final_id             : unsigned(FRAME_ID_WIDTH - 1 downto 0) := (others => '0'); -- The last frame will have this id
+    signal frame_id             : unsigned(FRAME_ID_WIDTH - 1 downto 0) := (others => '0'); -- The current frame_id (starts at initial_id)
+    signal frame_counter        : unsigned(data_rate'range)   := (others => '0'); -- Counter for the current sent frames (starts at 0 ends at data rate)
+    signal total_frame_counter  : unsigned(FRAME_ID_WIDTH - 1 downto 0)   := (others => '0'); -- Counter for the current total sent frames (starts at 0 ends when acquisition is over)
     signal valid_row            : std_logic := '0'; -- Signal that indicates that the row_counter is sync whith the current row,
                                                     -- if not we discard the current frame that has already started and wait until the next one starts
     signal update_payload       : std_logic := '0';
@@ -91,10 +91,10 @@ architecture behave of frame_builder is
 begin
 
 -- Simple assigments
-initial_id <= to_integer(unsigned(ret_data_setup(0)));
-final_id <= to_integer(unsigned(ret_data_setup(1)));
+initial_id <= resize(unsigned(ret_data_setup(0)), initial_id'length);
+final_id <= resize(unsigned(ret_data_setup(1)), final_id'length);
 last_frame <= '1' when frame_id = final_id or stop_bit = '1' else '0';
-payload_size <= t_header_payload'length + num_cols * num_rows;
+payload_size <= to_unsigned(t_header_payload'length + to_integer(num_cols) * to_integer(num_rows), payload_size'length);
 
 -- State machine logic
 main_logic : process(clk, rst)
@@ -125,11 +125,11 @@ begin
                 update_payload <= '0';
                 -- Valid frame
                 if (row_counter = num_rows - 1) then
-                    row_counter <= 0;
+                    row_counter <= (others => '0');
                     total_frame_counter <= total_frame_counter + 1;
                     -- We only send #data_rate valid frames
                     if (frame_counter = data_rate - 1) then
-                        frame_counter <= 0;
+                        frame_counter <= (others => '0');
                         if (sender_ready = '1') then
                             send_data_packet <= '1';
                             state <= send_data;
@@ -157,7 +157,7 @@ begin
                 send_data_packet <= '0';
                 if (last_frame = '1') then
                     last_frame_sent <= '1';
-                    total_frame_counter <= 0;
+                    total_frame_counter <= (others => '0');
                     frame_id <= initial_id;
                     state <= wait_acq_off;
                 else
@@ -181,7 +181,7 @@ end process;
 process(clk, rst)
 begin
     if (rst = '1') then
-        channels_data_reg <= (others => (value => (others => '0'), row_num => 0, valid => '0'));
+        channels_data_reg <= (others => (value => (others => '0'), row_num => (others => '0'), valid => '0'));
     elsif (rising_edge(clk)) then
         valid_data_reg <= valid_data;
 
@@ -274,7 +274,7 @@ begin
             -- We assign all channels even if they do not report their data. Is later through the size of the frame where 
             -- we decide which data to report
             for i in 0 to (MAX_CHANNELS - 1) loop
-                data_payload((i * num_rows) + channels_data_reg(i).row_num) <= channels_data_reg(i).value;
+                data_payload((i * to_integer(num_rows)) + to_integer(channels_data_reg(i).row_num)) <= std_logic_vector(channels_data_reg(i).value);
             end loop;
         end if;
     end if;
@@ -297,15 +297,15 @@ begin
             -- (0) Status bits
             header_payload(0)(1 downto 0) <= stop_bit & last_frame;
             -- (1) Frame id
-            header_payload(1) <= std_logic_vector(to_unsigned(frame_id, t_word'length));
+            header_payload(1) <= std_logic_vector(resize(frame_id, t_word'length));
             -- (2) row_len
-            header_payload(2) <= std_logic_vector(to_unsigned(row_len, t_word'length));
+            header_payload(2) <= std_logic_vector(resize(row_len, t_word'length));
             -- (3) num_rows reported
-            header_payload(3) <= std_logic_vector(to_unsigned(num_rows, t_word'length));
+            header_payload(3) <= std_logic_vector(resize(num_rows, t_word'length));
             -- (4) data_rate
-            header_payload(4) <= std_logic_vector(to_unsigned(data_rate, t_word'length));
+            header_payload(4) <= std_logic_vector(resize(data_rate, t_word'length));
             -- (5) total_frame_counter
-            header_payload(5) <= std_logic_vector(to_unsigned(total_frame_counter, t_word'length));
+            header_payload(5) <= std_logic_vector(resize(total_frame_counter, t_word'length));
             -- (6) Header version
             header_payload(6) <= std_logic_vector(to_unsigned(header_version, t_word'length));
             -- (7) ramp value (current value if ramp mode is active) (TODO)

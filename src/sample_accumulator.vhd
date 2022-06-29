@@ -28,8 +28,8 @@ use concept.utils.all;
 
 entity sample_accumulator is
     generic(
-        MAX_ROW_NUM : natural
-        MAX_SAMPLE_NUM : natural
+        MAX_ROW_NUM : natural;
+        MAX_SAMPLE_NUM : natural;
         DATA_WIDTH : natural
     );
     port(

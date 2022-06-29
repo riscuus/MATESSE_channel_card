@@ -12,6 +12,7 @@ package utils is
 
     -- Basic constraints
     constant WORD_WIDTH             : natural := 32;
+    constant WORD_WIDTH_BYTES       : natural := WORD_WIDTH / 8;
     constant MAX_CHANNELS           : natural := 2; -- Max channels that the daughter board can handle
     constant DATA_PKT_HEADER_SIZE   : natural := 43;
     constant MAX_ROWS               : natural := 12; -- Max rows that the daughter board can handle
@@ -22,6 +23,8 @@ package utils is
     constant MAX_SAMPLE_NUM         : natural := 65535;
     constant MAX_PARAM_IDS          : natural := 256;
     constant MAX_PARAM_ID_SIZE      : natural := MAX_ROWS;
+    constant MAX_DATA_RATE          : natural := 65535;
+    constant FRAME_ID_WIDTH         : natural := 32;
     --DAC constants
     constant DAC_VOLTAGE_SIZE       : natural := 16;
     constant DAC_ADDR_SIZE          : natural := 2;
