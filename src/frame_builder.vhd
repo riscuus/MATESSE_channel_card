@@ -212,6 +212,29 @@ begin
     end if;
 end process;
 
+-- Valid row generation
+process(row_counter, channels_data_reg)
+begin
+    valid_row <= '0';
+    for i in 0 to (MAX_CHANNELS - 1) loop
+        if (i < num_cols) then
+            if (i = 0) then
+                if (row_counter = channels_data_reg(i).row_num) then
+                    valid_row <= '1';
+                else
+                    valid_row <= '0';
+                end if;
+            else
+                -- It will only modify the result if row_counter is not equal
+                -- if it is equal row_counter remains the same
+                if (row_counter /= channels_data_reg(i).row_num) then
+                    valid_row <= '0';
+                end if;
+            end if;
+        end if;
+    end loop;
+end process;
+
 -- Stop bit signal generation
 process(clk, rst)
 begin
@@ -231,26 +254,6 @@ begin
     end if;
 end process;
 
--- Valid row generation
-process(row_counter, channels_data_reg)
-begin
-    valid_row <= '0';
-    for i in 0 to (MAX_CHANNELS - 1) loop
-        if (i < num_cols) then
-            if (i = 0) then
-                if (row_counter = channels_data_reg(i).row_num) then
-                    valid_row <= '1';
-                else
-                    valid_row <= '0';
-                end if;
-            else
-                if (row_counter /= channels_data_reg(i).row_num) then
-                    valid_row <= '0';
-                end if;
-            end if;
-        end if;
-    end loop;
-end process;
 
 -- Frame payload assigment = header_payload + data_payload
 process(header_payload, data_payload)
