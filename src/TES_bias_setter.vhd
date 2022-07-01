@@ -28,8 +28,8 @@ use concept.utils.all;
 
 entity TES_bias_setter is
     generic(
-        NUM_DACS : positive := PARAM_ID_TO_SIZE(BIAS_ID); -- Number of DACs (each chip contains 4)
-        DAC_DLY : natural := 10 -- Delay between each tart_DAC_pulse
+        NUM_DACS    : positive;
+        DAC_DLY     : natural
     );
     port(
         clk                     : in std_logic; -- 100MHz clock                                                                           
@@ -38,7 +38,7 @@ entity TES_bias_setter is
         set_bias                : in std_logic; -- Pulse signal to start the setting of the values
         TES_bias                : in t_param_array(0 to NUM_DACS - 1); -- Values to be set on each DAC
         DAC_start_pulse         : out std_logic; -- Pulse to be sent to the DAC gate controller to set the value
-        DAC_data                : out std_logic_vector(DAC_ADDR_SIZE + DAC_DATA_SIZE - 1 downto 0) -- Data to be sent to the DAC (address + voltage)
+        DAC_data                : out std_logic_vector(DAC_ADDR_SIZE + DAC_VOLTAGE_SIZE - 1 downto 0) -- Data to be sent to the DAC (address + voltage)
     );
 
 end TES_bias_setter;
@@ -52,7 +52,7 @@ architecture behave of TES_bias_setter is
     -- Address of the DAC (A,B,C,D)
     signal address      : std_logic_vector(DAC_ADDR_SIZE - 1 downto 0) := (others => '0');
     -- Voltage sent to the DAC
-    signal v_data       : std_logic_vector(DAC_DATA_SIZE - 1 downto 0) := (others => '0');
+    signal v_data       : std_logic_vector(DAC_VOLTAGE_SIZE - 1 downto 0) := (others => '0');
 
     -- Signal to indicate the start pulse process to start generating the start pulse
     signal gen_start    : std_logic := '0';
@@ -65,7 +65,7 @@ begin
 
 address <= std_logic_vector(resize(dac_counter, address'length));
 
-v_data <= TES_bias(to_integer(dac_counter))(DAC_DATA_SIZE - 1 downto 0) when dac_counter < NUM_DACS else
+v_data <= TES_bias(to_integer(dac_counter))(DAC_VOLTAGE_SIZE - 1 downto 0) when dac_counter < NUM_DACS else
           (others => '0');
 
 DAC_data <= address & v_data;

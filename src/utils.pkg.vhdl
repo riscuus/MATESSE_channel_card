@@ -21,6 +21,7 @@ package utils is
     constant MAX_ROW_LEN            : natural := 65535;
     constant MAX_SAMPLE_DLY         : natural := 65535;
     constant MAX_SAMPLE_NUM         : natural := 65535;
+    constant MAX_FB_DLY             : natural := 65535;
     constant MAX_PARAM_IDS          : natural := 256;
     constant MAX_PARAM_ID_SIZE      : natural := MAX_ROWS;
     constant MAX_DATA_RATE          : natural := 65535;
@@ -28,9 +29,14 @@ package utils is
     --DAC constants
     constant DAC_VOLTAGE_SIZE       : natural := 16;
     constant DAC_ADDR_SIZE          : natural := 2;
-    constant MAX_DAC_DLY            : natural := 10; -- Delay that for example row activator must wait to activate the next row
+    constant MAX_DAC_DLY            : natural := 10; -- Delay that row activator must wait to activate the next row
+    constant DAC_SCLK_HALF_PERIOD   : positive := 3; -- The half period of the serial clock. In clk cycles
+    constant DAC_LDAC_SETUP         : positive := 1; -- The setup time for the LDAC signal in clk cycles
+    constant DAC_LDAC_WIDTH         : positive := 3; -- The number of clk cycles that the LDAC must remain active
+    constant DAC_LDAC_HOLD          : positive := 3; -- The time that LDAC must remain deactivated until a new cycle can start
     -- ADC constants
     constant ADC_DATA_SIZE          : natural := 16;
+    constant ADC_PARAMS_WIDTH       : natural := 4;
     -- PARAMS RAM constants
     constant PARAM_RAM_DATA_WIDTH : natural := WORD_WIDTH; 
     constant PARAM_RAM_BRAM_SIZE  : string  := "18Kb";
