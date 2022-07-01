@@ -121,7 +121,7 @@ architecture Behavioral of main_module is
     signal param_id         : t_half_word := (others => '0');
     signal cmd_type         : t_packet_type := undefined;
     signal err_ok           : std_logic := '0';
-    signal payload_size     : unsigned(MAX_PAYLOAD - 1 downto 0) := (others => '0');
+    signal payload_size     : unsigned(bits_req(MAX_PAYLOAD) - 1 downto 0) := (others => '0');
     signal packet_payload   : t_packet_payload := (others => (others => '0'));
     signal params_valid     : std_logic := '0';
     signal builder_ready    : std_logic := '0';
@@ -203,6 +203,9 @@ architecture Behavioral of main_module is
         )
     );
 
+    type fb_ram_addr_signal_array is array(0 to MAX_CHANNELS - 1) of unsigned(FB_RAM_ADDR_WIDTH - 1 downto 0);
+    signal fb_ram_write_addr_signal : fb_ram_addr_signal_array := (others => (others => '0'));
+
     -- feedback reader -> dual ram
     type read_address_array is array(0 to MAX_CHANNELS - 1) of unsigned(FB_RAM_ADDR_WIDTH - 1 downto 0);
     signal read_address : read_address_array := (others => (others => '0'));
@@ -231,7 +234,7 @@ architecture Behavioral of main_module is
     );
     -- frame_builder -> packet_sender
     signal send_data_packet         : std_logic := '0';
-    signal data_packet_payload_size : unsigned(MAX_PAYLOAD - 1 downto 0) := (others => '0');
+    signal data_packet_payload_size : unsigned(bits_req(MAX_PAYLOAD) - 1 downto 0) := (others => '0');
     signal data_packet_payload      : t_packet_payload := (others => (others => '0'));
 
     -- TES_bias_setter signals
@@ -263,7 +266,6 @@ architecture Behavioral of main_module is
     signal sa_bias_cte      : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SA_BIAS_ID)) - 1) := (others => (others => '0'));
     signal sq1_fb_cte       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SQ1_FB_ID)) - 1) := (others => (others => '0'));
     signal sq1_bias_cte     : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SQ1_BIAS_ID)) - 1) := (others => (others => '0'));
-
 
     type t_gain_array is array(0 to MAX_CHANNELS - 1) of t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_0_ID)) - 1);
     signal gain_array : t_gain_array := (others => (others => (others => '0')));
@@ -465,7 +467,7 @@ begin
 
             data_mode           => data_mode(0)(bits_req(NUM_DATA_MODES) - 1 downto 0),
             servo_mode          => servo_mode,
-            fb_dly              => to_integer(unsigned(fb_dly(0))),
+            fb_dly              => unsigned(fb_dly(0)(bits_req(MAX_FB_DLY) - 1 downto 0)),
 
             new_row             => new_row,
             acquisition_on      => acquisition_on,
@@ -482,6 +484,13 @@ begin
         );
 
     channels_DAC_gate_ctrl : entity concept.DAC_gate_controller
+        generic map(
+            SCLK_TOTAL_PULSES   => DAC_VOLTAGE_SIZE + DAC_ADDR_SIZE,
+            SCLK_HALF_PERIOD    => DAC_SCLK_HALF_PERIOD,
+            LDAC_SETUP          => DAC_LDAC_SETUP,
+            LDAC_WIDTH          => DAC_LDAC_WIDTH,
+            LDAC_HOLD           => DAC_LDAC_HOLD
+        )
         port map(
             clk                 => sys_clk_100,
             rst                 => sys_rst,
@@ -503,8 +512,8 @@ begin
                                
             sync_frame      => sync_frame,
             acquisition_on  => acquisition_on,
-            num_rows        => unsigned(num_rows(0)),
-            row_len         => unsigned(row_len(0)),
+            num_rows        => unsigned(num_rows(0)(bits_req(MAX_ROWS) - 1 downto 0)),
+            row_len         => unsigned(row_len(0)(bits_req(MAX_ROW_LEN) - 1 downto 0)),
                                
             new_row         => new_row,
             row_num         => row_num,
@@ -525,7 +534,7 @@ begin
 
             on_bias             => on_bias,
             off_bias            => off_bias,
-            num_rows            => unsigned(num_rows(0)),
+            num_rows            => unsigned(num_rows(0)(bits_req(MAX_ROWS) - 1 downto 0)),
 
             new_row             => new_row,
             row_num             => row_num,
@@ -537,6 +546,13 @@ begin
         );
 
     row_activator_DAC_gate_ctrl : entity concept.DAC_gate_controller
+        generic map(
+            SCLK_TOTAL_PULSES   => DAC_VOLTAGE_SIZE + DAC_ADDR_SIZE,
+            SCLK_HALF_PERIOD    => DAC_SCLK_HALF_PERIOD,
+            LDAC_SETUP          => DAC_LDAC_SETUP,
+            LDAC_WIDTH          => DAC_LDAC_WIDTH,
+            LDAC_HOLD           => DAC_LDAC_HOLD
+        )
         port map(
             clk                 => sys_clk_100,
             rst                 => sys_rst,
@@ -587,13 +603,16 @@ begin
 
 
     ADC_gate_controller : entity concept.ADC_gate_controller
+        generic map(
+            NUM_OF_SCK_CYCLES => ADC_DATA_SIZE / 2
+        )
         port map(
             clk             => sys_clk_100,
             rst             => sys_rst,
 
-            cnv_len         => to_integer(unsigned(cnv_len(0))),
-            sck_dly         => to_integer(unsigned(sck_dly(0))),
-            sck_half_period => to_integer(unsigned(sck_half_period(0))),
+            cnv_len         => unsigned(cnv_len(0)(ADC_PARAMS_WIDTH - 1 downto 0)),
+            sck_dly         => unsigned(sck_dly(0)(ADC_PARAMS_WIDTH - 1 downto 0)),
+            sck_half_period => unsigned(sck_half_period(0)(ADC_PARAMS_WIDTH - 1 downto 0)),
 
             start_pulse     => ADC_start_pulse,
 
@@ -644,12 +663,17 @@ begin
             );
 
         sample_selector_module : entity concept.sample_selector
+            generic map(
+                MAX_SAMPLE_NUM  => MAX_SAMPLE_NUM,
+                MAX_SAMPLE_DLY  => MAX_SAMPLE_DLY,
+                DATA_WIDTH      => ADC_DATA_SIZE
+            )
             port map(
                 clk                     => sys_clk_100,
                 rst                     => sys_rst,
 
-                sample_dly              => unsigned(sample_dly(0)),
-                sample_num              => unsigned(sample_num(0)),
+                sample_dly              => unsigned(sample_dly(0)(bits_req(MAX_SAMPLE_DLY) - 1 downto 0)),
+                sample_num              => unsigned(sample_num(0)(bits_req(MAX_SAMPLE_NUM) - 1 downto 0)),
                 new_row                 => new_row,
                 valid_word              => valid_word(i),
                 parallel_data           => parallel_data(i),
@@ -667,7 +691,7 @@ begin
                 clk                     => sys_clk_100,
                 rst                     => sys_rst,
 
-                sample_num              => unsigned(sample_num(0)),
+                sample_num              => unsigned(sample_num(0)(bits_req(MAX_SAMPLE_NUM) - 1 downto 0)),
                 valid_sample            => valid_sample(i),
                 sample                  => sample_data(i),
                 row_num                 => row_num,
@@ -692,16 +716,25 @@ begin
                 rst                 => sys_rst,
 
                 acc_sample          => acc_sample_stretched(i),
-                sa_fb_gain          => to_integer(signed(gain_array(i)(0))),
+                sa_fb_gain          => signed(gain_array(i)(0)),
                 fb_sample           => fb_sample(i)
             );
 
+        fb_ram_write_addr_signal(i) <= resize(fb_sample(i).row_num, fb_ram_write_addr_signal(i)'length);
+
         bram_dual_wrapper_module : entity concept.bram_dual_wrapper
+            generic map(
+                DATA_WIDTH  => FB_RAM_DATA_WIDTH,
+                BRAM_SIZE   => FB_RAM_BRAM_SIZE,
+                READ_DEPTH  => FB_RAM_READ_DEPTH,
+                ADDR_WIDTH  => FB_RAM_ADDR_WIDTH,
+                WE_WIDTH    => FB_RAM_WE_WIDTH
+            )
             port map(
                 clk             => sys_clk_5,
                 rst             => sys_rst,
 
-                write_address   => fb_sample(i).row_num,
+                write_address   => fb_ram_write_addr_signal(i),
                 write_data      => std_logic_vector(fb_sample(i).value),
                 write_pulse     => fb_sample(i).valid,
                 read_address    => read_address(i),
@@ -710,8 +743,9 @@ begin
         
         feedback_reader_module : entity concept.feedback_reader
             generic map(
-                DATA_SIZE      => DAC_VOLTAGE_SIZE,
-                READ_ADDR_SIZE => FB_RAM_ADDR_WIDTH
+                DATA_SIZE       => DAC_VOLTAGE_SIZE,
+                MAX_NUM_ROWS    => MAX_ROWS,
+                READ_ADDR_SIZE  => FB_RAM_ADDR_WIDTH
             )
             port map(
                 clk             => sys_clk_5,
@@ -719,10 +753,10 @@ begin
 
                 new_row         => new_row,
                 row_num         => row_num,
-                num_rows        => unsigned(num_rows(0)),
+                num_rows        => unsigned(num_rows(0)(bits_req(MAX_ROWS) - 1 downto 0)),
 
                 read_address    => read_address(i),
-                read_data       => read_data(i),
+                read_data       => read_data(i)(DAC_VOLTAGE_SIZE - 1 downto 0),
 
                 sa_fb_data      => sa_fb_data(i)
             );
@@ -763,6 +797,10 @@ begin
 
 
     TES_bias_setter_module : entity concept.TES_bias_setter
+        generic map(
+            NUM_DACS    => PARAM_ID_TO_SIZE(to_integer(BIAS_ID)),
+            DAC_DLY     => MAX_DAC_DLY 
+        )
         port map(
             clk                     => sys_clk_5,
             rst                     => sys_rst,
@@ -774,6 +812,13 @@ begin
         );
 
     TES_bias_DAC_gate_controller : entity concept.DAC_gate_controller
+        generic map(
+            SCLK_TOTAL_PULSES   => DAC_VOLTAGE_SIZE + DAC_ADDR_SIZE,
+            SCLK_HALF_PERIOD    => DAC_SCLK_HALF_PERIOD,
+            LDAC_SETUP          => DAC_LDAC_SETUP,
+            LDAC_WIDTH          => DAC_LDAC_WIDTH,
+            LDAC_HOLD           => DAC_LDAC_HOLD
+        )
         port map(
             clk                 => sys_clk_100,
             rst                 => sys_rst,
@@ -806,10 +851,10 @@ begin
 
             -- Param buffers
             ret_data_setup          => ret_data_s,
-            data_rate               => unsigned(data_rate(0)),
-            num_rows                => unsigned(num_rows(0)),
-            num_cols                => unsigned(num_cols(0)),
-            row_len                 => unsigned(row_len(0)),
+            data_rate               => unsigned(data_rate(0)(bits_req(MAX_DATA_RATE) - 1 downto 0)),
+            num_rows                => unsigned(num_rows(0)(bits_req(MAX_ROWS) - 1 downto 0)),
+            num_cols                => unsigned(num_cols(0)(bits_req(MAX_CHANNELS) - 1 downto 0)),
+            row_len                 => unsigned(row_len(0)(bits_req(MAX_ROW_LEN) - 1 downto 0)),
 
             -- Interface with cmd handler
             acquisition_on          => acquisition_on,
