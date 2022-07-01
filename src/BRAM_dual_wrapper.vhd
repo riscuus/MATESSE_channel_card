@@ -36,11 +36,11 @@ use concept.utils.all;
 entity BRAM_dual_wrapper is
     -- Not all generic combinations are possible, look at the table in Xilinx HDL Libraries Guide
     generic(
-        DATA_WIDTH : natural;   -- (32)  1 <-> 72
-        BRAM_SIZE : string;     -- ("18Kb")  "18Kb" or "36Kb"
-        READ_DEPTH : natural;   -- (512)  512, 1024, 2048, 4096, 8192, 16384, 32768
-        ADDR_WIDTH : natural;   -- (9)  9 <-> 15
-        WE_WIDTH : natural      -- (4)  1, 2, 4, 8
+        DATA_WIDTH  : natural;   -- (32)  1 <-> 72
+        BRAM_SIZE   : string;    -- ("18Kb")  "18Kb" or "36Kb"
+        READ_DEPTH  : natural;   -- (512)  512, 1024, 2048, 4096, 8192, 16384, 32768
+        ADDR_WIDTH  : natural;   -- (9)  9 <-> 15
+        WE_WIDTH    : natural    -- (4)  1, 2, 4, 8
     );
     port(
         clk                     : in std_logic; -- 5MHz clock                                                                           
