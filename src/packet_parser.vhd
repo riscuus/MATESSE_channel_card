@@ -133,7 +133,7 @@ architecture behave of packet_parser is
     signal payload_state : payload_stateType;
 
     signal parse_payload        : std_logic := '0';
-    signal payload_word_count   : unsigned(bits_req(MAX_PAYLOAD/8) - 1 downto 0) := (others => '0');
+    signal payload_word_count   : unsigned(bits_req(MAX_PAYLOAD) - 1 downto 0) := (others => '0');
     signal payload_received     : std_logic := '0';
     signal packet_payload_reg   : t_packet_payload := (others => (others => '0')); -- Reg used to set default values
 
@@ -160,7 +160,7 @@ architecture behave of packet_parser is
 
     signal word_buffer      : t_word := (others => '0');
     signal received_word    : t_word := (others => '0');
-    signal byte_counter     : natural := 0;
+    signal byte_counter     : unsigned(bits_req(t_word'length/8) - 1 downto 0) := (others => '0');
     signal word_available   : std_logic := '0';
 
     -- Debug parameters
@@ -890,7 +890,7 @@ begin
             when init =>
                 word_buffer     <= (others => '0');
                 received_word   <= (others => '0');
-                byte_counter    <= 0;
+                byte_counter    <= (others => '0');
                 word_available  <= '0';
 
                 word_state <= wait_new_data;
@@ -905,9 +905,9 @@ begin
                 end if;
 
             when save_byte =>
-                word_buffer( (8 * (byte_counter + 1) - 1) downto (8 * byte_counter)) <= byte_buffer;
-                if (byte_counter = 3) then
-                    byte_counter <= 0;
+                word_buffer( (8 * (to_integer(byte_counter) + 1) - 1) downto (8 * to_integer(byte_counter))) <= byte_buffer;
+                if (byte_counter = t_word'length / 8 - 1) then
+                    byte_counter <= (others => '0');
                     word_state <= store_word;
                 else
                     byte_counter <= byte_counter + 1;

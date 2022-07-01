@@ -41,12 +41,12 @@ entity packet_sender is
         reply_param_id              : in unsigned(PARAM_ID_WIDTH - 1 downto 0); -- The param id
         reply_cmd_type              : in t_packet_type; -- The cmd type
         reply_err_ok                : in std_logic; -- If err = 1 else 0
-        reply_payload_size          : in unsigned(MAX_REPLY_PAYLOAD_SIZE - 1 downto 0); -- The size of the payload (in # of words)
+        reply_payload_size          : in unsigned(bits_req(MAX_REPLY_PAYLOAD_SIZE) - 1 downto 0); -- The size of the payload (in # of words)
         reply_payload               : in t_packet_payload; -- The reply packet payload data
 
         -- Interface with frame builder
         send_data_frame_pulse       : in std_logic; -- Pulse to send a new data packet
-        data_frame_payload_size     : in unsigned(MAX_PAYLOAD_SIZE - 1 downto 0); -- The size of the data packet payload (in # of words)
+        data_frame_payload_size     : in unsigned(bits_req(MAX_PAYLOAD_SIZE) - 1 downto 0); -- The size of the data packet payload (in # of words)
         data_frame_payload          : in t_packet_payload; -- The payload of the data packet
 
         -- Interface with packet builder
@@ -56,7 +56,7 @@ entity packet_sender is
         param_id                    : out t_half_word; -- Used in reply packets
         cmd_type                    : out t_packet_type; -- Used in reply packets
         err_ok                      : out std_logic; -- Used in reply packets
-        payload_size                : out unsigned(MAX_PAYLOAD_SIZE - 1 downto 0); -- Size of the payload data (n in MCE)
+        payload_size                : out unsigned(bits_req(MAX_PAYLOAD_SIZE) - 1 downto 0); -- Size of the payload data (n in MCE)
         packet_payload              : out t_packet_payload; -- The payload of the packet
         params_valid                : out std_logic; -- Indicates that the output data is already valid and that the packet can be sent
 

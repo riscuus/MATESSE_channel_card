@@ -29,7 +29,7 @@ use concept.utils.all;
 entity param_buffer is
     generic(
         PARAM_SIZE          : natural; -- Number of words that the param value occupies
-        PARAM_ID            : unsigned(bits_req(MAX_PARAM_IDS) - 1 downto 0)  -- The id of this parameter
+        PARAM_ID            : unsigned(bits_req(MAX_PARAM_IDS - 1) - 1 downto 0)  -- The id of this parameter
     );
     port(
         clk                 : in std_logic; -- 5mhz clock
