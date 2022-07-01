@@ -34,8 +34,8 @@ entity channels_controller is
         rst                     : in std_logic; -- asynchronous reset
 
         data_mode               : in std_logic_vector(bits_req(NUM_DATA_MODES) - 1 downto 0); -- Param that indicates which type of data should we insert in the data frames
-        servo_mode              : in t_param_array(0 to PARAM_ID_TO_SIZE(SERVO_MODE_ID) - 1); -- Param that indicates if the PID loop is active or we just ramp or set constant values for the lines
-        fb_dly                  : in natural; -- Param that indicates how many 5 MHz cycles do we have to wait to set the fb (activate DAC)
+        servo_mode              : in t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SERVO_MODE_ID)) - 1); -- Param that indicates if the PID loop is active or we just ramp or set constant values for the lines
+        fb_dly                  : in unsigned(bits_req(MAX_FB_DLY) - 1 downto 0); -- Param that indicates how many 5 MHz cycles do we have to wait to set the fb (activate DAC)
 
         new_row                 : in std_logic; -- Signal that indicates that a new row has started
         acquisition_on          : in std_logic; -- Signal that indicates that the acquisition is active
@@ -70,9 +70,9 @@ architecture behave of channels_controller is
     constant LINE_SEL_FB    : unsigned(LINE_SEL_SIZE - 1 downto 0) := to_unsigned(5, LINE_SEL_SIZE);
 
     type stateType is (idle, wait_new_row, wait_fb_dly, set_DAC_voltage);
-    signal state : stateType;
+    signal state : stateType := idle;
 
-    signal dly_counter : natural := 0;
+    signal dly_counter : unsigned(fb_dly'range) := (others => '0');
 
 begin
 
@@ -87,6 +87,7 @@ begin
     if (rst = '1') then
         DAC_address <= (others => '0');
         line_sel <= (others => to_unsigned(0, LINE_SEL_SIZE));
+        dly_counter <= (others => '0');
         state <= idle;
 
     elsif (rising_edge(clk)) then
@@ -142,7 +143,7 @@ begin
                     if (new_row = '1') then
                         if (dly_counter = fb_dly) then
                             DAC_start_pulse <= '1';
-                            dly_counter <= 0;
+                            dly_counter <= (others => '0');
                             state <= set_DAC_voltage;
                         else
                             dly_counter <= dly_counter + 1;
@@ -158,7 +159,7 @@ begin
             when wait_fb_dly =>
                 if (dly_counter = fb_dly) then
                     DAC_start_pulse <= '1';
-                    dly_counter <= 0;
+                    dly_counter <= (others => '0');
                     state <= set_DAC_voltage;
                 else 
                     dly_counter <= dly_counter + 1;

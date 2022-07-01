@@ -26,14 +26,20 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library concept;
+use concept.utils.all;
+
 entity ADC_gate_controller is
+    generic(
+        NUM_OF_SCK_CYCLES : positive
+    );
     port(
         clk             : in std_logic; -- 100MHz clock
         rst             : in std_logic; -- Async reset
 
-        cnv_len         : in positive;
-        sck_dly         : in positive;
-        sck_half_period : in positive;
+        cnv_len         : in unsigned(ADC_PARAMS_WIDTH - 1 downto 0);
+        sck_dly         : in unsigned(ADC_PARAMS_WIDTH - 1 downto 0);
+        sck_half_period : in unsigned(ADC_PARAMS_WIDTH - 1 downto 0);
 
         start_pulse     : in std_logic; -- Input pulse that indicates that a new conversion must start
 
@@ -45,12 +51,11 @@ end ADC_gate_controller;
 
 architecture behave OF ADC_gate_controller is
 
-    constant NUM_OF_SCK_CYCLES : positive := 8;
 
-    signal CNV_counter : natural := 0;
-    signal wait_SCK_counter : natural := 0;
-    signal SCK_counter : natural := 0;
-    signal SCK_cycles_counter : natural := 0;
+    signal CNV_counter : unsigned(cnv_len'range)            := (others => '0');
+    signal wait_SCK_counter : unsigned(sck_dly'range)       := (others => '0');
+    signal SCK_counter : unsigned(sck_half_period'range)    := (others => '0');
+    signal SCK_cycles_counter : unsigned(bits_req(NUM_OF_SCK_CYCLES - 1) - 1 downto 0) := (others => '0');
 
     type StateType is (init, wait_start_pulse, CNV_active, wait_serial_clk, SCK_active, SCK_non_active);
     signal state : StateType;
@@ -68,10 +73,10 @@ begin
         elsif (rising_edge(clk)) then
             case state is
                 when init =>
-                    CNV_counter <= 0;
-                    wait_SCK_counter <= 0;
-                    SCK_counter <= 0;
-                    SCK_cycles_counter <= 0;
+                    CNV_counter         <= (others => '0');
+                    wait_SCK_counter    <= (others => '0');
+                    SCK_counter         <= (others => '0');
+                    SCK_cycles_counter  <= (others => '0');
                     CNV <= '0';
                     SCK <= '0';
 
@@ -86,7 +91,7 @@ begin
                 when CNV_active =>
                     if(CNV_counter = cnv_len - 1) then
                         CNV <= '0';
-                        CNV_counter <= 0;
+                        CNV_counter <= (others => '0');
                         state <= wait_serial_clk;
                     else
                         CNV_counter <= CNV_counter + 1;
@@ -95,7 +100,7 @@ begin
                 when wait_serial_clk =>
                     if(wait_SCK_counter = sck_dly - 1) then
                         SCK <= '1';
-                        wait_SCK_counter <= 0;
+                        wait_SCK_counter <= (others => '0');
                         state <= SCK_active;
                     else
                         wait_SCK_counter <= wait_SCK_counter + 1;
@@ -103,7 +108,7 @@ begin
                     end if;
                 when SCK_active => 
                     if(SCK_counter = sck_half_period - 1) then 
-                        SCK_counter <= 0;
+                        SCK_counter <= (others => '0');
                         SCK <= '0';
                         state <= SCK_non_active;
                     else 
@@ -112,9 +117,9 @@ begin
                     end if;
                 when SCK_non_active =>
                     if(SCK_counter = sck_half_period - 1) then
-                        SCK_counter <= 0;
+                        SCK_counter <= (others => '0');
                         if(SCK_cycles_counter = NUM_OF_SCK_CYCLES - 1) then
-                            SCK_cycles_counter <= 0;
+                            SCK_cycles_counter <= (others => '0');
                             if (start_pulse = '1') then
                                 CNV <= '1';
                                 state <= CNV_active;

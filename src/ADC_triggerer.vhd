@@ -30,7 +30,7 @@ use concept.utils.all;
 
 entity ADC_triggerer is
     generic(
-        trigg_clk_cycles        : natural := 20 -- The ADC is triggered every "trigg_clk_cycles". 20 for 5MHz
+        TRIGG_CLK_CYCLES        : natural := 20 -- The ADC is triggered every "trigg_clk_cycles". 20 for 5MHz
     );
     port(
         clk                     : in std_logic; -- 100mhz clock
@@ -44,23 +44,23 @@ end ADC_triggerer;
 
 architecture behave of ADC_triggerer is
 
-    signal clk_counter  : natural := 0;
+    signal clk_counter  : unsigned(bits_req(TRIGG_CLK_CYCLES - 1) - 1 downto 0) := (others => '0');
 
 begin
 
 start_pulse_gen : process(clk, rst)
 begin
     if (rst = '1') then
-        clk_counter <= 0;
+        clk_counter <= (others => '0');
     elsif (rising_edge(clk)) then
         if (frame_active = '1') then
-            if (clk_counter = trigg_clk_cycles - 1) then
-                clk_counter <= 0;
+            if (clk_counter = TRIGG_CLK_CYCLES - 1) then
+                clk_counter <= (others => '0');
             else
                 clk_counter <= clk_counter + 1;
             end if;
         else
-            clk_counter <= 0;
+            clk_counter <= (others => '0');
         end if;
     end if;
 end process;

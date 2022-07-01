@@ -32,7 +32,7 @@ entity feedback_calculator is
         rst                 : in std_logic; -- asynchronous reset
 
         acc_sample          : in t_channel_record; -- Contains the acc sample from the sample_accumulator, a signal indicating if its valid and the row it belongs to
-        sa_fb_gain          : in integer; -- The gain to be applied to the acc sample
+        sa_fb_gain          : in signed(WORD_WIDTH - 1 downto 0); -- The gain to be applied to the acc sample
         fb_sample           : out t_channel_record -- Contains the fb value, signal indicating if it is valid and the row
                                                 -- The value is simply the acc value * gain
                                                 -- The valid signal is also use to enable the ram write
@@ -46,18 +46,16 @@ architecture behave of feedback_calculator is
     signal state : stateType;
 
     -- Internal register to store the acc sample as integer
-    signal acc_sample_int : integer := 0;
+    signal calc_value : signed(WORD_WIDTH - 1 downto 0) := (others => '0');
 
 begin
-
-acc_sample_int <= to_integer(signed(acc_sample.value));
 
 main_logic : process(clk, rst)
 begin
     if (rst = '1') then
 
         fb_sample.valid <= '0';
-        fb_sample.row_num <= 0;
+        fb_sample.row_num <= (others => '0');
         fb_sample.value <= (others => '0');
 
         state <= idle;
@@ -67,7 +65,7 @@ begin
                 fb_sample.valid <= '0';
 
                 if(acc_sample.valid = '1') then
-                    fb_sample.value <= std_logic_vector(to_signed(acc_sample_int * sa_fb_gain, fb_sample.value'length)); 
+                    fb_sample.value <= calc_value;
                     fb_sample.row_num <= acc_sample.row_num;
                     fb_sample.valid <= '1';
 
@@ -82,7 +80,8 @@ begin
                 state <= idle;
         end case;
     end if;
-
 end process;
+
+calc_value <= to_signed(to_integer(acc_sample.value) * to_integer(sa_fb_gain), calc_value'length);
 
 end behave;
