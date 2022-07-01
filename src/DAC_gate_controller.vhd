@@ -26,11 +26,11 @@ use concept.utils.all;
 
 entity DAC_gate_controller is
     generic(
-        SCLK_TOTAL_PULSES   : positive := DAC_DATA_SIZE + DAC_ADDR_SIZE; -- The total number of serial clock pulses
-        SCLK_HALF_PERIOD    : positive := 3; -- The half period of the serial clock. In clk cycles
-        LDAC_SETUP          : positive := 1; -- The setup time for the LDAC signal in clk cycles
-        LDAC_WIDTH          : positive := 3; -- The number of clk cycles that the LDAC must remain active
-        LDAC_HOLD           : positive := 3 -- The time that LDAC must remain deactivated until a new cycle can start
+        SCLK_TOTAL_PULSES   : positive; -- The total number of serial clock pulses
+        SCLK_HALF_PERIOD    : positive; -- The half period of the serial clock. In clk cycles
+        LDAC_SETUP          : positive; -- The setup time for the LDAC signal in clk cycles
+        LDAC_WIDTH          : positive; -- The number of clk cycles that the LDAC must remain active
+        LDAC_HOLD           : positive  -- The time that LDAC must remain deactivated until a new cycle can start
     );
     port(
         clk                     : in std_logic; -- 100MHz clk
