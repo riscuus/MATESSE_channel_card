@@ -112,6 +112,7 @@ architecture behave of command_handler is
 
 begin
 
+    param_id_to_update <= resize(unsigned(param_id_reg), param_id_to_update'length); 
     -- Param data
 
     main_state_process : process(clk, rst)
@@ -124,7 +125,6 @@ begin
             reply_payload_size  <= (others => '0');
             param_data          <= (others => (others =>'0'));
             update_param_pulse  <= '0';
-            param_id_to_update  <= (others => '0');
             set_SF              <= '0';
             set_SB              <= '0';
             set_FF              <= '0';
@@ -153,7 +153,6 @@ begin
                     -- Outputs
                     reply_err_ok            <= '0';
                     reply_payload_size      <= (others => '0');
-                    param_id_to_update      <= (others => '0');
                     set_SF                  <= '0';
                     set_SB                  <= '0';
                     set_FF                  <= '0';
@@ -195,7 +194,7 @@ begin
                 -- Type
                 when check_type =>
                     if (acquisition_on_reg = '1') then
-                        if ( packet_type_reg = cmd_st and to_integer(unsigned(param_id_reg)) = RET_DATA_ID) then -- Stop acquisition
+                        if (packet_type_reg = cmd_st and to_integer(unsigned(param_id_reg)) = RET_DATA_ID) then -- Stop acquisition
                             stop_received <= '1';
                             state <= stop_acquisition;
                         else -- While in acquisition ignore all packets that are not stop
@@ -223,7 +222,6 @@ begin
                 when check_param_id =>
                     if (correct_param_id = '1') then
                         ram_address_reg <= resize(unsigned(param_id_reg), ram_address_reg'length); 
-                        param_id_to_update <= resize(unsigned(param_id_reg), param_id_to_update'length); 
                         param_id_size <= to_unsigned(PARAM_ID_TO_SIZE(to_integer(unsigned(param_id_reg(7 downto 0)))), param_id_size'length);
                         
                         if (packet_type_reg = cmd_rb) then -- We either read the param or write it
