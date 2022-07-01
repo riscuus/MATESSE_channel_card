@@ -5,19 +5,18 @@
    <db_ref_list>
       <db_ref path="tb_integration_behav.wdb" id="1">
          <top_modules>
-            <top_module name="conv_utility" />
             <top_module name="tb_integration" />
             <top_module name="utils" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="32124800000000fs"></ZoomStartTime>
-      <ZoomEndTime time="35214800000001fs"></ZoomEndTime>
-      <Cursor1Time time="33016800000000fs"></Cursor1Time>
+      <ZoomStartTime time="1559966667000fs"></ZoomStartTime>
+      <ZoomEndTime time="25779966667001fs"></ZoomEndTime>
+      <Cursor1Time time="9759966667000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="225"></NameColumnWidth>
+      <NameColumnWidth column_width="197"></NameColumnWidth>
       <ValueColumnWidth column_width="58"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="20" />
@@ -53,9 +52,9 @@
             <obj_property name="ElementShortName">PC_param_id[15:0]</obj_property>
             <obj_property name="ObjectShortName">PC_param_id[15:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/PC_payload_size" type="other">
-            <obj_property name="ElementShortName">PC_payload_size</obj_property>
-            <obj_property name="ObjectShortName">PC_payload_size</obj_property>
+         <wvobject fp_name="/tb_integration/PC_payload_size" type="array">
+            <obj_property name="ElementShortName">PC_payload_size[6:0]</obj_property>
+            <obj_property name="ObjectShortName">PC_payload_size[6:0]</obj_property>
          </wvobject>
          <wvobject fp_name="/tb_integration/PC_packet_payload" type="array">
             <obj_property name="ElementShortName">PC_packet_payload[0:66][31:0]</obj_property>
@@ -78,9 +77,9 @@
          <obj_property name="ElementShortName">payload_state</obj_property>
          <obj_property name="ObjectShortName">payload_state</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/PC_builder_module/payload_word_counter" type="other">
-         <obj_property name="ElementShortName">payload_word_counter</obj_property>
-         <obj_property name="ObjectShortName">payload_word_counter</obj_property>
+      <wvobject fp_name="/tb_integration/PC_builder_module/payload_word_counter" type="array">
+         <obj_property name="ElementShortName">payload_word_counter[6:0]</obj_property>
+         <obj_property name="ObjectShortName">payload_word_counter[6:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_integration/PC_send_byte" type="logic">
          <obj_property name="ElementShortName">PC_send_byte</obj_property>
@@ -99,6 +98,42 @@
          <obj_property name="ObjectShortName">PC_params_valid</obj_property>
       </wvobject>
    </wvobject>
+   <wvobject fp_name="group2610" type="group">
+      <obj_property name="label">PC parser</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_integration/PC_packet_parser/packet_type" type="other">
+         <obj_property name="ElementShortName">packet_type</obj_property>
+         <obj_property name="ObjectShortName">packet_type</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/PC_packet_parser/card_id" type="array">
+         <obj_property name="ElementShortName">card_id[15:0]</obj_property>
+         <obj_property name="ObjectShortName">card_id[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/PC_packet_parser/param_id" type="array">
+         <obj_property name="ElementShortName">param_id[15:0]</obj_property>
+         <obj_property name="ObjectShortName">param_id[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/PC_packet_parser/cmd_type" type="other">
+         <obj_property name="ElementShortName">cmd_type</obj_property>
+         <obj_property name="ObjectShortName">cmd_type</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/PC_packet_parser/err_ok" type="logic">
+         <obj_property name="ElementShortName">err_ok</obj_property>
+         <obj_property name="ObjectShortName">err_ok</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/PC_packet_parser/payload_size" type="array">
+         <obj_property name="ElementShortName">payload_size[6:0]</obj_property>
+         <obj_property name="ObjectShortName">payload_size[6:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload" type="array">
+         <obj_property name="ElementShortName">packet_payload[0:66][31:0]</obj_property>
+         <obj_property name="ObjectShortName">packet_payload[0:66][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/PC_packet_parser/params_valid" type="logic">
+         <obj_property name="ElementShortName">params_valid</obj_property>
+         <obj_property name="ObjectShortName">params_valid</obj_property>
+      </wvobject>
+   </wvobject>
    <wvobject fp_name="group1134" type="group">
       <obj_property name="label">PC_uart_module</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -106,122 +141,57 @@
          <obj_property name="ElementShortName">PC_tx_busy</obj_property>
          <obj_property name="ObjectShortName">PC_tx_busy</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/rx_uart_serial" type="logic">
-         <obj_property name="ElementShortName">rx_uart_serial</obj_property>
-         <obj_property name="ObjectShortName">rx_uart_serial</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject fp_name="group1138" type="group">
       <obj_property name="label">FPGA_uart_module</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject fp_name="/tb_integration/rx_busy" type="logic">
+      <wvobject fp_name="/tb_integration/main_module/rx_busy" type="logic">
          <obj_property name="ElementShortName">rx_busy</obj_property>
          <obj_property name="ObjectShortName">rx_busy</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/rx_byte_data" type="array">
-         <obj_property name="ElementShortName">rx_byte_data[7:0]</obj_property>
-         <obj_property name="ObjectShortName">rx_byte_data[7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/tx_busy" type="logic">
-         <obj_property name="ElementShortName">tx_busy</obj_property>
-         <obj_property name="ObjectShortName">tx_busy</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/tx_send_byte" type="logic">
-         <obj_property name="ElementShortName">tx_send_byte</obj_property>
-         <obj_property name="ObjectShortName">tx_send_byte</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/tx_byte_data" type="array">
-         <obj_property name="ElementShortName">tx_byte_data[7:0]</obj_property>
-         <obj_property name="ObjectShortName">tx_byte_data[7:0]</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject fp_name="group1144" type="group">
-      <obj_property name="label">packet_parser</obj_property>
+      <obj_property name="label">FPGA_packet_parser</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject fp_name="/tb_integration/packet_parser/packet_parser_state" type="other">
-         <obj_property name="ElementShortName">packet_parser_state</obj_property>
-         <obj_property name="ObjectShortName">packet_parser_state</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_parser/cmd_state" type="other">
-         <obj_property name="ElementShortName">cmd_state</obj_property>
-         <obj_property name="ObjectShortName">cmd_state</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_parser/reply_state" type="other">
-         <obj_property name="ElementShortName">reply_state</obj_property>
-         <obj_property name="ObjectShortName">reply_state</obj_property>
-      </wvobject>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="group1177" type="group">
          <obj_property name="label">size</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/packet_parser/bad_size" type="logic">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/main_module/packet_parser/good_size" type="logic">
+            <obj_property name="ElementShortName">good_size</obj_property>
+            <obj_property name="ObjectShortName">good_size</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/packet_parser/bad_size" type="logic">
             <obj_property name="ElementShortName">bad_size</obj_property>
             <obj_property name="ObjectShortName">bad_size</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_parser/good_size" type="logic">
-            <obj_property name="ElementShortName">good_size</obj_property>
-            <obj_property name="ObjectShortName">good_size</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/packet_parser/parse_size" type="logic">
+            <obj_property name="ElementShortName">parse_size</obj_property>
+            <obj_property name="ObjectShortName">parse_size</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1176" type="group">
          <obj_property name="label">checksum</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/packet_parser/checksum_state" type="other">
-            <obj_property name="ElementShortName">checksum_state</obj_property>
-            <obj_property name="ObjectShortName">checksum_state</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/packet_parser/calculated_checksum" type="array">
-            <obj_property name="ElementShortName">calculated_checksum[31:0]</obj_property>
-            <obj_property name="ObjectShortName">calculated_checksum[31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/packet_parser/good_checksum" type="logic">
-            <obj_property name="ElementShortName">good_checksum</obj_property>
-            <obj_property name="ObjectShortName">good_checksum</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/packet_parser/bad_checksum" type="logic">
-            <obj_property name="ElementShortName">bad_checksum</obj_property>
-            <obj_property name="ObjectShortName">bad_checksum</obj_property>
-         </wvobject>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_parser/received_word" type="array">
-         <obj_property name="ElementShortName">received_word[31:0]</obj_property>
-         <obj_property name="ObjectShortName">received_word[31:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
       </wvobject>
       <wvobject fp_name="group1178" type="group">
          <obj_property name="label">decoded_packet</obj_property>
          <obj_property name="DisplayName">label</obj_property>
          <obj_property name="isExpanded"></obj_property>
-         <wvobject fp_name="/tb_integration/parser_packet_type" type="other">
-            <obj_property name="ElementShortName">parser_packet_type</obj_property>
-            <obj_property name="ObjectShortName">parser_packet_type</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/parser_cmd_type" type="other">
-            <obj_property name="ElementShortName">parser_cmd_type</obj_property>
-            <obj_property name="ObjectShortName">parser_cmd_type</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/parser_err_ok" type="logic">
-            <obj_property name="ElementShortName">parser_err_ok</obj_property>
-            <obj_property name="ObjectShortName">parser_err_ok</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/parser_card_id" type="array">
-            <obj_property name="ElementShortName">parser_card_id[15:0]</obj_property>
-            <obj_property name="ObjectShortName">parser_card_id[15:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/parser_param_id" type="array">
-            <obj_property name="ElementShortName">parser_param_id[15:0]</obj_property>
-            <obj_property name="ObjectShortName">parser_param_id[15:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/parser_payload_size" type="other">
-            <obj_property name="ElementShortName">parser_payload_size</obj_property>
-            <obj_property name="ObjectShortName">parser_payload_size</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/parser_packet_payload" type="array">
-            <obj_property name="ElementShortName">parser_packet_payload[0:66][31:0]</obj_property>
-            <obj_property name="ObjectShortName">parser_packet_payload[0:66][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/parser_params_valid" type="logic">
-            <obj_property name="ElementShortName">parser_params_valid</obj_property>
-            <obj_property name="ObjectShortName">parser_params_valid</obj_property>
-         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group1044" type="group">
+         <obj_property name="label">states</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+      </wvobject>
+      <wvobject fp_name="group1064" type="group">
+         <obj_property name="label">payload</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/parser_params_valid" type="logic">
+         <obj_property name="ElementShortName">parser_params_valid</obj_property>
+         <obj_property name="ObjectShortName">parser_params_valid</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group1195" type="group">
@@ -231,27 +201,23 @@
       <wvobject fp_name="group1216" type="group">
          <obj_property name="label">packet_fields</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/command_handler_module/params_valid" type="logic">
-            <obj_property name="ElementShortName">params_valid</obj_property>
-            <obj_property name="ObjectShortName">params_valid</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/packet_type_reg" type="other">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/packet_type_reg" type="other">
             <obj_property name="ElementShortName">packet_type_reg</obj_property>
             <obj_property name="ObjectShortName">packet_type_reg</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/card_id_reg" type="array">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/card_id_reg" type="array">
             <obj_property name="ElementShortName">card_id_reg[15:0]</obj_property>
             <obj_property name="ObjectShortName">card_id_reg[15:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/param_id_reg" type="array">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/param_id_reg" type="array">
             <obj_property name="ElementShortName">param_id_reg[15:0]</obj_property>
             <obj_property name="ObjectShortName">param_id_reg[15:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/payload_size_reg" type="other">
-            <obj_property name="ElementShortName">payload_size_reg</obj_property>
-            <obj_property name="ObjectShortName">payload_size_reg</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/payload_size_reg" type="array">
+            <obj_property name="ElementShortName">payload_size_reg[6:0]</obj_property>
+            <obj_property name="ObjectShortName">payload_size_reg[6:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/packet_payload_reg" type="array">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/packet_payload_reg" type="array">
             <obj_property name="ElementShortName">packet_payload_reg[0:66][31:0]</obj_property>
             <obj_property name="ObjectShortName">packet_payload_reg[0:66][31:0]</obj_property>
          </wvobject>
@@ -259,212 +225,152 @@
       <wvobject fp_name="group1227" type="group">
          <obj_property name="label">ram_interface</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/command_handler_module/ram_write_data" type="array">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/ram_read_data" type="array">
+            <obj_property name="ElementShortName">ram_read_data[31:0]</obj_property>
+            <obj_property name="ObjectShortName">ram_read_data[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/ram_write_data" type="array">
             <obj_property name="ElementShortName">ram_write_data[31:0]</obj_property>
             <obj_property name="ObjectShortName">ram_write_data[31:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/ram_address" type="other">
-            <obj_property name="ElementShortName">ram_address</obj_property>
-            <obj_property name="ObjectShortName">ram_address</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/ram_address" type="array">
+            <obj_property name="ElementShortName">ram_address[8:0]</obj_property>
+            <obj_property name="ObjectShortName">ram_address[8:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/ram_write" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/ram_write" type="logic">
             <obj_property name="ElementShortName">ram_write</obj_property>
             <obj_property name="ObjectShortName">ram_write</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/ram_read_data" type="array">
-            <obj_property name="ElementShortName">ram_read_data[31:0]</obj_property>
-            <obj_property name="ObjectShortName">ram_read_data[31:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1298" type="group">
          <obj_property name="label">param_buffer_interface</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/command_handler_module/update_param_pulse" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/update_param_pulse" type="logic">
             <obj_property name="ElementShortName">update_param_pulse</obj_property>
             <obj_property name="ObjectShortName">update_param_pulse</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/param_id_to_update" type="other">
-            <obj_property name="ElementShortName">param_id_to_update</obj_property>
-            <obj_property name="ObjectShortName">param_id_to_update</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/param_data" type="array">
-            <obj_property name="ElementShortName">param_data[0:66][31:0]</obj_property>
-            <obj_property name="ObjectShortName">param_data[0:66][31:0]</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/param_id_to_update" type="array">
+            <obj_property name="ElementShortName">param_id_to_update[7:0]</obj_property>
+            <obj_property name="ObjectShortName">param_id_to_update[7:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1438" type="group">
          <obj_property name="label">registers</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/command_handler_module/acquisition_configured" type="logic">
-            <obj_property name="ElementShortName">acquisition_configured</obj_property>
-            <obj_property name="ObjectShortName">acquisition_configured</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/reply_err_word" type="array">
-            <obj_property name="ElementShortName">reply_err_word[31:0]</obj_property>
-            <obj_property name="ObjectShortName">reply_err_word[31:0]</obj_property>
-            <obj_property name="Radix">BINARYRADIX</obj_property>
-         </wvobject>
       </wvobject>
       <wvobject fp_name="group1219" type="group">
          <obj_property name="label">outputs_pulses</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
-         <wvobject fp_name="/tb_integration/command_handler_module/acquisition_on" type="logic">
-            <obj_property name="ElementShortName">acquisition_on</obj_property>
-            <obj_property name="ObjectShortName">acquisition_on</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/set_SF" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/set_SF" type="logic">
             <obj_property name="ElementShortName">set_SF</obj_property>
             <obj_property name="ObjectShortName">set_SF</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/set_SB" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/set_SB" type="logic">
             <obj_property name="ElementShortName">set_SB</obj_property>
             <obj_property name="ObjectShortName">set_SB</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/set_FF" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/set_FF" type="logic">
             <obj_property name="ElementShortName">set_FF</obj_property>
             <obj_property name="ObjectShortName">set_FF</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/set_FB" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/set_FB" type="logic">
             <obj_property name="ElementShortName">set_FB</obj_property>
             <obj_property name="ObjectShortName">set_FB</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/set_TES_bias" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/set_TES_bias" type="logic">
             <obj_property name="ElementShortName">set_TES_bias</obj_property>
             <obj_property name="ObjectShortName">set_TES_bias</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/update_off_value" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/update_off_value" type="logic">
             <obj_property name="ElementShortName">update_off_value</obj_property>
             <obj_property name="ObjectShortName">update_off_value</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/stop_received" type="logic">
-            <obj_property name="ElementShortName">stop_received</obj_property>
-            <obj_property name="ObjectShortName">stop_received</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1402" type="group">
          <obj_property name="label">reply_outputs</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/command_handler_module/reply_cmd_type" type="other">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/send_reply_pulse" type="logic">
+            <obj_property name="ElementShortName">send_reply_pulse</obj_property>
+            <obj_property name="ObjectShortName">send_reply_pulse</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/param_id_to_update" type="array">
+            <obj_property name="ElementShortName">param_id_to_update[7:0]</obj_property>
+            <obj_property name="ObjectShortName">param_id_to_update[7:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/reply_cmd_type" type="other">
             <obj_property name="ElementShortName">reply_cmd_type</obj_property>
             <obj_property name="ObjectShortName">reply_cmd_type</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/reply_err_ok" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/reply_err_ok" type="logic">
             <obj_property name="ElementShortName">reply_err_ok</obj_property>
             <obj_property name="ObjectShortName">reply_err_ok</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/reply_payload_size" type="other">
-            <obj_property name="ElementShortName">reply_payload_size</obj_property>
-            <obj_property name="ObjectShortName">reply_payload_size</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/command_handler_module/param_data" type="array">
-            <obj_property name="ElementShortName">param_data[0:66][31:0]</obj_property>
-            <obj_property name="ObjectShortName">param_data[0:66][31:0]</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/command_handler_module/reply_payload_size" type="array">
+            <obj_property name="ElementShortName">reply_payload_size[5:0]</obj_property>
+            <obj_property name="ObjectShortName">reply_payload_size[5:0]</obj_property>
          </wvobject>
       </wvobject>
-      <wvobject fp_name="/tb_integration/command_handler_module/state" type="other">
+      <wvobject fp_name="/tb_integration/main_module/command_handler_module/acquisition_on" type="logic">
+         <obj_property name="ElementShortName">acquisition_on</obj_property>
+         <obj_property name="ObjectShortName">acquisition_on</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/command_handler_module/state" type="other">
          <obj_property name="ElementShortName">state</obj_property>
          <obj_property name="ObjectShortName">state</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/command_handler_module/send_reply_pulse" type="logic">
-         <obj_property name="ElementShortName">send_reply_pulse</obj_property>
-         <obj_property name="ObjectShortName">send_reply_pulse</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group1231" type="group">
       <obj_property name="label">packet_sender</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="group1238" type="group">
          <obj_property name="label">reply_fields</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/packet_sender_module/reply_param_id" type="other">
-            <obj_property name="ElementShortName">reply_param_id</obj_property>
-            <obj_property name="ObjectShortName">reply_param_id</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/packet_sender_module/reply_cmd_type" type="other">
-            <obj_property name="ElementShortName">reply_cmd_type</obj_property>
-            <obj_property name="ObjectShortName">reply_cmd_type</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/packet_sender_module/reply_err_ok" type="logic">
-            <obj_property name="ElementShortName">reply_err_ok</obj_property>
-            <obj_property name="ObjectShortName">reply_err_ok</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/packet_sender_module/reply_payload_size" type="other">
-            <obj_property name="ElementShortName">reply_payload_size</obj_property>
-            <obj_property name="ObjectShortName">reply_payload_size</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/packet_sender_module/reply_payload" type="array">
-            <obj_property name="ElementShortName">reply_payload[0:66][31:0]</obj_property>
-            <obj_property name="ObjectShortName">reply_payload[0:66][31:0]</obj_property>
-         </wvobject>
       </wvobject>
       <wvobject fp_name="group1239" type="group">
          <obj_property name="label">data_pkt_fields</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/packet_sender_module/data_frame_payload_size" type="other">
-            <obj_property name="ElementShortName">data_frame_payload_size</obj_property>
-            <obj_property name="ObjectShortName">data_frame_payload_size</obj_property>
-         </wvobject>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_sender_module/state" type="other">
-         <obj_property name="ElementShortName">state</obj_property>
-         <obj_property name="ObjectShortName">state</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_sender_module/ready" type="logic">
-         <obj_property name="ElementShortName">ready</obj_property>
-         <obj_property name="ObjectShortName">ready</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_sender_module/send_reply_pulse" type="logic">
-         <obj_property name="ElementShortName">send_reply_pulse</obj_property>
-         <obj_property name="ObjectShortName">send_reply_pulse</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_sender_module/send_data_frame_pulse" type="logic">
-         <obj_property name="ElementShortName">send_data_frame_pulse</obj_property>
-         <obj_property name="ObjectShortName">send_data_frame_pulse</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_sender_module/builder_ready" type="logic">
-         <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="ElementShortName">builder_ready</obj_property>
-         <obj_property name="ObjectShortName">builder_ready</obj_property>
-         <obj_property name="label">packet_builder_ready</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_sender_module/params_valid" type="logic">
-         <obj_property name="ElementShortName">params_valid</obj_property>
-         <obj_property name="ObjectShortName">params_valid</obj_property>
       </wvobject>
       <wvobject fp_name="group1394" type="group">
          <obj_property name="label">output_packet_fields</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
-         <wvobject fp_name="/tb_integration/packet_sender_module/packet_type" type="other">
+         <wvobject fp_name="/tb_integration/main_module/packet_sender_module/packet_type" type="other">
             <obj_property name="ElementShortName">packet_type</obj_property>
             <obj_property name="ObjectShortName">packet_type</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_sender_module/card_id" type="array">
+         <wvobject fp_name="/tb_integration/main_module/packet_sender_module/card_id" type="array">
             <obj_property name="ElementShortName">card_id[15:0]</obj_property>
             <obj_property name="ObjectShortName">card_id[15:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_sender_module/param_id" type="array">
+         <wvobject fp_name="/tb_integration/main_module/packet_sender_module/param_id" type="array">
             <obj_property name="ElementShortName">param_id[15:0]</obj_property>
             <obj_property name="ObjectShortName">param_id[15:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_sender_module/cmd_type" type="other">
+         <wvobject fp_name="/tb_integration/main_module/packet_sender_module/cmd_type" type="other">
             <obj_property name="ElementShortName">cmd_type</obj_property>
             <obj_property name="ObjectShortName">cmd_type</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_sender_module/err_ok" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/packet_sender_module/err_ok" type="logic">
             <obj_property name="ElementShortName">err_ok</obj_property>
             <obj_property name="ObjectShortName">err_ok</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_sender_module/payload_size" type="other">
-            <obj_property name="ElementShortName">payload_size</obj_property>
-            <obj_property name="ObjectShortName">payload_size</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/packet_sender_module/payload_size" type="array">
+            <obj_property name="ElementShortName">payload_size[6:0]</obj_property>
+            <obj_property name="ObjectShortName">payload_size[6:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_sender_module/packet_payload" type="array">
+         <wvobject fp_name="/tb_integration/main_module/packet_sender_module/packet_payload" type="array">
             <obj_property name="ElementShortName">packet_payload[0:66][31:0]</obj_property>
             <obj_property name="ObjectShortName">packet_payload[0:66][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/packet_sender_module/builder_ready" type="logic">
+         <obj_property name="ElementShortName">builder_ready</obj_property>
+         <obj_property name="ObjectShortName">builder_ready</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/packet_sender_module/params_valid" type="logic">
+         <obj_property name="ElementShortName">params_valid</obj_property>
+         <obj_property name="ObjectShortName">params_valid</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group1246" type="group">
@@ -473,242 +379,189 @@
       <wvobject fp_name="group2665" type="group">
          <obj_property name="label">packet_fields_reg</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/packet_builder_module/packet_type_reg" type="other">
-            <obj_property name="ElementShortName">packet_type_reg</obj_property>
-            <obj_property name="ObjectShortName">packet_type_reg</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/main_module/packet_builder_module/packet_type" type="other">
+            <obj_property name="ElementShortName">packet_type</obj_property>
+            <obj_property name="ObjectShortName">packet_type</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_builder_module/card_id_reg" type="array">
-            <obj_property name="ElementShortName">card_id_reg[15:0]</obj_property>
-            <obj_property name="ObjectShortName">card_id_reg[15:0]</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/packet_builder_module/card_id" type="array">
+            <obj_property name="ElementShortName">card_id[15:0]</obj_property>
+            <obj_property name="ObjectShortName">card_id[15:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_builder_module/param_id_reg" type="array">
-            <obj_property name="ElementShortName">param_id_reg[15:0]</obj_property>
-            <obj_property name="ObjectShortName">param_id_reg[15:0]</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/packet_builder_module/param_id" type="array">
+            <obj_property name="ElementShortName">param_id[15:0]</obj_property>
+            <obj_property name="ObjectShortName">param_id[15:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_builder_module/cmd_type_reg" type="other">
-            <obj_property name="ElementShortName">cmd_type_reg</obj_property>
-            <obj_property name="ObjectShortName">cmd_type_reg</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/packet_builder_module/cmd_type" type="other">
+            <obj_property name="ElementShortName">cmd_type</obj_property>
+            <obj_property name="ObjectShortName">cmd_type</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_builder_module/err_ok_reg" type="logic">
-            <obj_property name="ElementShortName">err_ok_reg</obj_property>
-            <obj_property name="ObjectShortName">err_ok_reg</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/packet_builder_module/err_ok" type="logic">
+            <obj_property name="ElementShortName">err_ok</obj_property>
+            <obj_property name="ObjectShortName">err_ok</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_builder_module/payload_size_reg" type="other">
-            <obj_property name="ElementShortName">payload_size_reg</obj_property>
-            <obj_property name="ObjectShortName">payload_size_reg</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/packet_builder_module/payload_size" type="array">
+            <obj_property name="ElementShortName">payload_size[6:0]</obj_property>
+            <obj_property name="ObjectShortName">payload_size[6:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/packet_builder_module/packet_payload_reg" type="array">
-            <obj_property name="ElementShortName">packet_payload_reg[0:66][31:0]</obj_property>
-            <obj_property name="ObjectShortName">packet_payload_reg[0:66][31:0]</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/packet_builder_module/packet_payload" type="array">
+            <obj_property name="ElementShortName">packet_payload[0:66][31:0]</obj_property>
+            <obj_property name="ObjectShortName">packet_payload[0:66][31:0]</obj_property>
          </wvobject>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_builder_module/packet_type" type="other">
-         <obj_property name="ElementShortName">packet_type</obj_property>
-         <obj_property name="ObjectShortName">packet_type</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_builder_module/builder_ready" type="logic">
-         <obj_property name="ElementShortName">builder_ready</obj_property>
-         <obj_property name="ObjectShortName">builder_ready</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_builder_module/reply_state" type="other">
-         <obj_property name="ElementShortName">reply_state</obj_property>
-         <obj_property name="ObjectShortName">reply_state</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_builder_module/data_state" type="other">
-         <obj_property name="ElementShortName">data_state</obj_property>
-         <obj_property name="ObjectShortName">data_state</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_builder_module/checksum_state" type="other">
-         <obj_property name="ElementShortName">checksum_state</obj_property>
-         <obj_property name="ObjectShortName">checksum_state</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_builder_module/word_state" type="other">
-         <obj_property name="ElementShortName">word_state</obj_property>
-         <obj_property name="ObjectShortName">word_state</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_builder_module/checksum_sent" type="logic">
-         <obj_property name="ElementShortName">checksum_sent</obj_property>
-         <obj_property name="ObjectShortName">checksum_sent</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_builder_module/word_sent" type="logic">
-         <obj_property name="ElementShortName">word_sent</obj_property>
-         <obj_property name="ObjectShortName">word_sent</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_builder_module/tx_busy" type="logic">
-         <obj_property name="ElementShortName">tx_busy</obj_property>
-         <obj_property name="ObjectShortName">tx_busy</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/uart_controller_module/tx" type="logic">
-         <obj_property name="ElementShortName">tx</obj_property>
-         <obj_property name="ObjectShortName">tx</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group1440" type="group">
       <obj_property name="label">row_selector</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject fp_name="/tb_integration/command_handler_module/acquisition_on" type="logic">
-         <obj_property name="ElementShortName">acquisition_on</obj_property>
-         <obj_property name="ObjectShortName">acquisition_on</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/row_selector_module/state" type="other">
-         <obj_property name="ElementShortName">state</obj_property>
-         <obj_property name="ObjectShortName">state</obj_property>
-      </wvobject>
       <wvobject fp_name="/tb_integration/sync_frame" type="logic">
          <obj_property name="ElementShortName">sync_frame</obj_property>
          <obj_property name="ObjectShortName">sync_frame</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/row_selector_module/num_rows" type="other">
-         <obj_property name="ElementShortName">num_rows</obj_property>
-         <obj_property name="ObjectShortName">num_rows</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/row_selector_module/row_len" type="other">
-         <obj_property name="ElementShortName">row_len</obj_property>
-         <obj_property name="ObjectShortName">row_len</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/row_selector_module/new_row" type="logic">
+      <wvobject fp_name="/tb_integration/main_module/row_selector_module/new_row" type="logic">
          <obj_property name="ElementShortName">new_row</obj_property>
          <obj_property name="ObjectShortName">new_row</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/row_selector_module/row_num" type="other">
-         <obj_property name="ElementShortName">row_num</obj_property>
-         <obj_property name="ObjectShortName">row_num</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/row_selector_module/row_num" type="array">
+         <obj_property name="ElementShortName">row_num[3:0]</obj_property>
+         <obj_property name="ObjectShortName">row_num[3:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/row_selector_module/frame_active" type="logic">
+      <wvobject fp_name="/tb_integration/main_module/row_selector_module/frame_active" type="logic">
          <obj_property name="ElementShortName">frame_active</obj_property>
          <obj_property name="ObjectShortName">frame_active</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/row_selector_module/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group1511" type="group">
       <obj_property name="label">row_activator</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject fp_name="/tb_integration/row_activator_module/on_bias" type="array">
+      <wvobject fp_name="/tb_integration/main_module/row_activator_module/on_bias" type="array">
          <obj_property name="ElementShortName">on_bias[0:11][31:0]</obj_property>
          <obj_property name="ObjectShortName">on_bias[0:11][31:0]</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/row_activator_module/off_bias" type="array">
+      <wvobject fp_name="/tb_integration/main_module/row_activator_module/off_bias" type="array">
          <obj_property name="ElementShortName">off_bias[0:11][31:0]</obj_property>
          <obj_property name="ObjectShortName">off_bias[0:11][31:0]</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/row_activator_module/state" type="other">
-         <obj_property name="ElementShortName">state</obj_property>
-         <obj_property name="ObjectShortName">state</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/row_activator_module/update_off_value" type="logic">
+         <obj_property name="ElementShortName">update_off_value</obj_property>
+         <obj_property name="ObjectShortName">update_off_value</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/row_activator_module/DAC_start_pulse" type="logic">
-         <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
-         <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/row_activator_module/acquisition_on" type="logic">
+         <obj_property name="ElementShortName">acquisition_on</obj_property>
+         <obj_property name="ObjectShortName">acquisition_on</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/row_activator_module/new_row" type="logic">
+      <wvobject fp_name="/tb_integration/main_module/row_activator_module/row_num" type="array">
+         <obj_property name="ElementShortName">row_num[3:0]</obj_property>
+         <obj_property name="ObjectShortName">row_num[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/row_activator_module/new_row" type="logic">
          <obj_property name="ElementShortName">new_row</obj_property>
          <obj_property name="ObjectShortName">new_row</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/row_num" type="other">
-         <obj_property name="ElementShortName">row_num</obj_property>
-         <obj_property name="ObjectShortName">row_num</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/row_activator_module/DAC_sel" type="array">
-         <obj_property name="ElementShortName">DAC_sel[1:0]</obj_property>
-         <obj_property name="ObjectShortName">DAC_sel[1:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/row_activator_module/address" type="array">
-         <obj_property name="ElementShortName">address[1:0]</obj_property>
-         <obj_property name="ObjectShortName">address[1:0]</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/row_activator_module/v_data" type="array">
-         <obj_property name="ElementShortName">v_data[15:0]</obj_property>
-         <obj_property name="ObjectShortName">v_data[15:0]</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/row_activator_module/DAC_data" type="array">
-         <obj_property name="ElementShortName">DAC_data[17:0]</obj_property>
-         <obj_property name="ObjectShortName">DAC_data[17:0]</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="group1640" type="group">
          <obj_property name="label">DAC_gate_controller</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
-         <wvobject fp_name="/tb_integration/row_activator_DAC_gate_ctrl/state" type="other">
-            <obj_property name="ElementShortName">state</obj_property>
-            <obj_property name="ObjectShortName">state</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/row_activator_module/DAC_start_pulse" type="logic">
+            <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
+            <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/row_activator_DAC_gate_ctrl/start_conv_pulse" type="logic">
-            <obj_property name="ElementShortName">start_conv_pulse</obj_property>
-            <obj_property name="ObjectShortName">start_conv_pulse</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/row_activator_module/DAC_sel" type="array">
+            <obj_property name="ElementShortName">DAC_sel[1:0]</obj_property>
+            <obj_property name="ObjectShortName">DAC_sel[1:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/row_activator_DAC_gate_ctrl/CS" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/row_activator_module/DAC_data" type="array">
+            <obj_property name="ElementShortName">DAC_data[17:0]</obj_property>
+            <obj_property name="ObjectShortName">DAC_data[17:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/row_activator_DAC_gate_ctrl/CS" type="logic">
             <obj_property name="ElementShortName">CS</obj_property>
             <obj_property name="ObjectShortName">CS</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/row_activator_DAC_gate_ctrl/SCLK" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/row_activator_DAC_gate_ctrl/SCLK" type="logic">
             <obj_property name="ElementShortName">SCLK</obj_property>
             <obj_property name="ObjectShortName">SCLK</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/row_activator_DAC_gate_ctrl/LDAC" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/row_activator_data_serializer/serial_data" type="logic">
+            <obj_property name="ElementShortName">serial_data</obj_property>
+            <obj_property name="ObjectShortName">serial_data</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/row_activator_DAC_gate_ctrl/LDAC" type="logic">
             <obj_property name="ElementShortName">LDAC</obj_property>
             <obj_property name="ObjectShortName">LDAC</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/row_activator_DAC_gate_ctrl/state" type="other">
+            <obj_property name="ElementShortName">state</obj_property>
+            <obj_property name="ObjectShortName">state</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group2100" type="group">
          <obj_property name="label">Data_serializer_wrapper</obj_property>
          <obj_property name="DisplayName">label</obj_property>
          <obj_property name="isExpanded"></obj_property>
-         <wvobject fp_name="/tb_integration/row_activator_data_serializer/DAC_start_pulse" type="logic">
-            <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
-            <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/row_activator_module/address" type="array">
+            <obj_property name="ElementShortName">address[1:0]</obj_property>
+            <obj_property name="ObjectShortName">address[1:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/row_activator_data_serializer/serial_data" type="logic">
-            <obj_property name="ElementShortName">serial_data</obj_property>
-            <obj_property name="ObjectShortName">serial_data</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/row_activator_module/v_data" type="array">
+            <obj_property name="ElementShortName">v_data[15:0]</obj_property>
+            <obj_property name="ObjectShortName">v_data[15:0]</obj_property>
          </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/row_activator_data_serializer/parallel_data" type="array">
+            <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/row_activator_module/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group1586" type="group">
       <obj_property name="label">adc_triggerer</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject fp_name="/tb_integration/ADC_triggerer_module/trigg_clk_cycles" type="other">
-         <obj_property name="ElementShortName">trigg_clk_cycles</obj_property>
-         <obj_property name="ObjectShortName">trigg_clk_cycles</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/ADC_triggerer_module/frame_active" type="logic">
-         <obj_property name="ElementShortName">frame_active</obj_property>
-         <obj_property name="ObjectShortName">frame_active</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/ADC_triggerer_module/ADC_start_pulse" type="logic">
+      <wvobject fp_name="/tb_integration/main_module/ADC_triggerer_module/ADC_start_pulse" type="logic">
          <obj_property name="ElementShortName">ADC_start_pulse</obj_property>
          <obj_property name="ObjectShortName">ADC_start_pulse</obj_property>
       </wvobject>
-   </wvobject>
-   <wvobject fp_name="group1631" type="group">
-      <obj_property name="label">adc_gate_controller</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-      <wvobject fp_name="/tb_integration/ADC_gate_controller/state" type="other">
-         <obj_property name="ElementShortName">state</obj_property>
-         <obj_property name="ObjectShortName">state</obj_property>
+      <wvobject fp_name="group1631" type="group">
+         <obj_property name="label">adc_gate_controller</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/main_module/ADC_gate_controller/CNV" type="logic">
+            <obj_property name="ElementShortName">CNV</obj_property>
+            <obj_property name="ObjectShortName">CNV</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/ADC_gate_controller/SCK" type="logic">
+            <obj_property name="ElementShortName">SCK</obj_property>
+            <obj_property name="ObjectShortName">SCK</obj_property>
+         </wvobject>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group3341" type="group">
       <obj_property name="label">Channel 0</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="group1599" type="group">
          <obj_property name="label">adc_simulator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/ADC_simulator/data" type="array">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/\ADC_simulators(0)\/ADC_simulator/data" type="array">
             <obj_property name="ElementShortName">data[15:0]</obj_property>
             <obj_property name="ObjectShortName">data[15:0]</obj_property>
             <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/ADC_gate_controller/CNV" type="logic">
-            <obj_property name="ElementShortName">CNV</obj_property>
-            <obj_property name="ObjectShortName">CNV</obj_property>
+         <wvobject fp_name="/tb_integration/\ADC_simulators(0)\/ADC_simulator/nCNV" type="logic">
+            <obj_property name="ElementShortName">nCNV</obj_property>
+            <obj_property name="ObjectShortName">nCNV</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/ADC_gate_controller/SCK" type="logic">
+         <wvobject fp_name="/tb_integration/\ADC_simulators(0)\/ADC_simulator/SCK" type="logic">
             <obj_property name="ElementShortName">SCK</obj_property>
             <obj_property name="ObjectShortName">SCK</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/ADC_simulator/SDO" type="logic">
+         <wvobject fp_name="/tb_integration/\ADC_simulators(0)\/ADC_simulator/SDO" type="logic">
             <obj_property name="ElementShortName">SDO</obj_property>
             <obj_property name="ObjectShortName">SDO</obj_property>
          </wvobject>
@@ -716,19 +569,12 @@
       <wvobject fp_name="group1604" type="group">
          <obj_property name="label">input_shift_register</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/input_shift_register_module/state" type="other">
-            <obj_property name="ElementShortName">state</obj_property>
-            <obj_property name="ObjectShortName">state</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/input_shift_register_module/iddr_parallel_output" type="array">
-            <obj_property name="ElementShortName">iddr_parallel_output[1:0]</obj_property>
-            <obj_property name="ObjectShortName">iddr_parallel_output[1:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/input_shift_register_module/valid_word" type="logic">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/input_shift_register_module/valid_word" type="logic">
             <obj_property name="ElementShortName">valid_word</obj_property>
             <obj_property name="ObjectShortName">valid_word</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/input_shift_register_module/parallel_data" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/input_shift_register_module/parallel_data" type="array">
             <obj_property name="ElementShortName">parallel_data[15:0]</obj_property>
             <obj_property name="ObjectShortName">parallel_data[15:0]</obj_property>
             <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
@@ -737,525 +583,489 @@
       <wvobject fp_name="group1633" type="group">
          <obj_property name="label">sample_selector</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/sample_selector_module/sample_count" type="other">
-            <obj_property name="ElementShortName">sample_count</obj_property>
-            <obj_property name="ObjectShortName">sample_count</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/sample_selector_module/state" type="other">
-            <obj_property name="ElementShortName">state</obj_property>
-            <obj_property name="ObjectShortName">state</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/sample_selector_module/valid_sample" type="logic">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_selector_module/valid_sample" type="logic">
             <obj_property name="ElementShortName">valid_sample</obj_property>
             <obj_property name="ObjectShortName">valid_sample</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/sample_selector_module/sample_data" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_selector_module/sample_data" type="array">
             <obj_property name="ElementShortName">sample_data[15:0]</obj_property>
             <obj_property name="ObjectShortName">sample_data[15:0]</obj_property>
-            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_selector_module/state" type="other">
+            <obj_property name="ElementShortName">state</obj_property>
+            <obj_property name="ObjectShortName">state</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1642" type="group">
          <obj_property name="label">sample_accumulator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/sample_accumulator_module/acc_sample" type="array">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_accumulator_module/acc_sample" type="array">
             <obj_property name="ElementShortName">acc_sample</obj_property>
             <obj_property name="ObjectShortName">acc_sample</obj_property>
-            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+            <obj_property name="isExpanded"></obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1648" type="group">
          <obj_property name="label">feedback_calculator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/feedback_calculator_module/state" type="other">
-            <obj_property name="ElementShortName">state</obj_property>
-            <obj_property name="ObjectShortName">state</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/feedback_calculator_module/sa_fb_gain" type="array">
+            <obj_property name="ElementShortName">sa_fb_gain[31:0]</obj_property>
+            <obj_property name="ObjectShortName">sa_fb_gain[31:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/feedback_calculator_module/sa_fb_gain" type="other">
-            <obj_property name="ElementShortName">sa_fb_gain</obj_property>
-            <obj_property name="ObjectShortName">sa_fb_gain</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/feedback_calculator_module/fb_sample" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/feedback_calculator_module/fb_sample" type="array">
             <obj_property name="ElementShortName">fb_sample</obj_property>
             <obj_property name="ObjectShortName">fb_sample</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1655" type="group">
          <obj_property name="label">dual_bram</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
       </wvobject>
       <wvobject fp_name="group1661" type="group">
          <obj_property name="label">feedback_reader</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/feedback_reader_module/state" type="other">
-            <obj_property name="ElementShortName">state</obj_property>
-            <obj_property name="ObjectShortName">state</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/feedback_reader_module/read_address" type="other">
-            <obj_property name="ElementShortName">read_address</obj_property>
-            <obj_property name="ObjectShortName">read_address</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/feedback_reader_module/read_data" type="array">
-            <obj_property name="ElementShortName">read_data[31:0]</obj_property>
-            <obj_property name="ObjectShortName">read_data[31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/feedback_reader_module/row_num" type="other">
-            <obj_property name="ElementShortName">row_num</obj_property>
-            <obj_property name="ObjectShortName">row_num</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/feedback_reader_module/new_row" type="logic">
-            <obj_property name="ElementShortName">new_row</obj_property>
-            <obj_property name="ObjectShortName">new_row</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/feedback_reader_module/sa_fb_data" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/feedback_reader_module/sa_fb_data" type="array">
             <obj_property name="ElementShortName">sa_fb_data[15:0]</obj_property>
             <obj_property name="ObjectShortName">sa_fb_data[15:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group963" type="group">
          <obj_property name="label">channel_mux</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/selector" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/selector" type="array">
             <obj_property name="ElementShortName">selector[2:0]</obj_property>
             <obj_property name="ObjectShortName">selector[2:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="vbus1182" type="vbus">
+         <wvobject fp_name="vbus1668" type="vbus">
             <obj_property name="label">sq1_bias_cte[95:80]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[95]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[95]" type="logic">
                <obj_property name="ElementShortName">[95]</obj_property>
                <obj_property name="ObjectShortName">[95]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[94]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[94]" type="logic">
                <obj_property name="ElementShortName">[94]</obj_property>
                <obj_property name="ObjectShortName">[94]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[93]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[93]" type="logic">
                <obj_property name="ElementShortName">[93]</obj_property>
                <obj_property name="ObjectShortName">[93]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[92]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[92]" type="logic">
                <obj_property name="ElementShortName">[92]</obj_property>
                <obj_property name="ObjectShortName">[92]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[91]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[91]" type="logic">
                <obj_property name="ElementShortName">[91]</obj_property>
                <obj_property name="ObjectShortName">[91]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[90]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[90]" type="logic">
                <obj_property name="ElementShortName">[90]</obj_property>
                <obj_property name="ObjectShortName">[90]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[89]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[89]" type="logic">
                <obj_property name="ElementShortName">[89]</obj_property>
                <obj_property name="ObjectShortName">[89]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[88]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[88]" type="logic">
                <obj_property name="ElementShortName">[88]</obj_property>
                <obj_property name="ObjectShortName">[88]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[87]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[87]" type="logic">
                <obj_property name="ElementShortName">[87]</obj_property>
                <obj_property name="ObjectShortName">[87]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[86]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[86]" type="logic">
                <obj_property name="ElementShortName">[86]</obj_property>
                <obj_property name="ObjectShortName">[86]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[85]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[85]" type="logic">
                <obj_property name="ElementShortName">[85]</obj_property>
                <obj_property name="ObjectShortName">[85]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[84]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[84]" type="logic">
                <obj_property name="ElementShortName">[84]</obj_property>
                <obj_property name="ObjectShortName">[84]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[83]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[83]" type="logic">
                <obj_property name="ElementShortName">[83]</obj_property>
                <obj_property name="ObjectShortName">[83]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[82]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[82]" type="logic">
                <obj_property name="ElementShortName">[82]</obj_property>
                <obj_property name="ObjectShortName">[82]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[81]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[81]" type="logic">
                <obj_property name="ElementShortName">[81]</obj_property>
                <obj_property name="ObjectShortName">[81]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[80]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[80]" type="logic">
                <obj_property name="ElementShortName">[80]</obj_property>
                <obj_property name="ObjectShortName">[80]</obj_property>
             </wvobject>
          </wvobject>
-         <wvobject fp_name="vbus1165" type="vbus">
+         <wvobject fp_name="vbus1685" type="vbus">
             <obj_property name="label">sq1_fb_cte[79:64]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[79]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[79]" type="logic">
                <obj_property name="ElementShortName">[79]</obj_property>
                <obj_property name="ObjectShortName">[79]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[78]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[78]" type="logic">
                <obj_property name="ElementShortName">[78]</obj_property>
                <obj_property name="ObjectShortName">[78]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[77]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[77]" type="logic">
                <obj_property name="ElementShortName">[77]</obj_property>
                <obj_property name="ObjectShortName">[77]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[76]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[76]" type="logic">
                <obj_property name="ElementShortName">[76]</obj_property>
                <obj_property name="ObjectShortName">[76]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[75]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[75]" type="logic">
                <obj_property name="ElementShortName">[75]</obj_property>
                <obj_property name="ObjectShortName">[75]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[74]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[74]" type="logic">
                <obj_property name="ElementShortName">[74]</obj_property>
                <obj_property name="ObjectShortName">[74]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[73]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[73]" type="logic">
                <obj_property name="ElementShortName">[73]</obj_property>
                <obj_property name="ObjectShortName">[73]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[72]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[72]" type="logic">
                <obj_property name="ElementShortName">[72]</obj_property>
                <obj_property name="ObjectShortName">[72]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[71]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[71]" type="logic">
                <obj_property name="ElementShortName">[71]</obj_property>
                <obj_property name="ObjectShortName">[71]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[70]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[70]" type="logic">
                <obj_property name="ElementShortName">[70]</obj_property>
                <obj_property name="ObjectShortName">[70]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[69]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[69]" type="logic">
                <obj_property name="ElementShortName">[69]</obj_property>
                <obj_property name="ObjectShortName">[69]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[68]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[68]" type="logic">
                <obj_property name="ElementShortName">[68]</obj_property>
                <obj_property name="ObjectShortName">[68]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[67]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[67]" type="logic">
                <obj_property name="ElementShortName">[67]</obj_property>
                <obj_property name="ObjectShortName">[67]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[66]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[66]" type="logic">
                <obj_property name="ElementShortName">[66]</obj_property>
                <obj_property name="ObjectShortName">[66]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[65]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[65]" type="logic">
                <obj_property name="ElementShortName">[65]</obj_property>
                <obj_property name="ObjectShortName">[65]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[64]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[64]" type="logic">
                <obj_property name="ElementShortName">[64]</obj_property>
                <obj_property name="ObjectShortName">[64]</obj_property>
             </wvobject>
          </wvobject>
-         <wvobject fp_name="vbus1148" type="vbus">
+         <wvobject fp_name="vbus1702" type="vbus">
             <obj_property name="label">sa_bias_cte[63:48]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <obj_property name="Radix">HEXRADIX</obj_property>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[63]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[63]" type="logic">
                <obj_property name="ElementShortName">[63]</obj_property>
                <obj_property name="ObjectShortName">[63]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[62]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[62]" type="logic">
                <obj_property name="ElementShortName">[62]</obj_property>
                <obj_property name="ObjectShortName">[62]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[61]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[61]" type="logic">
                <obj_property name="ElementShortName">[61]</obj_property>
                <obj_property name="ObjectShortName">[61]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[60]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[60]" type="logic">
                <obj_property name="ElementShortName">[60]</obj_property>
                <obj_property name="ObjectShortName">[60]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[59]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[59]" type="logic">
                <obj_property name="ElementShortName">[59]</obj_property>
                <obj_property name="ObjectShortName">[59]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[58]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[58]" type="logic">
                <obj_property name="ElementShortName">[58]</obj_property>
                <obj_property name="ObjectShortName">[58]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[57]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[57]" type="logic">
                <obj_property name="ElementShortName">[57]</obj_property>
                <obj_property name="ObjectShortName">[57]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[56]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[56]" type="logic">
                <obj_property name="ElementShortName">[56]</obj_property>
                <obj_property name="ObjectShortName">[56]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[55]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[55]" type="logic">
                <obj_property name="ElementShortName">[55]</obj_property>
                <obj_property name="ObjectShortName">[55]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[54]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[54]" type="logic">
                <obj_property name="ElementShortName">[54]</obj_property>
                <obj_property name="ObjectShortName">[54]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[53]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[53]" type="logic">
                <obj_property name="ElementShortName">[53]</obj_property>
                <obj_property name="ObjectShortName">[53]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[52]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[52]" type="logic">
                <obj_property name="ElementShortName">[52]</obj_property>
                <obj_property name="ObjectShortName">[52]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[51]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[51]" type="logic">
                <obj_property name="ElementShortName">[51]</obj_property>
                <obj_property name="ObjectShortName">[51]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[50]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[50]" type="logic">
                <obj_property name="ElementShortName">[50]</obj_property>
                <obj_property name="ObjectShortName">[50]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[49]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[49]" type="logic">
                <obj_property name="ElementShortName">[49]</obj_property>
                <obj_property name="ObjectShortName">[49]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[48]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[48]" type="logic">
                <obj_property name="ElementShortName">[48]</obj_property>
                <obj_property name="ObjectShortName">[48]</obj_property>
             </wvobject>
          </wvobject>
-         <wvobject fp_name="vbus1131" type="vbus">
+         <wvobject fp_name="vbus1719" type="vbus">
             <obj_property name="label">sa_fb_cte[47:32]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[47]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[47]" type="logic">
                <obj_property name="ElementShortName">[47]</obj_property>
                <obj_property name="ObjectShortName">[47]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[46]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[46]" type="logic">
                <obj_property name="ElementShortName">[46]</obj_property>
                <obj_property name="ObjectShortName">[46]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[45]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[45]" type="logic">
                <obj_property name="ElementShortName">[45]</obj_property>
                <obj_property name="ObjectShortName">[45]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[44]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[44]" type="logic">
                <obj_property name="ElementShortName">[44]</obj_property>
                <obj_property name="ObjectShortName">[44]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[43]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[43]" type="logic">
                <obj_property name="ElementShortName">[43]</obj_property>
                <obj_property name="ObjectShortName">[43]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[42]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[42]" type="logic">
                <obj_property name="ElementShortName">[42]</obj_property>
                <obj_property name="ObjectShortName">[42]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[41]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[41]" type="logic">
                <obj_property name="ElementShortName">[41]</obj_property>
                <obj_property name="ObjectShortName">[41]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[40]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[40]" type="logic">
                <obj_property name="ElementShortName">[40]</obj_property>
                <obj_property name="ObjectShortName">[40]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[39]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[39]" type="logic">
                <obj_property name="ElementShortName">[39]</obj_property>
                <obj_property name="ObjectShortName">[39]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[38]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[38]" type="logic">
                <obj_property name="ElementShortName">[38]</obj_property>
                <obj_property name="ObjectShortName">[38]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[37]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[37]" type="logic">
                <obj_property name="ElementShortName">[37]</obj_property>
                <obj_property name="ObjectShortName">[37]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[36]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[36]" type="logic">
                <obj_property name="ElementShortName">[36]</obj_property>
                <obj_property name="ObjectShortName">[36]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[35]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[35]" type="logic">
                <obj_property name="ElementShortName">[35]</obj_property>
                <obj_property name="ObjectShortName">[35]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[34]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[34]" type="logic">
                <obj_property name="ElementShortName">[34]</obj_property>
                <obj_property name="ObjectShortName">[34]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[33]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[33]" type="logic">
                <obj_property name="ElementShortName">[33]</obj_property>
                <obj_property name="ObjectShortName">[33]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[32]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[32]" type="logic">
                <obj_property name="ElementShortName">[32]</obj_property>
                <obj_property name="ObjectShortName">[32]</obj_property>
             </wvobject>
          </wvobject>
-         <wvobject fp_name="vbus1114" type="vbus">
+         <wvobject fp_name="vbus1736" type="vbus">
             <obj_property name="label">ramp[31:16]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[31]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[31]" type="logic">
                <obj_property name="ElementShortName">[31]</obj_property>
                <obj_property name="ObjectShortName">[31]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[30]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[30]" type="logic">
                <obj_property name="ElementShortName">[30]</obj_property>
                <obj_property name="ObjectShortName">[30]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[29]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[29]" type="logic">
                <obj_property name="ElementShortName">[29]</obj_property>
                <obj_property name="ObjectShortName">[29]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[28]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[28]" type="logic">
                <obj_property name="ElementShortName">[28]</obj_property>
                <obj_property name="ObjectShortName">[28]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[27]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[27]" type="logic">
                <obj_property name="ElementShortName">[27]</obj_property>
                <obj_property name="ObjectShortName">[27]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[26]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[26]" type="logic">
                <obj_property name="ElementShortName">[26]</obj_property>
                <obj_property name="ObjectShortName">[26]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[25]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[25]" type="logic">
                <obj_property name="ElementShortName">[25]</obj_property>
                <obj_property name="ObjectShortName">[25]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[24]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[24]" type="logic">
                <obj_property name="ElementShortName">[24]</obj_property>
                <obj_property name="ObjectShortName">[24]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[23]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[23]" type="logic">
                <obj_property name="ElementShortName">[23]</obj_property>
                <obj_property name="ObjectShortName">[23]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[22]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[22]" type="logic">
                <obj_property name="ElementShortName">[22]</obj_property>
                <obj_property name="ObjectShortName">[22]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[21]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[21]" type="logic">
                <obj_property name="ElementShortName">[21]</obj_property>
                <obj_property name="ObjectShortName">[21]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[20]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[20]" type="logic">
                <obj_property name="ElementShortName">[20]</obj_property>
                <obj_property name="ObjectShortName">[20]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[19]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[19]" type="logic">
                <obj_property name="ElementShortName">[19]</obj_property>
                <obj_property name="ObjectShortName">[19]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[18]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[18]" type="logic">
                <obj_property name="ElementShortName">[18]</obj_property>
                <obj_property name="ObjectShortName">[18]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[17]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[17]" type="logic">
                <obj_property name="ElementShortName">[17]</obj_property>
                <obj_property name="ObjectShortName">[17]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[16]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[16]" type="logic">
                <obj_property name="ElementShortName">[16]</obj_property>
                <obj_property name="ObjectShortName">[16]</obj_property>
             </wvobject>
          </wvobject>
-         <wvobject fp_name="vbus1097" type="vbus">
+         <wvobject fp_name="vbus1753" type="vbus">
             <obj_property name="label">calc_fb[15:0]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[15]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[15]" type="logic">
                <obj_property name="ElementShortName">[15]</obj_property>
                <obj_property name="ObjectShortName">[15]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[14]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[14]" type="logic">
                <obj_property name="ElementShortName">[14]</obj_property>
                <obj_property name="ObjectShortName">[14]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[13]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[13]" type="logic">
                <obj_property name="ElementShortName">[13]</obj_property>
                <obj_property name="ObjectShortName">[13]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[12]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[12]" type="logic">
                <obj_property name="ElementShortName">[12]</obj_property>
                <obj_property name="ObjectShortName">[12]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[11]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[11]" type="logic">
                <obj_property name="ElementShortName">[11]</obj_property>
                <obj_property name="ObjectShortName">[11]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[10]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[10]" type="logic">
                <obj_property name="ElementShortName">[10]</obj_property>
                <obj_property name="ObjectShortName">[10]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[9]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[9]" type="logic">
                <obj_property name="ElementShortName">[9]</obj_property>
                <obj_property name="ObjectShortName">[9]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[8]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[8]" type="logic">
                <obj_property name="ElementShortName">[8]</obj_property>
                <obj_property name="ObjectShortName">[8]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[7]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[7]" type="logic">
                <obj_property name="ElementShortName">[7]</obj_property>
                <obj_property name="ObjectShortName">[7]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[6]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[6]" type="logic">
                <obj_property name="ElementShortName">[6]</obj_property>
                <obj_property name="ObjectShortName">[6]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[5]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[5]" type="logic">
                <obj_property name="ElementShortName">[5]</obj_property>
                <obj_property name="ObjectShortName">[5]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[4]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[4]" type="logic">
                <obj_property name="ElementShortName">[4]</obj_property>
                <obj_property name="ObjectShortName">[4]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[3]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[3]" type="logic">
                <obj_property name="ElementShortName">[3]</obj_property>
                <obj_property name="ObjectShortName">[3]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[2]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[2]" type="logic">
                <obj_property name="ElementShortName">[2]</obj_property>
                <obj_property name="ObjectShortName">[2]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[1]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[1]" type="logic">
                <obj_property name="ElementShortName">[1]</obj_property>
                <obj_property name="ObjectShortName">[1]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_in[0]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[0]" type="logic">
                <obj_property name="ElementShortName">[0]</obj_property>
                <obj_property name="ObjectShortName">[0]</obj_property>
             </wvobject>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_mux/data_out" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_out" type="array">
             <obj_property name="ElementShortName">data_out[15:0]</obj_property>
             <obj_property name="ObjectShortName">data_out[15:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group3016" type="group">
          <obj_property name="label">data_serializer</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_data_serializer/parallel_data" type="array">
-            <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
-            <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
-            <obj_property name="Radix">BINARYRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_data_serializer/DAC_start_pulse" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_data_serializer/DAC_start_pulse" type="logic">
             <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
             <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_data_serializer/data_clk" type="logic">
-            <obj_property name="ElementShortName">data_clk</obj_property>
-            <obj_property name="ObjectShortName">data_clk</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_data_serializer/parallel_data" type="array">
+            <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(0)\/channel_data_serializer/serial_data" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_data_serializer/serial_data" type="logic">
             <obj_property name="ElementShortName">serial_data</obj_property>
             <obj_property name="ObjectShortName">serial_data</obj_property>
          </wvobject>
@@ -1268,20 +1078,19 @@
       <wvobject fp_name="group1599" type="group">
          <obj_property name="label">adc_simulator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/ADC_simulator/data" type="array">
-            <obj_property name="ElementShortName">data[15:0]</obj_property>
-            <obj_property name="ObjectShortName">data[15:0]</obj_property>
-            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <wvobject fp_name="/tb_integration/\ADC_simulators(1)\/ADC_simulator/nCNV" type="logic">
+            <obj_property name="ElementShortName">nCNV</obj_property>
+            <obj_property name="ObjectShortName">nCNV</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/ADC_gate_controller/CNV" type="logic">
-            <obj_property name="ElementShortName">CNV</obj_property>
-            <obj_property name="ObjectShortName">CNV</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/ADC_gate_controller/SCK" type="logic">
+         <wvobject fp_name="/tb_integration/\ADC_simulators(1)\/ADC_simulator/SCK" type="logic">
             <obj_property name="ElementShortName">SCK</obj_property>
             <obj_property name="ObjectShortName">SCK</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/ADC_simulator/SDO" type="logic">
+         <wvobject fp_name="/tb_integration/\ADC_simulators(1)\/ADC_simulator/data" type="array">
+            <obj_property name="ElementShortName">data[15:0]</obj_property>
+            <obj_property name="ObjectShortName">data[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/\ADC_simulators(1)\/ADC_simulator/SDO" type="logic">
             <obj_property name="ElementShortName">SDO</obj_property>
             <obj_property name="ObjectShortName">SDO</obj_property>
          </wvobject>
@@ -1289,66 +1098,45 @@
       <wvobject fp_name="group1604" type="group">
          <obj_property name="label">input_shift_register</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/input_shift_register_module/state" type="other">
-            <obj_property name="ElementShortName">state</obj_property>
-            <obj_property name="ObjectShortName">state</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/input_shift_register_module/iddr_parallel_output" type="array">
-            <obj_property name="ElementShortName">iddr_parallel_output[1:0]</obj_property>
-            <obj_property name="ObjectShortName">iddr_parallel_output[1:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/input_shift_register_module/valid_word" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/input_shift_register_module/valid_word" type="logic">
             <obj_property name="ElementShortName">valid_word</obj_property>
             <obj_property name="ObjectShortName">valid_word</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/input_shift_register_module/parallel_data" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/input_shift_register_module/parallel_data" type="array">
             <obj_property name="ElementShortName">parallel_data[15:0]</obj_property>
             <obj_property name="ObjectShortName">parallel_data[15:0]</obj_property>
-            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1633" type="group">
          <obj_property name="label">sample_selector</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/sample_selector_module/state" type="other">
-            <obj_property name="ElementShortName">state</obj_property>
-            <obj_property name="ObjectShortName">state</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/sample_selector_module/sample_count" type="other">
-            <obj_property name="ElementShortName">sample_count</obj_property>
-            <obj_property name="ObjectShortName">sample_count</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/sample_selector_module/valid_sample" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/sample_selector_module/valid_sample" type="logic">
             <obj_property name="ElementShortName">valid_sample</obj_property>
             <obj_property name="ObjectShortName">valid_sample</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/sample_selector_module/sample_data" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/sample_selector_module/sample_data" type="array">
             <obj_property name="ElementShortName">sample_data[15:0]</obj_property>
             <obj_property name="ObjectShortName">sample_data[15:0]</obj_property>
-            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1642" type="group">
          <obj_property name="label">sample_accumulator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/sample_accumulator_module/acc_sample" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/sample_accumulator_module/acc_sample" type="array">
             <obj_property name="ElementShortName">acc_sample</obj_property>
             <obj_property name="ObjectShortName">acc_sample</obj_property>
-            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1648" type="group">
          <obj_property name="label">feedback_calculator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/feedback_calculator_module/state" type="other">
-            <obj_property name="ElementShortName">state</obj_property>
-            <obj_property name="ObjectShortName">state</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/feedback_calculator_module/sa_fb_gain" type="array">
+            <obj_property name="ElementShortName">sa_fb_gain[31:0]</obj_property>
+            <obj_property name="ObjectShortName">sa_fb_gain[31:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/feedback_calculator_module/sa_fb_gain" type="other">
-            <obj_property name="ElementShortName">sa_fb_gain</obj_property>
-            <obj_property name="ObjectShortName">sa_fb_gain</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/feedback_calculator_module/fb_sample" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/feedback_calculator_module/fb_sample" type="array">
             <obj_property name="ElementShortName">fb_sample</obj_property>
             <obj_property name="ObjectShortName">fb_sample</obj_property>
             <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
@@ -1357,342 +1145,443 @@
       <wvobject fp_name="group1661" type="group">
          <obj_property name="label">feedback_reader</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/feedback_reader_module/state" type="other">
-            <obj_property name="ElementShortName">state</obj_property>
-            <obj_property name="ObjectShortName">state</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/feedback_reader_module/read_address" type="other">
-            <obj_property name="ElementShortName">read_address</obj_property>
-            <obj_property name="ObjectShortName">read_address</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/feedback_reader_module/read_data" type="array">
-            <obj_property name="ElementShortName">read_data[31:0]</obj_property>
-            <obj_property name="ObjectShortName">read_data[31:0]</obj_property>
-            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/feedback_reader_module/row_num" type="other">
-            <obj_property name="ElementShortName">row_num</obj_property>
-            <obj_property name="ObjectShortName">row_num</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/feedback_reader_module/new_row" type="logic">
-            <obj_property name="ElementShortName">new_row</obj_property>
-            <obj_property name="ObjectShortName">new_row</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/feedback_reader_module/sa_fb_data" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/feedback_reader_module/sa_fb_data" type="array">
             <obj_property name="ElementShortName">sa_fb_data[15:0]</obj_property>
             <obj_property name="ObjectShortName">sa_fb_data[15:0]</obj_property>
-            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group305" type="group">
          <obj_property name="label">channel_mux</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/selector" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/selector" type="array">
             <obj_property name="ElementShortName">selector[2:0]</obj_property>
             <obj_property name="ObjectShortName">selector[2:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in" type="array">
-            <obj_property name="ElementShortName">data_in[127:0]</obj_property>
-            <obj_property name="ObjectShortName">data_in[127:0]</obj_property>
+         <wvobject fp_name="vbus1918" type="vbus">
+            <obj_property name="label">sq1_bias_cte[95:80]</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[95]" type="logic">
+               <obj_property name="ElementShortName">[95]</obj_property>
+               <obj_property name="ObjectShortName">[95]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[94]" type="logic">
+               <obj_property name="ElementShortName">[94]</obj_property>
+               <obj_property name="ObjectShortName">[94]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[93]" type="logic">
+               <obj_property name="ElementShortName">[93]</obj_property>
+               <obj_property name="ObjectShortName">[93]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[92]" type="logic">
+               <obj_property name="ElementShortName">[92]</obj_property>
+               <obj_property name="ObjectShortName">[92]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[91]" type="logic">
+               <obj_property name="ElementShortName">[91]</obj_property>
+               <obj_property name="ObjectShortName">[91]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[90]" type="logic">
+               <obj_property name="ElementShortName">[90]</obj_property>
+               <obj_property name="ObjectShortName">[90]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[89]" type="logic">
+               <obj_property name="ElementShortName">[89]</obj_property>
+               <obj_property name="ObjectShortName">[89]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[88]" type="logic">
+               <obj_property name="ElementShortName">[88]</obj_property>
+               <obj_property name="ObjectShortName">[88]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[87]" type="logic">
+               <obj_property name="ElementShortName">[87]</obj_property>
+               <obj_property name="ObjectShortName">[87]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[86]" type="logic">
+               <obj_property name="ElementShortName">[86]</obj_property>
+               <obj_property name="ObjectShortName">[86]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[85]" type="logic">
+               <obj_property name="ElementShortName">[85]</obj_property>
+               <obj_property name="ObjectShortName">[85]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[84]" type="logic">
+               <obj_property name="ElementShortName">[84]</obj_property>
+               <obj_property name="ObjectShortName">[84]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[83]" type="logic">
+               <obj_property name="ElementShortName">[83]</obj_property>
+               <obj_property name="ObjectShortName">[83]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[82]" type="logic">
+               <obj_property name="ElementShortName">[82]</obj_property>
+               <obj_property name="ObjectShortName">[82]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[81]" type="logic">
+               <obj_property name="ElementShortName">[81]</obj_property>
+               <obj_property name="ObjectShortName">[81]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[80]" type="logic">
+               <obj_property name="ElementShortName">[80]</obj_property>
+               <obj_property name="ObjectShortName">[80]</obj_property>
+            </wvobject>
          </wvobject>
-         <wvobject fp_name="vbus491" type="vbus">
+         <wvobject fp_name="vbus1935" type="vbus">
+            <obj_property name="label">sq1_fb_cte[79:64]</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[79]" type="logic">
+               <obj_property name="ElementShortName">[79]</obj_property>
+               <obj_property name="ObjectShortName">[79]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[78]" type="logic">
+               <obj_property name="ElementShortName">[78]</obj_property>
+               <obj_property name="ObjectShortName">[78]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[77]" type="logic">
+               <obj_property name="ElementShortName">[77]</obj_property>
+               <obj_property name="ObjectShortName">[77]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[76]" type="logic">
+               <obj_property name="ElementShortName">[76]</obj_property>
+               <obj_property name="ObjectShortName">[76]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[75]" type="logic">
+               <obj_property name="ElementShortName">[75]</obj_property>
+               <obj_property name="ObjectShortName">[75]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[74]" type="logic">
+               <obj_property name="ElementShortName">[74]</obj_property>
+               <obj_property name="ObjectShortName">[74]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[73]" type="logic">
+               <obj_property name="ElementShortName">[73]</obj_property>
+               <obj_property name="ObjectShortName">[73]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[72]" type="logic">
+               <obj_property name="ElementShortName">[72]</obj_property>
+               <obj_property name="ObjectShortName">[72]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[71]" type="logic">
+               <obj_property name="ElementShortName">[71]</obj_property>
+               <obj_property name="ObjectShortName">[71]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[70]" type="logic">
+               <obj_property name="ElementShortName">[70]</obj_property>
+               <obj_property name="ObjectShortName">[70]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[69]" type="logic">
+               <obj_property name="ElementShortName">[69]</obj_property>
+               <obj_property name="ObjectShortName">[69]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[68]" type="logic">
+               <obj_property name="ElementShortName">[68]</obj_property>
+               <obj_property name="ObjectShortName">[68]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[67]" type="logic">
+               <obj_property name="ElementShortName">[67]</obj_property>
+               <obj_property name="ObjectShortName">[67]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[66]" type="logic">
+               <obj_property name="ElementShortName">[66]</obj_property>
+               <obj_property name="ObjectShortName">[66]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[65]" type="logic">
+               <obj_property name="ElementShortName">[65]</obj_property>
+               <obj_property name="ObjectShortName">[65]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[64]" type="logic">
+               <obj_property name="ElementShortName">[64]</obj_property>
+               <obj_property name="ObjectShortName">[64]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="vbus1952" type="vbus">
             <obj_property name="label">sa_bias_cte[63:48]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[63]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[63]" type="logic">
                <obj_property name="ElementShortName">[63]</obj_property>
                <obj_property name="ObjectShortName">[63]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[62]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[62]" type="logic">
                <obj_property name="ElementShortName">[62]</obj_property>
                <obj_property name="ObjectShortName">[62]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[61]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[61]" type="logic">
                <obj_property name="ElementShortName">[61]</obj_property>
                <obj_property name="ObjectShortName">[61]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[60]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[60]" type="logic">
                <obj_property name="ElementShortName">[60]</obj_property>
                <obj_property name="ObjectShortName">[60]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[59]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[59]" type="logic">
                <obj_property name="ElementShortName">[59]</obj_property>
                <obj_property name="ObjectShortName">[59]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[58]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[58]" type="logic">
                <obj_property name="ElementShortName">[58]</obj_property>
                <obj_property name="ObjectShortName">[58]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[57]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[57]" type="logic">
                <obj_property name="ElementShortName">[57]</obj_property>
                <obj_property name="ObjectShortName">[57]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[56]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[56]" type="logic">
                <obj_property name="ElementShortName">[56]</obj_property>
                <obj_property name="ObjectShortName">[56]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[55]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[55]" type="logic">
                <obj_property name="ElementShortName">[55]</obj_property>
                <obj_property name="ObjectShortName">[55]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[54]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[54]" type="logic">
                <obj_property name="ElementShortName">[54]</obj_property>
                <obj_property name="ObjectShortName">[54]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[53]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[53]" type="logic">
                <obj_property name="ElementShortName">[53]</obj_property>
                <obj_property name="ObjectShortName">[53]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[52]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[52]" type="logic">
                <obj_property name="ElementShortName">[52]</obj_property>
                <obj_property name="ObjectShortName">[52]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[51]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[51]" type="logic">
                <obj_property name="ElementShortName">[51]</obj_property>
                <obj_property name="ObjectShortName">[51]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[50]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[50]" type="logic">
                <obj_property name="ElementShortName">[50]</obj_property>
                <obj_property name="ObjectShortName">[50]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[49]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[49]" type="logic">
                <obj_property name="ElementShortName">[49]</obj_property>
                <obj_property name="ObjectShortName">[49]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[48]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[48]" type="logic">
                <obj_property name="ElementShortName">[48]</obj_property>
                <obj_property name="ObjectShortName">[48]</obj_property>
             </wvobject>
          </wvobject>
-         <wvobject fp_name="vbus474" type="vbus">
+         <wvobject fp_name="vbus1969" type="vbus">
             <obj_property name="label">sa_fb_cte[47:32]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[47]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[47]" type="logic">
                <obj_property name="ElementShortName">[47]</obj_property>
                <obj_property name="ObjectShortName">[47]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[46]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[46]" type="logic">
                <obj_property name="ElementShortName">[46]</obj_property>
                <obj_property name="ObjectShortName">[46]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[45]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[45]" type="logic">
                <obj_property name="ElementShortName">[45]</obj_property>
                <obj_property name="ObjectShortName">[45]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[44]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[44]" type="logic">
                <obj_property name="ElementShortName">[44]</obj_property>
                <obj_property name="ObjectShortName">[44]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[43]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[43]" type="logic">
                <obj_property name="ElementShortName">[43]</obj_property>
                <obj_property name="ObjectShortName">[43]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[42]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[42]" type="logic">
                <obj_property name="ElementShortName">[42]</obj_property>
                <obj_property name="ObjectShortName">[42]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[41]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[41]" type="logic">
                <obj_property name="ElementShortName">[41]</obj_property>
                <obj_property name="ObjectShortName">[41]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[40]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[40]" type="logic">
                <obj_property name="ElementShortName">[40]</obj_property>
                <obj_property name="ObjectShortName">[40]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[39]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[39]" type="logic">
                <obj_property name="ElementShortName">[39]</obj_property>
                <obj_property name="ObjectShortName">[39]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[38]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[38]" type="logic">
                <obj_property name="ElementShortName">[38]</obj_property>
                <obj_property name="ObjectShortName">[38]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[37]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[37]" type="logic">
                <obj_property name="ElementShortName">[37]</obj_property>
                <obj_property name="ObjectShortName">[37]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[36]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[36]" type="logic">
                <obj_property name="ElementShortName">[36]</obj_property>
                <obj_property name="ObjectShortName">[36]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[35]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[35]" type="logic">
                <obj_property name="ElementShortName">[35]</obj_property>
                <obj_property name="ObjectShortName">[35]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[34]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[34]" type="logic">
                <obj_property name="ElementShortName">[34]</obj_property>
                <obj_property name="ObjectShortName">[34]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[33]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[33]" type="logic">
                <obj_property name="ElementShortName">[33]</obj_property>
                <obj_property name="ObjectShortName">[33]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[32]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[32]" type="logic">
                <obj_property name="ElementShortName">[32]</obj_property>
                <obj_property name="ObjectShortName">[32]</obj_property>
             </wvobject>
          </wvobject>
-         <wvobject fp_name="vbus457" type="vbus">
-            <obj_property name="label">ramp_data[31:16]</obj_property>
+         <wvobject fp_name="vbus1986" type="vbus">
+            <obj_property name="label">ramp[31:16]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[31]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[31]" type="logic">
                <obj_property name="ElementShortName">[31]</obj_property>
                <obj_property name="ObjectShortName">[31]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[30]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[30]" type="logic">
                <obj_property name="ElementShortName">[30]</obj_property>
                <obj_property name="ObjectShortName">[30]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[29]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[29]" type="logic">
                <obj_property name="ElementShortName">[29]</obj_property>
                <obj_property name="ObjectShortName">[29]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[28]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[28]" type="logic">
                <obj_property name="ElementShortName">[28]</obj_property>
                <obj_property name="ObjectShortName">[28]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[27]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[27]" type="logic">
                <obj_property name="ElementShortName">[27]</obj_property>
                <obj_property name="ObjectShortName">[27]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[26]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[26]" type="logic">
                <obj_property name="ElementShortName">[26]</obj_property>
                <obj_property name="ObjectShortName">[26]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[25]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[25]" type="logic">
                <obj_property name="ElementShortName">[25]</obj_property>
                <obj_property name="ObjectShortName">[25]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[24]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[24]" type="logic">
                <obj_property name="ElementShortName">[24]</obj_property>
                <obj_property name="ObjectShortName">[24]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[23]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[23]" type="logic">
                <obj_property name="ElementShortName">[23]</obj_property>
                <obj_property name="ObjectShortName">[23]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[22]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[22]" type="logic">
                <obj_property name="ElementShortName">[22]</obj_property>
                <obj_property name="ObjectShortName">[22]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[21]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[21]" type="logic">
                <obj_property name="ElementShortName">[21]</obj_property>
                <obj_property name="ObjectShortName">[21]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[20]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[20]" type="logic">
                <obj_property name="ElementShortName">[20]</obj_property>
                <obj_property name="ObjectShortName">[20]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[19]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[19]" type="logic">
                <obj_property name="ElementShortName">[19]</obj_property>
                <obj_property name="ObjectShortName">[19]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[18]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[18]" type="logic">
                <obj_property name="ElementShortName">[18]</obj_property>
                <obj_property name="ObjectShortName">[18]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[17]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[17]" type="logic">
                <obj_property name="ElementShortName">[17]</obj_property>
                <obj_property name="ObjectShortName">[17]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[16]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[16]" type="logic">
                <obj_property name="ElementShortName">[16]</obj_property>
                <obj_property name="ObjectShortName">[16]</obj_property>
             </wvobject>
          </wvobject>
-         <wvobject fp_name="vbus456" type="vbus">
+         <wvobject fp_name="vbus2003" type="vbus">
             <obj_property name="label">calc_fb[15:0]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[15]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[15]" type="logic">
                <obj_property name="ElementShortName">[15]</obj_property>
                <obj_property name="ObjectShortName">[15]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[14]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[14]" type="logic">
                <obj_property name="ElementShortName">[14]</obj_property>
                <obj_property name="ObjectShortName">[14]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[13]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[13]" type="logic">
                <obj_property name="ElementShortName">[13]</obj_property>
                <obj_property name="ObjectShortName">[13]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[12]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[12]" type="logic">
                <obj_property name="ElementShortName">[12]</obj_property>
                <obj_property name="ObjectShortName">[12]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[11]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[11]" type="logic">
                <obj_property name="ElementShortName">[11]</obj_property>
                <obj_property name="ObjectShortName">[11]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[10]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[10]" type="logic">
                <obj_property name="ElementShortName">[10]</obj_property>
                <obj_property name="ObjectShortName">[10]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[9]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[9]" type="logic">
                <obj_property name="ElementShortName">[9]</obj_property>
                <obj_property name="ObjectShortName">[9]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[8]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[8]" type="logic">
                <obj_property name="ElementShortName">[8]</obj_property>
                <obj_property name="ObjectShortName">[8]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[7]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[7]" type="logic">
                <obj_property name="ElementShortName">[7]</obj_property>
                <obj_property name="ObjectShortName">[7]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[6]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[6]" type="logic">
                <obj_property name="ElementShortName">[6]</obj_property>
                <obj_property name="ObjectShortName">[6]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[5]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[5]" type="logic">
                <obj_property name="ElementShortName">[5]</obj_property>
                <obj_property name="ObjectShortName">[5]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[4]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[4]" type="logic">
                <obj_property name="ElementShortName">[4]</obj_property>
                <obj_property name="ObjectShortName">[4]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[3]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[3]" type="logic">
                <obj_property name="ElementShortName">[3]</obj_property>
                <obj_property name="ObjectShortName">[3]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[2]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[2]" type="logic">
                <obj_property name="ElementShortName">[2]</obj_property>
                <obj_property name="ObjectShortName">[2]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[1]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[1]" type="logic">
                <obj_property name="ElementShortName">[1]</obj_property>
                <obj_property name="ObjectShortName">[1]</obj_property>
             </wvobject>
-            <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_in[0]" type="logic">
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_in[0]" type="logic">
                <obj_property name="ElementShortName">[0]</obj_property>
                <obj_property name="ObjectShortName">[0]</obj_property>
             </wvobject>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_mux/data_out" type="array">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_mux/data_out" type="array">
             <obj_property name="ElementShortName">data_out[15:0]</obj_property>
             <obj_property name="ObjectShortName">data_out[15:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group2993" type="group">
          <obj_property name="label">data_serializer</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_data_serializer/parallel_data" type="array">
-            <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
-            <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
-            <obj_property name="Radix">BINARYRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_data_serializer/DAC_start_pulse" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_data_serializer/DAC_start_pulse" type="logic">
             <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
             <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_data_serializer/data_clk" type="logic">
-            <obj_property name="ElementShortName">data_clk</obj_property>
-            <obj_property name="ObjectShortName">data_clk</obj_property>
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_data_serializer/parallel_data" type="array">
+            <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\channels_readout(1)\/channel_data_serializer/serial_data" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_data_serializer/serial_data" type="logic">
             <obj_property name="ElementShortName">serial_data</obj_property>
             <obj_property name="ObjectShortName">serial_data</obj_property>
          </wvobject>
@@ -1702,62 +1591,78 @@
       <obj_property name="label">channels_controller</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject fp_name="/tb_integration/channels_controller_module/servo_mode" type="array">
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/data_mode" type="array">
+         <obj_property name="ElementShortName">data_mode[2:0]</obj_property>
+         <obj_property name="ObjectShortName">data_mode[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/servo_mode" type="array">
          <obj_property name="ElementShortName">servo_mode[0:1][31:0]</obj_property>
          <obj_property name="ObjectShortName">servo_mode[0:1][31:0]</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/channels_controller_module/fb_dly" type="other">
-         <obj_property name="ElementShortName">fb_dly</obj_property>
-         <obj_property name="ObjectShortName">fb_dly</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/fb_dly" type="array">
+         <obj_property name="ElementShortName">fb_dly[15:0]</obj_property>
+         <obj_property name="ObjectShortName">fb_dly[15:0]</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/channels_controller_module/state" type="other">
-         <obj_property name="ElementShortName">state</obj_property>
-         <obj_property name="ObjectShortName">state</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/set_SF" type="logic">
+         <obj_property name="ElementShortName">set_SF</obj_property>
+         <obj_property name="ObjectShortName">set_SF</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/channels_controller_module/acquisition_on" type="logic">
-         <obj_property name="ElementShortName">acquisition_on</obj_property>
-         <obj_property name="ObjectShortName">acquisition_on</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/set_SB" type="logic">
+         <obj_property name="ElementShortName">set_SB</obj_property>
+         <obj_property name="ObjectShortName">set_SB</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/channels_controller_module/frame_active" type="logic">
-         <obj_property name="ElementShortName">frame_active</obj_property>
-         <obj_property name="ObjectShortName">frame_active</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/set_FF" type="logic">
+         <obj_property name="ElementShortName">set_FF</obj_property>
+         <obj_property name="ObjectShortName">set_FF</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/channels_controller_module/new_row" type="logic">
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/set_FB" type="logic">
+         <obj_property name="ElementShortName">set_FB</obj_property>
+         <obj_property name="ObjectShortName">set_FB</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/new_row" type="logic">
          <obj_property name="ElementShortName">new_row</obj_property>
          <obj_property name="ObjectShortName">new_row</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/channels_controller_module/DAC_start_pulse" type="logic">
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/acquisition_on" type="logic">
+         <obj_property name="ElementShortName">acquisition_on</obj_property>
+         <obj_property name="ObjectShortName">acquisition_on</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/frame_active" type="logic">
+         <obj_property name="ElementShortName">frame_active</obj_property>
+         <obj_property name="ObjectShortName">frame_active</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/DAC_start_pulse" type="logic">
          <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
          <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/channels_controller_module/DAC_address" type="array">
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/data_sel" type="array">
+         <obj_property name="ElementShortName">data_sel[2:0]</obj_property>
+         <obj_property name="ObjectShortName">data_sel[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/DAC_address" type="array">
          <obj_property name="ElementShortName">DAC_address[1:0]</obj_property>
          <obj_property name="ObjectShortName">DAC_address[1:0]</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/channels_controller_module/line_sel" type="array">
+      <wvobject fp_name="/tb_integration/main_module/channels_controller_module/line_sel" type="array">
          <obj_property name="ElementShortName">line_sel[0:1][2:0]</obj_property>
          <obj_property name="ObjectShortName">line_sel[0:1][2:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/channels_controller_module/data_sel" type="array">
-         <obj_property name="ElementShortName">data_sel[2:0]</obj_property>
-         <obj_property name="ObjectShortName">data_sel[2:0]</obj_property>
       </wvobject>
       <wvobject fp_name="group1199" type="group">
          <obj_property name="label">channels_DAC_controller</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/tb_integration/channels_DAC_gate_ctrl/start_conv_pulse" type="logic">
-            <obj_property name="ElementShortName">start_conv_pulse</obj_property>
-            <obj_property name="ObjectShortName">start_conv_pulse</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/channels_DAC_gate_ctrl/CS" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/channels_DAC_gate_ctrl/CS" type="logic">
             <obj_property name="ElementShortName">CS</obj_property>
             <obj_property name="ObjectShortName">CS</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/channels_DAC_gate_ctrl/SCLK" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/channels_DAC_gate_ctrl/SCLK" type="logic">
             <obj_property name="ElementShortName">SCLK</obj_property>
             <obj_property name="ObjectShortName">SCLK</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/channels_DAC_gate_ctrl/LDAC" type="logic">
+         <wvobject fp_name="/tb_integration/main_module/channels_DAC_gate_ctrl/LDAC" type="logic">
             <obj_property name="ElementShortName">LDAC</obj_property>
             <obj_property name="ObjectShortName">LDAC</obj_property>
          </wvobject>
@@ -1766,166 +1671,69 @@
    <wvobject fp_name="group1689" type="group">
       <obj_property name="label">frame_builder</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject fp_name="/tb_integration/frame_builder_module/num_cols" type="other">
-         <obj_property name="ElementShortName">num_cols</obj_property>
-         <obj_property name="ObjectShortName">num_cols</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/payload_size" type="other">
-         <obj_property name="ElementShortName">payload_size</obj_property>
-         <obj_property name="ObjectShortName">payload_size</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/state" type="other">
-         <obj_property name="ElementShortName">state</obj_property>
-         <obj_property name="ObjectShortName">state</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/channels_data" type="array">
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_integration/main_module/frame_builder_module/channels_data" type="array">
          <obj_property name="ElementShortName">channels_data[0:1]</obj_property>
          <obj_property name="ObjectShortName">channels_data[0:1]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/channels_data_reg" type="array">
+      <wvobject fp_name="/tb_integration/main_module/frame_builder_module/channels_data_reg" type="array">
          <obj_property name="ElementShortName">channels_data_reg[0:1]</obj_property>
          <obj_property name="ObjectShortName">channels_data_reg[0:1]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="isExpanded"></obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/row_counter" type="other">
-         <obj_property name="ElementShortName">row_counter</obj_property>
-         <obj_property name="ObjectShortName">row_counter</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/frame_builder_module/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/valid_data" type="logic">
-         <obj_property name="ElementShortName">valid_data</obj_property>
-         <obj_property name="ObjectShortName">valid_data</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/valid_data_reg" type="logic">
-         <obj_property name="ElementShortName">valid_data_reg</obj_property>
-         <obj_property name="ObjectShortName">valid_data_reg</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/valid_row" type="logic">
-         <obj_property name="ElementShortName">valid_row</obj_property>
-         <obj_property name="ObjectShortName">valid_row</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/update_payload" type="logic">
-         <obj_property name="ElementShortName">update_payload</obj_property>
-         <obj_property name="ObjectShortName">update_payload</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/header_payload" type="array">
-         <obj_property name="ElementShortName">header_payload[0:42][31:0]</obj_property>
-         <obj_property name="ObjectShortName">header_payload[0:42][31:0]</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/frame_builder_module/payload_size" type="array">
+         <obj_property name="ElementShortName">payload_size[6:0]</obj_property>
+         <obj_property name="ObjectShortName">payload_size[6:0]</obj_property>
          <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/data_payload" type="array">
+      <wvobject fp_name="/tb_integration/main_module/frame_builder_module/header_payload" type="array">
+         <obj_property name="ElementShortName">header_payload[0:42][31:0]</obj_property>
+         <obj_property name="ObjectShortName">header_payload[0:42][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/frame_builder_module/data_payload" type="array">
          <obj_property name="ElementShortName">data_payload[0:23][31:0]</obj_property>
          <obj_property name="ObjectShortName">data_payload[0:23][31:0]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/sender_ready" type="logic">
-         <obj_property name="ElementShortName">sender_ready</obj_property>
-         <obj_property name="ObjectShortName">sender_ready</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/frame_builder_module/valid_data_reg" type="logic">
+         <obj_property name="ElementShortName">valid_data_reg</obj_property>
+         <obj_property name="ObjectShortName">valid_data_reg</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/send_data_packet" type="logic">
-         <obj_property name="ElementShortName">send_data_packet</obj_property>
-         <obj_property name="ObjectShortName">send_data_packet</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/frame_builder_module/valid_row" type="logic">
+         <obj_property name="ElementShortName">valid_row</obj_property>
+         <obj_property name="ObjectShortName">valid_row</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/last_frame_sent" type="logic">
+      <wvobject fp_name="/tb_integration/main_module/frame_builder_module/last_frame_sent" type="logic">
          <obj_property name="ElementShortName">last_frame_sent</obj_property>
          <obj_property name="ObjectShortName">last_frame_sent</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/stop_received" type="logic">
-         <obj_property name="ElementShortName">stop_received</obj_property>
-         <obj_property name="ObjectShortName">stop_received</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/frame_builder_module/last_frame" type="logic">
-         <obj_property name="ElementShortName">last_frame</obj_property>
-         <obj_property name="ObjectShortName">last_frame</obj_property>
+      <wvobject fp_name="/tb_integration/main_module/frame_builder_module/send_data_packet" type="logic">
+         <obj_property name="ElementShortName">send_data_packet</obj_property>
+         <obj_property name="ObjectShortName">send_data_packet</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group1684" type="group">
       <obj_property name="label">TES_bias_setter</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject fp_name="/tb_integration/TES_bias_setter_module/TES_bias" type="array">
-         <obj_property name="ElementShortName">TES_bias[0:3][31:0]</obj_property>
-         <obj_property name="ObjectShortName">TES_bias[0:3][31:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/TES_bias_setter_module/set_bias" type="logic">
-         <obj_property name="ElementShortName">set_bias</obj_property>
-         <obj_property name="ObjectShortName">set_bias</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/TES_bias_setter_module/DAC_start_pulse" type="logic">
-         <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
-         <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/TES_bias_setter_module/DAC_data" type="array">
-         <obj_property name="ElementShortName">DAC_data[17:0]</obj_property>
-         <obj_property name="ObjectShortName">DAC_data[17:0]</obj_property>
-      </wvobject>
       <wvobject fp_name="group3025" type="group">
          <obj_property name="label">TES_bias_DAC_ctrl</obj_property>
          <obj_property name="DisplayName">label</obj_property>
          <obj_property name="isExpanded"></obj_property>
-         <wvobject fp_name="/tb_integration/TES_bias_DAC_gate_controller/CS" type="logic">
-            <obj_property name="ElementShortName">CS</obj_property>
-            <obj_property name="ObjectShortName">CS</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/TES_bias_DAC_gate_controller/SCLK" type="logic">
-            <obj_property name="ElementShortName">SCLK</obj_property>
-            <obj_property name="ObjectShortName">SCLK</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/TES_bias_DAC_gate_controller/LDAC" type="logic">
-            <obj_property name="ElementShortName">LDAC</obj_property>
-            <obj_property name="ObjectShortName">LDAC</obj_property>
-         </wvobject>
       </wvobject>
       <wvobject fp_name="group3029" type="group">
          <obj_property name="label">TES_bias_data_serializer</obj_property>
          <obj_property name="DisplayName">label</obj_property>
          <obj_property name="isExpanded"></obj_property>
-         <wvobject fp_name="/tb_integration/TES_bias_data_serializer/DAC_start_pulse" type="logic">
-            <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
-            <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/TES_bias_data_serializer/parallel_data" type="array">
-            <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
-            <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
-            <obj_property name="Radix">BINARYRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/TES_bias_data_serializer/data_clk" type="logic">
-            <obj_property name="ElementShortName">data_clk</obj_property>
-            <obj_property name="ObjectShortName">data_clk</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/TES_bias_data_serializer/serial_data" type="logic">
-            <obj_property name="ElementShortName">serial_data</obj_property>
-            <obj_property name="ObjectShortName">serial_data</obj_property>
-         </wvobject>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group313" type="group">
       <obj_property name="label">packet_sender</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject fp_name="/tb_integration/packet_sender_module/send_reply_pulse" type="logic">
-         <obj_property name="ElementShortName">send_reply_pulse</obj_property>
-         <obj_property name="ObjectShortName">send_reply_pulse</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_sender_module/send_data_frame_pulse" type="logic">
-         <obj_property name="ElementShortName">send_data_frame_pulse</obj_property>
-         <obj_property name="ObjectShortName">send_data_frame_pulse</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_sender_module/state" type="other">
-         <obj_property name="ElementShortName">state</obj_property>
-         <obj_property name="ObjectShortName">state</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_sender_module/packet_payload" type="array">
-         <obj_property name="ElementShortName">packet_payload[0:66][31:0]</obj_property>
-         <obj_property name="ObjectShortName">packet_payload[0:66][31:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_sender_module/ready" type="logic">
-         <obj_property name="ElementShortName">ready</obj_property>
-         <obj_property name="ObjectShortName">ready</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_integration/packet_sender_module/params_valid" type="logic">
-         <obj_property name="ElementShortName">params_valid</obj_property>
-         <obj_property name="ObjectShortName">params_valid</obj_property>
-      </wvobject>
    </wvobject>
 </wave_config>
