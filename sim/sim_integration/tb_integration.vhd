@@ -90,7 +90,20 @@ architecture Behavioral of tb_integration is
     ---------------------------------------------------------------------------
     -- Internal signals to assert tests
     ---------------------------------------------------------------------------
-    signal internal_signal          : std_logic := '0';
+    -- Types
+    type t_sample_sum is array (0 to MAX_CHANNELS - 1) of t_word;
+
+    type t_data_payload is array (0 to (MAX_CHANNELS * MAX_ROWS - 1)) of t_word;
+
+    type t_packet_record is record
+        num                 : integer;
+        packet_type         : t_packet_type;
+        card_id             : t_half_word;
+        param_id            : unsigned(PARAM_ID_WIDTH - 1 downto 0);
+        payload_size        : natural;
+        packet_payload      : t_packet_payload;
+    end record;
+
     -- packet_parser module
     signal parser_params_valid      : std_logic := '0';
     signal parser_packet_type       : t_packet_type := undefined;
@@ -110,16 +123,53 @@ architecture Behavioral of tb_integration is
     signal builder_err_ok       : std_logic := '0';
     signal builder_payload_size : unsigned(bits_req(MAX_PAYLOAD) - 1 downto 0) := (others => '0');
     signal builder_payload      : t_packet_payload := (others => (others => '0'));
+    -- row selector
+    signal new_row              : std_logic := '0';
+    signal row_num              : unsigned(bits_req(MAX_ROWS - 1) - 1 downto 0)   := (others => '0');
 
-    type t_packet_record is record
-        num                 : integer;
-        packet_type         : t_packet_type;
-        card_id             : t_half_word;
-        param_id            : unsigned(PARAM_ID_WIDTH - 1 downto 0);
-        payload_size        : natural;
-        packet_payload      : t_packet_payload;
-    end record;
+    -- buffers
+    signal data_rate        : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(DATA_RATE_ID)) - 1) := (others => (others => '0'));
+    signal num_rows         : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(NUM_ROWS_ID)) - 1) := (others => (others => '0'));
+    signal num_cols         : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(NUM_COLS_REP_ID)) - 1) := (others => (others => '0'));
+    signal sample_dly       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SAMPLE_DLY_ID)) - 1) := (others => (others => '0'));
+    signal sample_num       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SAMPLE_NUM_ID)) - 1) := (others => (others => '0'));
+    signal gain_0           : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_0_ID)) - 1) := (others => (others => '0'));
+    signal gain_1           : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_1_ID)) - 1) := (others => (others => '0'));
 
+    signal data_rate_int    : natural := 0;
+    signal num_rows_int     : natural := 0;
+    signal num_cols_int     : natural := 0;
+    signal sample_num_int   : natural := 0;
+    signal sample_dly_int   : natural := 0;
+
+    type t_gain_array is array(0 to MAX_CHANNELS - 1) of natural;
+    signal fb_gain : t_gain_array := (others => 0);
+
+
+    -- check_packet_data signals
+    signal calc_data_packet : std_logic := '0';
+    signal data_packet_calculated : std_logic := '0';
+
+    signal frame_count      : natural := 0;
+    signal row_count        : natural := 0;
+    signal discard_count    : natural := 0;
+    signal sample_count     : natural := 0;
+    signal packets_checked  : natural := 0;
+
+    signal sample_sum : t_sample_sum := (others => (others => '0'));
+
+    signal calc_data_payload        : t_packet_payload := (others => (others => '0'));
+    signal calc_data_payload_buffer : t_packet_payload := (others => (others => '0'));
+
+    -- check_reply_ok_background signals
+    signal reply_ok_bg_packet       : t_packet_record := (num => 0, packet_type => undefined, card_id => (others => '0'), param_id => (others => '0'), payload_size => 0, packet_payload => (others => (others => '0')));
+    signal reply_ok_bg_data_to_read : t_packet_payload := (others => (others => '0'));
+    signal reply_ok_bg_data_length  : natural := 0;
+    signal check_reply_ok_signal    : std_logic := '0';
+
+    ---------------------------------------------------------------------------
+    -- Check procedures
+    ---------------------------------------------------------------------------
     procedure send_packet(
         packet                     : in t_packet_record;
 
@@ -167,6 +217,11 @@ architecture Behavioral of tb_integration is
         assert send_reply_pulse = '0' report "Packet not ignored";
     end procedure;
 
+    procedure check_parser_ignored_packet(packet : in t_packet_record) is
+    begin
+        wait until parser_params_valid = '1' for 2 ms;
+        assert parser_params_valid = '0' report "Packet not ignored";
+    end procedure;
 
     procedure check_reply_error(packet : in t_packet_record) is
     begin
@@ -183,32 +238,92 @@ architecture Behavioral of tb_integration is
     end procedure;
 
     procedure check_reply_ok(packet : in t_packet_record; data_to_read : in t_packet_payload := (others => (others => '0')); data_length : in natural := 0 ) is
-        variable empty_payload : t_packet_payload := (others => (others => '0'));
+        variable empty_word : t_word := (others => '0');
     begin
-        wait until send_reply_pulse = '1' for 100 us;
-        assert send_reply_pulse = '1' report "No error reply sent";
+        wait until PC_parser_params_valid = '1';
+        assert PC_parser_params_valid = '1' report "No reply received";
 
-        wait until sender_params_valid = '1' for 100 us;
-        assert builder_packet_type = reply report "Wrong packet type";
-        assert builder_card_id = DAUGHTER_CARD_ID report "Wrong card id";
-        assert builder_param_id = std_logic_vector(resize(packet.param_id, builder_param_id'length)) report "Wrong param id (Expected: " & integer'image(to_integer(unsigned(builder_param_id))) & ", Received: " & integer'image(to_integer(unsigned(std_logic_vector(resize(packet.param_id, builder_param_id'length))))) & ")";
-        assert builder_cmd_type = packet.packet_type report "Wrong cmd_type";
-        assert builder_err_ok = '0' report "Reply error bit set";
+        assert PC_parser_packet_type = reply report "Wrong packet type";
+        assert PC_parser_card_id = DAUGHTER_CARD_ID report "Wrong card id";
+        assert PC_parser_param_id = std_logic_vector(resize(packet.param_id, PC_parser_param_id'length)) report "Wrong param id (Expected: " & integer'image(to_integer(unsigned(builder_param_id))) & ", Received: " & integer'image(to_integer(unsigned(std_logic_vector(resize(packet.param_id, builder_param_id'length))))) & ")";
+        assert PC_parser_cmd_type = packet.packet_type report "Wrong cmd_type";
+        assert PC_parser_err_ok = '0' report "Reply error bit not set";
         if(packet.packet_type = cmd_wb) then
-            assert builder_payload_size = to_unsigned(1, builder_payload_size'length) report "Wrong payload size";
-            assert builder_payload = empty_payload report "Reply payload is not empty";
+            assert PC_parser_payload_size = to_unsigned(1, builder_payload_size'length) report "Wrong payload size";
+            assert PC_parser_packet_payload(0) = empty_word report "Reply payload is not empty";
         elsif (packet.packet_type = cmd_rb) then
-            assert builder_payload_size = to_unsigned(data_length, builder_payload_size'length) report "Wrong payload size";
-            assert builder_payload = data_to_read report "Reply payload data is not correct";
+            assert PC_parser_payload_size = to_unsigned(data_length, builder_payload_size'length) report "Wrong payload size";
+            for i in 0 to data_length - 1 loop
+                assert PC_parser_packet_payload(i) = data_to_read(i) report "Reply payload data is not correct (word " & integer'image(i) & ") (Expected: " & integer'image(to_integer(signed(data_to_read(i)))) & ", Received: " & integer'image(to_integer(signed(PC_parser_packet_payload(i))));
+            end loop;
         end if;
-
     end procedure;
 
-    procedure check_parser_ignored_packet(packet : in t_packet_record) is
+    procedure check_reply_ok_background(packet                          : in t_packet_record; 
+                                        data_to_read                    : in t_packet_payload := (others => (others => '0')); 
+                                        data_length                     : in natural := 0; 
+                                        signal reply_ok_bg_packet       : out t_packet_record;
+                                        signal reply_ok_bg_data_to_read : out t_packet_payload;
+                                        signal reply_ok_bg_data_length  : out natural;
+                                        signal check_reply_ok_signal    : out std_logic
+                                        ) is
     begin
-        wait until parser_params_valid = '1' for 2 ms;
-        assert parser_params_valid = '0' report "Packet not ignored";
+        reply_ok_bg_packet <= packet;
+        reply_ok_bg_data_to_read <= data_to_read;
+        reply_ok_bg_data_length <= data_length;
+        check_reply_ok_signal <= '1';
+        wait for 1 ps;
+        check_reply_ok_signal <= '0';
+        wait for 1 ps;
     end procedure;
+
+
+    procedure check_data_packets(num_packets                : in natural; 
+                                 signal calc_data_packet    : out std_logic; 
+                                 signal calc_data_payload   : out t_packet_payload
+                                ) is
+        variable packets_checked    : natural := 0;
+        variable payload_size       : natural := 0;
+    begin
+        while packets_checked < num_packets loop
+
+            if (packets_checked = 0) then -- special case for the 1st packets
+                calc_data_packet <= '1';
+                wait until data_packet_calculated = '1';
+                calc_data_packet <= '0';
+                wait for 1 ps;
+            end if;
+
+            calc_data_payload <= calc_data_payload_buffer;
+            wait for 1 ps;
+
+            if (packets_checked < num_packets - 1) then
+                calc_data_packet <= '1';
+                wait until data_packet_calculated = '1';
+                calc_data_packet <= '0';
+                wait for 1 ps;
+            end if;
+
+            wait until PC_parser_params_valid = '1' for 2 ms; 
+            assert PC_parser_params_valid = '1' report "PC params valid timeout 1";
+            if (PC_parser_packet_type = reply) then -- We must discard the reply packet in some situations
+                wait until PC_parser_params_valid = '1' for 2 ms;
+                assert PC_parser_params_valid = '1' report "PC params valid timeout 2";
+            end if;
+
+
+            payload_size := DATA_PKT_HEADER_SIZE + num_cols_int * num_rows_int;
+            assert PC_parser_packet_type = data report "Wrong packet type (Expected: data, Received: " & t_packet_type'image(PC_parser_packet_type) & ")";
+            assert PC_parser_card_id = DAUGHTER_CARD_ID report "Wrong card id";
+            assert PC_parser_payload_size = to_unsigned(payload_size, PC_parser_payload_size'length) report "Wrong payload size (Expected: " & integer'image(payload_size) & ", Received: " & integer'image(to_integer(PC_parser_payload_size));
+            for i in 0 to num_cols_int * num_rows_int - 1 loop
+                assert PC_parser_packet_payload(DATA_PKT_HEADER_SIZE + i) = calc_data_payload(i) report "Wrong data payload (row " & integer'image(i) & ") (Expected: " & integer'image(to_integer(signed(calc_data_payload(i)))) & ", Received: " & integer'image(to_integer(signed(PC_parser_packet_payload(DATA_PKT_HEADER_SIZE + i))));
+            end loop;
+            report "Checked data packet: " & integer'image(packets_checked);
+            packets_checked := packets_checked + 1;
+        end loop;
+    end procedure;
+
 
 begin
 
@@ -262,7 +377,61 @@ begin
         wait for 20 us;
     end process;
 
+    ---------------------------------------------------------------------------
+    -- Check processes
+    ---------------------------------------------------------------------------
 
+    check_reply_ok_background_process : process
+    begin
+        wait until check_reply_ok_signal = '1';
+        check_reply_ok(reply_ok_bg_packet, reply_ok_bg_data_to_read, reply_ok_bg_data_length);
+    end process;
+
+    calculate_data_packet : process
+    begin
+        wait until calc_data_packet = '1';
+        data_packet_calculated <= '0';
+
+        while frame_count < data_rate_int loop 
+            -- sync with row 0
+            if (row_num /= 0) then
+                wait until row_num = 0;
+            end if;
+            while row_count < num_rows_int loop
+                wait until new_row = '1';
+                -- Discard sample_dly samples
+                while discard_count < sample_dly_int loop
+                    wait until ADC_CNV = '1';
+                    discard_count <= discard_count + 1;
+                    wait for 1 ps;
+                end loop;
+                discard_count <= 0;
+                -- Sum sample_num samples
+                while sample_count < sample_num_int loop
+                    wait until ADC_CNV = '1';
+                    sample_count <= sample_count + 1;
+                    for i in 0 to MAX_CHANNELS - 1 loop
+                        sample_sum(i) <= std_logic_vector(unsigned(sample_sum(i)) + resize(unsigned(adc_sim_data(i)), sample_sum(i)'length));
+                    end loop;
+                    wait for 1 ps;
+                end loop;
+                -- Calculate feedback
+                for i in 0 to MAX_CHANNELS - 1 loop
+                    calc_data_payload_buffer((i * num_rows_int) + row_count) <= std_logic_vector(to_signed(to_integer(signed(sample_sum(i))) * fb_gain(i), t_word'length));
+                end loop;
+                sample_sum <= (others => (others => '0'));
+                sample_count <= 0;
+                row_count <= row_count + 1;
+                wait on row_count, frame_count;
+            end loop;
+            row_count <= 0;
+            frame_count <= frame_count + 1;
+            wait on row_count, frame_count;
+        end loop;
+        frame_count <= 0;
+        data_packet_calculated <= '1';
+        wait on data_packet_calculated;
+    end process;
 
     -- (PC) TX packet builder
     PC_builder_module : entity concept.packet_builder
@@ -372,7 +541,6 @@ begin
         );
 
     
-    internal_signal <= <<signal main_module.rx_busy : std_logic>>;
     --PC_params_valid 
     --parser_params_valid <= <<signal main_module.parser_params_valid : std_logic>>;
 
@@ -395,6 +563,25 @@ begin
     builder_err_ok          <= <<signal main_module.err_ok                  : std_logic>>;
     builder_payload_size    <= <<signal main_module.payload_size            : unsigned(bits_req(MAX_PAYLOAD) - 1 downto 0)>>;
     builder_payload         <= <<signal main_module.packet_payload          : t_packet_payload>>;
+    --row_selector
+    new_row                 <= <<signal main_module.new_row                 : std_logic>>;
+    row_num                 <= <<signal main_module.row_num                 : unsigned(bits_req(MAX_ROWS - 1) - 1 downto 0)>>;
+    --buffers
+    data_rate               <= <<signal main_module.data_rate    : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(DATA_RATE_ID)) - 1)>>;
+    num_rows                <= <<signal main_module.num_rows     : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(NUM_ROWS_ID)) - 1)>>;
+    num_cols                <= <<signal main_module.num_cols     : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(NUM_COLS_REP_ID)) - 1)>>;
+    sample_num              <= <<signal main_module.sample_num   : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SAMPLE_NUM_ID)) - 1)>>;
+    sample_dly              <= <<signal main_module.sample_dly   : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SAMPLE_DLY_ID)) - 1)>>;
+    gain_0                  <= <<signal main_module.gain_0       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_0_ID)) - 1)>>;
+    gain_1                  <= <<signal main_module.gain_1       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_1_ID)) - 1)>>;
+
+    data_rate_int           <= to_integer(unsigned(data_rate(0)));
+    num_rows_int            <= to_integer(unsigned(num_rows(0)));
+    num_cols_int            <= to_integer(unsigned(num_cols(0)));
+    sample_num_int          <= to_integer(unsigned(sample_num(0)));
+    sample_dly_int          <= to_integer(unsigned(sample_dly(0)));
+    fb_gain(0)              <= to_integer(unsigned(gain_0(0)));
+    fb_gain(1)              <= to_integer(unsigned(gain_1(0)));
 
     -- Stimulus generation
     stimulus_generation: process
@@ -420,7 +607,7 @@ begin
         variable packet_10 : t_packet_record := (10, packet_type => cmd_st, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_ID, payload_size => 1, packet_payload => (others => (others => '0')));
         -- #11: Set acquisition config 
         variable packet_11 : t_packet_record := (11, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_S_ID, payload_size => 2, packet_payload => (0 => x"00000003", 1 => x"00000006", others => (others => '0')));
-        -- #12: Good start acquisition (with current parameters it should last around 6000us until the last frame put in module, and 7500 until it is sent)
+        -- #12: Good start acquisition
         variable packet_12 : t_packet_record := (12, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_ID, payload_size => 1, packet_payload => (others => (others => '0')));
         -- #13: Good write but has to be ignored because acquisition is on
         variable packet_13 : t_packet_record := (13, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => ON_BIAS_ID, payload_size => PARAM_ID_TO_SIZE(to_integer(ON_BIAS_ID)), packet_payload => (0  => x"0f0f0f00", 1  => x"0f0f0f01", 2  => x"0f0f0f02", 3  => x"0f0f0f03", 4  => x"0f0f0f04", 5  => x"0f0f0f05", 6  => x"0f0f0f06", 7  => x"0f0f0f07", 8  => x"0f0f0f08", 9  => x"0f0f0f09", 10 => x"0f0f0f10", 11 => x"0f0f0f11", others => (others => '0')));
@@ -516,7 +703,8 @@ begin
         send_packet(packet_12, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
         report "[TEST 12]";
         check_packet_received(packet_12);
-        check_reply_ok(packet_12);
+        check_reply_ok_background(packet_12, (others => (others => '0')), 0, reply_ok_bg_packet, reply_ok_bg_data_to_read, reply_ok_bg_data_length, check_reply_ok_signal);
+        check_data_packets(to_integer(unsigned(packet_11.packet_payload(1))) - to_integer(unsigned(packet_11.packet_payload(0))) + 1, calc_data_packet, calc_data_payload);
 
         -- #13: Good write but has to be ignored because acquisition is on
         send_packet(packet_13, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
