@@ -49,7 +49,7 @@ end sample_selector;
 
 architecture behave of sample_selector is
 
-    type stateType is (idle, wait_sample);
+    type stateType is (idle, wait_first_sample, wait_sample);
     signal state : stateType;
 
     signal sample_count : unsigned(sample_num'range) := (others => '0');
@@ -68,9 +68,15 @@ begin
                 sample_data <= (others => '0');
                 sample_count <= (others => '0');
                 if (new_row = '1') then
-                    state <= wait_sample;
+                    state <= wait_first_sample;
                 else
                     state <= state;
+                end if;
+
+            when wait_first_sample =>
+                -- We wait until the pulse is over to avoid reading the last valid word from the previous row
+                if (new_row = '0') then
+                    state <= wait_sample;
                 end if;
             
             when wait_sample =>
