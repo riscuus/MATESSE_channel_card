@@ -145,7 +145,14 @@ architecture Behavioral of tb_integration is
     type t_gain_array is array(0 to MAX_CHANNELS - 1) of natural;
     signal fb_gain : t_gain_array := (others => 0);
 
+    -- send_packet_async signals
+    signal send_packet_async_trigger    : std_logic := '0';
+    signal async_packet                 : t_packet_record := (num => 0, packet_type => undefined, card_id => (others => '0'), param_id => (others => '0'), payload_size => 0, packet_payload => (others => (others => '0')));
+    signal async_delay                  : time;
 
+    -- check packet ignored async 
+    signal check_packet_ignored_async_packet    : t_packet_record := (num => 0, packet_type => undefined, card_id => (others => '0'), param_id => (others => '0'), payload_size => 0, packet_payload => (others => (others => '0')));
+    signal check_packet_ignored_async_trigger   : std_logic := '0';
     -- check_packet_data signals
     signal calc_data_packet : std_logic := '0';
     signal data_packet_calculated : std_logic := '0';
@@ -161,11 +168,11 @@ architecture Behavioral of tb_integration is
     signal calc_data_payload        : t_packet_payload := (others => (others => '0'));
     signal calc_data_payload_buffer : t_packet_payload := (others => (others => '0'));
 
-    -- check_reply_ok_background signals
-    signal reply_ok_bg_packet       : t_packet_record := (num => 0, packet_type => undefined, card_id => (others => '0'), param_id => (others => '0'), payload_size => 0, packet_payload => (others => (others => '0')));
-    signal reply_ok_bg_data_to_read : t_packet_payload := (others => (others => '0'));
-    signal reply_ok_bg_data_length  : natural := 0;
-    signal check_reply_ok_signal    : std_logic := '0';
+    -- check_reply_ok_async signals
+    signal reply_ok_async               : t_packet_record := (num => 0, packet_type => undefined, card_id => (others => '0'), param_id => (others => '0'), payload_size => 0, packet_payload => (others => (others => '0')));
+    signal reply_ok_async_data_to_read  : t_packet_payload := (others => (others => '0'));
+    signal reply_ok_async_data_length   : natural := 0;
+    signal check_reply_ok_signal        : std_logic := '0';
 
     ---------------------------------------------------------------------------
     -- Check procedures
@@ -197,6 +204,23 @@ architecture Behavioral of tb_integration is
 
     end procedure;
 
+    procedure send_packet_async(
+        packet                              : in t_packet_record;
+        delay                               : in time;
+
+        signal async_packet                 : out t_packet_record;
+        signal async_delay                  : out time;
+        signal send_packet_async_trigger    : out std_logic
+        ) is
+    begin
+        async_packet <= packet;
+        async_delay <= delay;
+        send_packet_async_trigger <= '1';
+        wait for 1 ps;
+        send_packet_async_trigger <= '0';
+        wait for 1 ps;
+    end procedure;
+
     procedure check_packet_received(
         packet  : in t_packet_record) is
     begin
@@ -214,8 +238,18 @@ architecture Behavioral of tb_integration is
         packet  : in t_packet_record) is
     begin
         wait until send_reply_pulse = '1' for 100 us;
-        assert send_reply_pulse = '0' report "Packet not ignored";
+        assert send_reply_pulse = '0' report "Packet not ignored num: " & integer'image(packet.num);
     end procedure;
+
+    procedure check_packet_ignored_async(packet : in t_packet_record; signal check_packet_ignored_async_packet : out t_packet_record; signal check_packet_ignored_async_trigger : out std_logic) is
+    begin
+        check_packet_ignored_async_packet <= packet;
+        check_packet_ignored_async_trigger <= '1';
+        wait for 1 ps;
+        check_packet_ignored_async_trigger <= '0';
+        wait for 1 ps;
+    end procedure;
+
 
     procedure check_parser_ignored_packet(packet : in t_packet_record) is
     begin
@@ -247,8 +281,8 @@ architecture Behavioral of tb_integration is
         assert PC_parser_card_id = DAUGHTER_CARD_ID report "Wrong card id";
         assert PC_parser_param_id = std_logic_vector(resize(packet.param_id, PC_parser_param_id'length)) report "Wrong param id (Expected: " & integer'image(to_integer(unsigned(builder_param_id))) & ", Received: " & integer'image(to_integer(unsigned(std_logic_vector(resize(packet.param_id, builder_param_id'length))))) & ")";
         assert PC_parser_cmd_type = packet.packet_type report "Wrong cmd_type";
-        assert PC_parser_err_ok = '0' report "Reply error bit not set";
-        if(packet.packet_type = cmd_wb) then
+        assert PC_parser_err_ok = '0' report "Reply error bit set";
+        if(packet.packet_type = cmd_wb or packet.packet_type = cmd_st) then
             assert PC_parser_payload_size = to_unsigned(1, builder_payload_size'length) report "Wrong payload size";
             assert PC_parser_packet_payload(0) = empty_word report "Reply payload is not empty";
         elsif (packet.packet_type = cmd_rb) then
@@ -259,18 +293,18 @@ architecture Behavioral of tb_integration is
         end if;
     end procedure;
 
-    procedure check_reply_ok_background(packet                          : in t_packet_record; 
-                                        data_to_read                    : in t_packet_payload := (others => (others => '0')); 
-                                        data_length                     : in natural := 0; 
-                                        signal reply_ok_bg_packet       : out t_packet_record;
-                                        signal reply_ok_bg_data_to_read : out t_packet_payload;
-                                        signal reply_ok_bg_data_length  : out natural;
-                                        signal check_reply_ok_signal    : out std_logic
-                                        ) is
+    procedure check_reply_ok_async(packet                               : in t_packet_record; 
+                                   data_to_read                         : in t_packet_payload := (others => (others => '0')); 
+                                   data_length                          : in natural := 0; 
+                                   signal reply_ok_async                : out t_packet_record;
+                                   signal reply_ok_async_data_to_read   : out t_packet_payload;
+                                   signal reply_ok_async_data_length    : out natural;
+                                   signal check_reply_ok_signal         : out std_logic
+                                  ) is
     begin
-        reply_ok_bg_packet <= packet;
-        reply_ok_bg_data_to_read <= data_to_read;
-        reply_ok_bg_data_length <= data_length;
+        reply_ok_async <= packet;
+        reply_ok_async_data_to_read <= data_to_read;
+        reply_ok_async_data_length <= data_length;
         check_reply_ok_signal <= '1';
         wait for 1 ps;
         check_reply_ok_signal <= '0';
@@ -324,6 +358,26 @@ architecture Behavioral of tb_integration is
         end loop;
     end procedure;
 
+    procedure check_good_stop(packet : in t_packet_record; last_frame_id : in natural) is
+        variable stop_loop : std_logic := '0';
+    begin
+        stop_loop := '0';
+        while stop_loop = '0' loop
+            wait until PC_parser_params_valid = '1';
+            if (PC_parser_packet_type = data) then
+                -- The last data frame must have the stop_bit and last_frame set. It needs also to have an id smaller than the real last one
+                if (PC_parser_packet_payload(0)(1 downto 0) = "11" and to_integer(unsigned(PC_parser_packet_payload(1))) < last_frame_id) then
+                    stop_loop := '1';
+                end if;
+            else
+                report "Wrong stop" severity error;
+                stop_loop := '1';
+            end if;
+            wait for 1 ps;
+        end loop;
+        -- After the last data frame we must receive a reply packet
+        check_reply_ok(packet, (others => (others => '0')), 0);
+    end procedure;
 
 begin
 
@@ -380,11 +434,17 @@ begin
     ---------------------------------------------------------------------------
     -- Check processes
     ---------------------------------------------------------------------------
+    
+    check_packet_ignored_async_process : process
+    begin
+        wait until check_packet_ignored_async_trigger = '1';
+        check_packet_ignored(check_packet_ignored_async_packet);
+    end process;
 
     check_reply_ok_background_process : process
     begin
         wait until check_reply_ok_signal = '1';
-        check_reply_ok(reply_ok_bg_packet, reply_ok_bg_data_to_read, reply_ok_bg_data_length);
+        check_reply_ok(reply_ok_async, reply_ok_async_data_to_read, reply_ok_async_data_length);
     end process;
 
     calculate_data_packet : process
@@ -625,7 +685,7 @@ begin
         -- #20: Good write (set ch0 -> servo_mode_const, ch1 -> servo_mode_PID)
         variable packet_20 : t_packet_record := (19, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => SERVO_MODE_ID, payload_size => PARAM_ID_TO_SIZE(to_integer(SERVO_MODE_ID)), packet_payload => (0 => std_logic_vector(to_unsigned(SERVO_MODE_CONST, t_word'length)), 1 => std_logic_vector(to_unsigned(SERVO_MODE_PID, t_word'length)), others => (others => '0')));
         -- #21: Good write TES bias 
-        variable packet_21 : t_packet_record := (20, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => SERVO_MODE_ID, payload_size => PARAM_ID_TO_SIZE(to_integer(SERVO_MODE_ID)), packet_payload => (0 => x"FFFFFFF0", 1 => x"FFFFFFF1", 2 => x"FFFFFFF2", 3 => x"FFFFFFF3", others => (others => '0')));
+        variable packet_21 : t_packet_record := (20, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => BIAS_ID, payload_size => PARAM_ID_TO_SIZE(to_integer(BIAS_ID)), packet_payload => (0 => x"FFFFFFF0", 1 => x"FFFFFFF1", 2 => x"FFFFFFF2", 3 => x"FFFFFFF3", others => (others => '0')));
         -- #22: Good start acquisition
         variable packet_22 : t_packet_record := (21, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_ID, payload_size => 1, packet_payload => (others => (others => '0')));
 
@@ -703,40 +763,62 @@ begin
         send_packet(packet_12, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
         report "[TEST 12]";
         check_packet_received(packet_12);
-        check_reply_ok_background(packet_12, (others => (others => '0')), 0, reply_ok_bg_packet, reply_ok_bg_data_to_read, reply_ok_bg_data_length, check_reply_ok_signal);
+        check_reply_ok_async(packet_12, (others => (others => '0')), 0, reply_ok_async, reply_ok_async_data_to_read, reply_ok_async_data_length, check_reply_ok_signal);
         check_data_packets(to_integer(unsigned(packet_11.packet_payload(1))) - to_integer(unsigned(packet_11.packet_payload(0))) + 1, calc_data_packet, calc_data_payload);
 
         -- #13: Good write but has to be ignored because acquisition is on
-        send_packet(packet_13, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
+        --report "[TEST 13]";
+        -- Manual testing
+        --send_packet(packet_13, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
 
         -- #14: Bad write but has to be ignored because acquisition is on (wrong size)
         --send_packet(cmd_wb, DAUGHTER_CARD_ID, ON_BIAS_ID, 3, (others => (others => '0')), PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
 
         -- #15: bad start acquisition (acq already on)
-        send_packet(packet_15, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
+        -- send_packet(packet_15, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
 
-        -- #16: Good start acquisition (But sender still busy)
+        -- #16 & 17: Good start acquisition and good stop 
+        report "[TEST 13]";
         send_packet(packet_16, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
-
         wait for PACKET_DELAY;
-
-        -- #17: Good stop (It should finish before last frame and set the corresponding bits)
         send_packet(packet_17, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
+        check_good_stop(packet_17, to_integer(unsigned(packet_11.packet_payload(1))));
 
         -- #18: Good write sa fb cte 
+        report "[TEST 14]";
         send_packet(packet_18, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
+        check_packet_received(packet_18);
+        check_reply_ok(packet_18);
 
         -- #19: Good write sa bias cte 
+        report "[TEST 15]";
         send_packet(packet_19, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
+        check_packet_received(packet_19);
+        check_reply_ok(packet_19);
         
         -- #20: Good write (set ch0 -> servo_mode_const, ch1 -> servo_mode_PID)
+
+        report "[TEST 16]";
         send_packet(packet_20, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
+        check_packet_received(packet_20);
+        check_reply_ok(packet_20);
+
 
         -- #21: Good write TES bias 
+        report "[TEST 17]";
         send_packet(packet_21, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
+        check_packet_received(packet_21);
+        check_reply_ok(packet_21);
+        -- Check that TES bias buffer are updated
+        -- Check that TES setter does update the DAC voltages
+
 
         -- #22: Good start acquisition
+        --report "[TEST 18]";
         send_packet(packet_22, PC_packet_type, PC_card_id, PC_param_id, PC_payload_size, PC_packet_payload, PC_params_valid);
+        -- Check that channel mux on ch0 is outputing fb_cte
+        -- Check that channel mux on ch1 is outputing calc_fb
+        -- Check 
 
         wait for PACKET_DELAY;
 

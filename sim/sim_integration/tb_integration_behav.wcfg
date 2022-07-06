@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="26273000000000fs"></ZoomStartTime>
-      <ZoomEndTime time="55293000000001fs"></ZoomEndTime>
-      <Cursor1Time time="37793000000000fs"></Cursor1Time>
+      <ZoomStartTime time="28841666666667fs"></ZoomStartTime>
+      <ZoomEndTime time="101791666666668fs"></ZoomEndTime>
+      <Cursor1Time time="41000000000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="254"></NameColumnWidth>
-      <ValueColumnWidth column_width="123"></ValueColumnWidth>
+      <ValueColumnWidth column_width="115"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="21" />
    <wvobject fp_name="/tb_integration/sys_clk_100" type="logic">
@@ -38,6 +38,7 @@
       <wvobject fp_name="group1160" type="group">
          <obj_property name="label">packet_params</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/PC_packet_type" type="other">
             <obj_property name="ElementShortName">PC_packet_type</obj_property>
             <obj_property name="ObjectShortName">PC_packet_type</obj_property>
@@ -99,7 +100,6 @@
    <wvobject fp_name="group2610" type="group">
       <obj_property name="label">PC parser</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_integration/PC_packet_parser/packet_type" type="other">
          <obj_property name="ElementShortName">packet_type</obj_property>
          <obj_property name="ObjectShortName">packet_type</obj_property>
@@ -128,286 +128,6 @@
          <obj_property name="ElementShortName">packet_payload[0:66][31:0]</obj_property>
          <obj_property name="ObjectShortName">packet_payload[0:66][31:0]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[0]" type="array">
-            <obj_property name="ElementShortName">[0][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[0][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[1]" type="array">
-            <obj_property name="ElementShortName">[1][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[1][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[2]" type="array">
-            <obj_property name="ElementShortName">[2][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[2][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[3]" type="array">
-            <obj_property name="ElementShortName">[3][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[3][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[4]" type="array">
-            <obj_property name="ElementShortName">[4][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[4][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[5]" type="array">
-            <obj_property name="ElementShortName">[5][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[5][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[6]" type="array">
-            <obj_property name="ElementShortName">[6][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[6][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[7]" type="array">
-            <obj_property name="ElementShortName">[7][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[7][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[8]" type="array">
-            <obj_property name="ElementShortName">[8][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[8][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[9]" type="array">
-            <obj_property name="ElementShortName">[9][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[9][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[10]" type="array">
-            <obj_property name="ElementShortName">[10][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[10][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[11]" type="array">
-            <obj_property name="ElementShortName">[11][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[11][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[12]" type="array">
-            <obj_property name="ElementShortName">[12][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[12][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[13]" type="array">
-            <obj_property name="ElementShortName">[13][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[13][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[14]" type="array">
-            <obj_property name="ElementShortName">[14][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[14][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[15]" type="array">
-            <obj_property name="ElementShortName">[15][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[15][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[16]" type="array">
-            <obj_property name="ElementShortName">[16][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[16][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[17]" type="array">
-            <obj_property name="ElementShortName">[17][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[17][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[18]" type="array">
-            <obj_property name="ElementShortName">[18][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[18][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[19]" type="array">
-            <obj_property name="ElementShortName">[19][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[19][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[20]" type="array">
-            <obj_property name="ElementShortName">[20][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[20][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[21]" type="array">
-            <obj_property name="ElementShortName">[21][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[21][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[22]" type="array">
-            <obj_property name="ElementShortName">[22][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[22][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[23]" type="array">
-            <obj_property name="ElementShortName">[23][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[23][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[24]" type="array">
-            <obj_property name="ElementShortName">[24][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[24][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[25]" type="array">
-            <obj_property name="ElementShortName">[25][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[25][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[26]" type="array">
-            <obj_property name="ElementShortName">[26][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[26][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[27]" type="array">
-            <obj_property name="ElementShortName">[27][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[27][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[28]" type="array">
-            <obj_property name="ElementShortName">[28][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[28][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[29]" type="array">
-            <obj_property name="ElementShortName">[29][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[29][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[30]" type="array">
-            <obj_property name="ElementShortName">[30][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[30][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[31]" type="array">
-            <obj_property name="ElementShortName">[31][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[31][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[32]" type="array">
-            <obj_property name="ElementShortName">[32][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[32][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[33]" type="array">
-            <obj_property name="ElementShortName">[33][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[33][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[34]" type="array">
-            <obj_property name="ElementShortName">[34][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[34][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[35]" type="array">
-            <obj_property name="ElementShortName">[35][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[35][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[36]" type="array">
-            <obj_property name="ElementShortName">[36][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[36][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[37]" type="array">
-            <obj_property name="ElementShortName">[37][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[37][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[38]" type="array">
-            <obj_property name="ElementShortName">[38][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[38][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[39]" type="array">
-            <obj_property name="ElementShortName">[39][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[39][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[40]" type="array">
-            <obj_property name="ElementShortName">[40][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[40][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[41]" type="array">
-            <obj_property name="ElementShortName">[41][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[41][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[42]" type="array">
-            <obj_property name="ElementShortName">[42][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[42][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[43]" type="array">
-            <obj_property name="ElementShortName">[43][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[43][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[44]" type="array">
-            <obj_property name="ElementShortName">[44][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[44][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[45]" type="array">
-            <obj_property name="ElementShortName">[45][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[45][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[46]" type="array">
-            <obj_property name="ElementShortName">[46][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[46][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[47]" type="array">
-            <obj_property name="ElementShortName">[47][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[47][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[48]" type="array">
-            <obj_property name="ElementShortName">[48][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[48][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[49]" type="array">
-            <obj_property name="ElementShortName">[49][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[49][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[50]" type="array">
-            <obj_property name="ElementShortName">[50][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[50][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[51]" type="array">
-            <obj_property name="ElementShortName">[51][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[51][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[52]" type="array">
-            <obj_property name="ElementShortName">[52][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[52][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[53]" type="array">
-            <obj_property name="ElementShortName">[53][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[53][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[54]" type="array">
-            <obj_property name="ElementShortName">[54][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[54][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[55]" type="array">
-            <obj_property name="ElementShortName">[55][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[55][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[56]" type="array">
-            <obj_property name="ElementShortName">[56][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[56][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[57]" type="array">
-            <obj_property name="ElementShortName">[57][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[57][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[58]" type="array">
-            <obj_property name="ElementShortName">[58][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[58][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[59]" type="array">
-            <obj_property name="ElementShortName">[59][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[59][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[60]" type="array">
-            <obj_property name="ElementShortName">[60][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[60][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[61]" type="array">
-            <obj_property name="ElementShortName">[61][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[61][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[62]" type="array">
-            <obj_property name="ElementShortName">[62][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[62][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[63]" type="array">
-            <obj_property name="ElementShortName">[63][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[63][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[64]" type="array">
-            <obj_property name="ElementShortName">[64][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[64][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[65]" type="array">
-            <obj_property name="ElementShortName">[65][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[65][31:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload[66]" type="array">
-            <obj_property name="ElementShortName">[66][31:0]</obj_property>
-            <obj_property name="ObjectShortName">[66][31:0]</obj_property>
-         </wvobject>
       </wvobject>
       <wvobject fp_name="/tb_integration/PC_packet_parser/params_valid" type="logic">
          <obj_property name="ElementShortName">params_valid</obj_property>
@@ -539,6 +259,7 @@
       <wvobject fp_name="group1219" type="group">
          <obj_property name="label">outputs_pulses</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/command_handler_module/set_SF" type="logic">
             <obj_property name="ElementShortName">set_SF</obj_property>
             <obj_property name="ObjectShortName">set_SF</obj_property>
@@ -567,7 +288,6 @@
       <wvobject fp_name="group1402" type="group">
          <obj_property name="label">reply_outputs</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/command_handler_module/send_reply_pulse" type="logic">
             <obj_property name="ElementShortName">send_reply_pulse</obj_property>
             <obj_property name="ObjectShortName">send_reply_pulse</obj_property>
@@ -690,7 +410,6 @@
    <wvobject fp_name="group1440" type="group">
       <obj_property name="label">row_selector</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_integration/sync_frame" type="logic">
          <obj_property name="ElementShortName">sync_frame</obj_property>
          <obj_property name="ObjectShortName">sync_frame</obj_property>
@@ -822,11 +541,9 @@
    <wvobject fp_name="group3341" type="group">
       <obj_property name="label">Channel 0</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="group1599" type="group">
          <obj_property name="label">adc_simulator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/\ADC_simulators(0)\/ADC_simulator/data" type="array">
             <obj_property name="ElementShortName">data[15:0]</obj_property>
             <obj_property name="ObjectShortName">data[15:0]</obj_property>
@@ -848,7 +565,6 @@
       <wvobject fp_name="group1604" type="group">
          <obj_property name="label">input_shift_register</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/input_shift_register_module/valid_word" type="logic">
             <obj_property name="ElementShortName">valid_word</obj_property>
             <obj_property name="ObjectShortName">valid_word</obj_property>
@@ -862,7 +578,6 @@
       <wvobject fp_name="group1633" type="group">
          <obj_property name="label">sample_selector</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_selector_module/valid_sample" type="logic">
             <obj_property name="ElementShortName">valid_sample</obj_property>
             <obj_property name="ObjectShortName">valid_sample</obj_property>
@@ -884,24 +599,10 @@
       <wvobject fp_name="group1642" type="group">
          <obj_property name="label">sample_accumulator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_accumulator_module/acc_sample" type="array">
             <obj_property name="ElementShortName">acc_sample</obj_property>
             <obj_property name="ObjectShortName">acc_sample</obj_property>
             <obj_property name="isExpanded"></obj_property>
-            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_accumulator_module/acc_sample.value" type="array">
-               <obj_property name="ElementShortName">.value[31:0]</obj_property>
-               <obj_property name="ObjectShortName">.value[31:0]</obj_property>
-               <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-            </wvobject>
-            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_accumulator_module/acc_sample.row_num" type="array">
-               <obj_property name="ElementShortName">.row_num[3:0]</obj_property>
-               <obj_property name="ObjectShortName">.row_num[3:0]</obj_property>
-            </wvobject>
-            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_accumulator_module/acc_sample.valid" type="logic">
-               <obj_property name="ElementShortName">.valid</obj_property>
-               <obj_property name="ObjectShortName">.valid</obj_property>
-            </wvobject>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1648" type="group">
@@ -1281,6 +982,7 @@
          <wvobject fp_name="vbus1753" type="vbus">
             <obj_property name="label">calc_fb[15:0]</obj_property>
             <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
             <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/data_in[15]" type="logic">
                <obj_property name="ElementShortName">[15]</obj_property>
                <obj_property name="ObjectShortName">[15]</obj_property>
@@ -1354,13 +1056,19 @@
       <wvobject fp_name="group3016" type="group">
          <obj_property name="label">data_serializer</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_data_serializer/DAC_start_pulse" type="logic">
             <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
             <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
          </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_data_serializer/data_clk" type="logic">
+            <obj_property name="ElementShortName">data_clk</obj_property>
+            <obj_property name="ObjectShortName">data_clk</obj_property>
+         </wvobject>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_data_serializer/parallel_data" type="array">
             <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
             <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_data_serializer/serial_data" type="logic">
             <obj_property name="ElementShortName">serial_data</obj_property>
@@ -1374,7 +1082,6 @@
       <wvobject fp_name="group1599" type="group">
          <obj_property name="label">adc_simulator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/\ADC_simulators(1)\/ADC_simulator/nCNV" type="logic">
             <obj_property name="ElementShortName">nCNV</obj_property>
             <obj_property name="ObjectShortName">nCNV</obj_property>
@@ -1419,7 +1126,6 @@
       <wvobject fp_name="group1642" type="group">
          <obj_property name="label">sample_accumulator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/sample_accumulator_module/acc_sample" type="array">
             <obj_property name="ElementShortName">acc_sample</obj_property>
             <obj_property name="ObjectShortName">acc_sample</obj_property>
@@ -1429,7 +1135,6 @@
       <wvobject fp_name="group1648" type="group">
          <obj_property name="label">feedback_calculator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/feedback_calculator_module/sa_fb_gain" type="array">
             <obj_property name="ElementShortName">sa_fb_gain[31:0]</obj_property>
             <obj_property name="ObjectShortName">sa_fb_gain[31:0]</obj_property>
@@ -1872,13 +1577,19 @@
       <wvobject fp_name="group2993" type="group">
          <obj_property name="label">data_serializer</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_data_serializer/DAC_start_pulse" type="logic">
             <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
             <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
          </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_data_serializer/data_clk" type="logic">
+            <obj_property name="ElementShortName">data_clk</obj_property>
+            <obj_property name="ObjectShortName">data_clk</obj_property>
+         </wvobject>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_data_serializer/parallel_data" type="array">
             <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
             <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_data_serializer/serial_data" type="logic">
             <obj_property name="ElementShortName">serial_data</obj_property>
@@ -1952,6 +1663,7 @@
       <wvobject fp_name="group1199" type="group">
          <obj_property name="label">channels_DAC_controller</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/channels_DAC_gate_ctrl/CS" type="logic">
             <obj_property name="ElementShortName">CS</obj_property>
             <obj_property name="ObjectShortName">CS</obj_property>
@@ -1969,7 +1681,6 @@
    <wvobject fp_name="group1689" type="group">
       <obj_property name="label">frame_builder</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_integration/main_module/frame_builder_module/channels_data" type="array">
          <obj_property name="ElementShortName">channels_data[0:1]</obj_property>
          <obj_property name="ObjectShortName">channels_data[0:1]</obj_property>
@@ -1980,27 +1691,6 @@
          <obj_property name="ObjectShortName">channels_data_reg[0:1]</obj_property>
          <obj_property name="isExpanded"></obj_property>
          <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-         <wvobject fp_name="/tb_integration/main_module/frame_builder_module/channels_data_reg[0]" type="array">
-            <obj_property name="ElementShortName">[0]</obj_property>
-            <obj_property name="ObjectShortName">[0]</obj_property>
-            <wvobject fp_name="/tb_integration/main_module/frame_builder_module/channels_data_reg[0].value" type="array">
-               <obj_property name="ElementShortName">.value[31:0]</obj_property>
-               <obj_property name="ObjectShortName">.value[31:0]</obj_property>
-               <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-            </wvobject>
-            <wvobject fp_name="/tb_integration/main_module/frame_builder_module/channels_data_reg[0].row_num" type="array">
-               <obj_property name="ElementShortName">.row_num[3:0]</obj_property>
-               <obj_property name="ObjectShortName">.row_num[3:0]</obj_property>
-            </wvobject>
-            <wvobject fp_name="/tb_integration/main_module/frame_builder_module/channels_data_reg[0].valid" type="logic">
-               <obj_property name="ElementShortName">.valid</obj_property>
-               <obj_property name="ObjectShortName">.valid</obj_property>
-            </wvobject>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/main_module/frame_builder_module/channels_data_reg[1]" type="array">
-            <obj_property name="ElementShortName">[1]</obj_property>
-            <obj_property name="ObjectShortName">[1]</obj_property>
-         </wvobject>
       </wvobject>
       <wvobject fp_name="/tb_integration/main_module/frame_builder_module/state" type="other">
          <obj_property name="ElementShortName">state</obj_property>
@@ -2040,16 +1730,48 @@
    <wvobject fp_name="group1684" type="group">
       <obj_property name="label">TES_bias_setter</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_integration/main_module/TES_bias_setter_module/set_bias" type="logic">
+         <obj_property name="ElementShortName">set_bias</obj_property>
+         <obj_property name="ObjectShortName">set_bias</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/TES_bias_setter_module/TES_bias" type="array">
+         <obj_property name="ElementShortName">TES_bias[0:3][31:0]</obj_property>
+         <obj_property name="ObjectShortName">TES_bias[0:3][31:0]</obj_property>
+      </wvobject>
       <wvobject fp_name="group3025" type="group">
          <obj_property name="label">TES_bias_DAC_ctrl</obj_property>
          <obj_property name="DisplayName">label</obj_property>
          <obj_property name="isExpanded"></obj_property>
       </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/TES_bias_DAC_gate_controller/start_conv_pulse" type="logic">
+         <obj_property name="ElementShortName">start_conv_pulse</obj_property>
+         <obj_property name="ObjectShortName">start_conv_pulse</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/TES_bias_DAC_gate_controller/CS" type="logic">
+         <obj_property name="ElementShortName">CS</obj_property>
+         <obj_property name="ObjectShortName">CS</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/TES_bias_DAC_gate_controller/SCLK" type="logic">
+         <obj_property name="ElementShortName">SCLK</obj_property>
+         <obj_property name="ObjectShortName">SCLK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_integration/main_module/TES_bias_DAC_gate_controller/LDAC" type="logic">
+         <obj_property name="ElementShortName">LDAC</obj_property>
+         <obj_property name="ObjectShortName">LDAC</obj_property>
+      </wvobject>
       <wvobject fp_name="group3029" type="group">
          <obj_property name="label">TES_bias_data_serializer</obj_property>
          <obj_property name="DisplayName">label</obj_property>
          <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_integration/main_module/TES_bias_data_serializer/parallel_data" type="array">
+            <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_integration/main_module/TES_bias_data_serializer/serial_data" type="logic">
+            <obj_property name="ElementShortName">serial_data</obj_property>
+            <obj_property name="ObjectShortName">serial_data</obj_property>
+         </wvobject>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group313" type="group">
@@ -2059,7 +1781,6 @@
    <wvobject fp_name="group1141" type="group">
       <obj_property name="label">test_calc_data</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_integration/discard_count" type="other">
          <obj_property name="ElementShortName">discard_count</obj_property>
          <obj_property name="ObjectShortName">discard_count</obj_property>
@@ -2098,29 +1819,14 @@
       <wvobject fp_name="group1161" type="group">
          <obj_property name="label">triggers</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/calc_data_packet" type="logic">
             <obj_property name="ElementShortName">calc_data_packet</obj_property>
             <obj_property name="ObjectShortName">calc_data_packet</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/discard_samples" type="logic">
-            <obj_property name="ElementShortName">discard_samples</obj_property>
-            <obj_property name="ObjectShortName">discard_samples</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/add_samples" type="logic">
-            <obj_property name="ElementShortName">add_samples</obj_property>
-            <obj_property name="ObjectShortName">add_samples</obj_property>
-         </wvobject>
          <wvobject fp_name="/tb_integration/data_packet_calculated" type="logic">
             <obj_property name="ElementShortName">data_packet_calculated</obj_property>
             <obj_property name="ObjectShortName">data_packet_calculated</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/samples_discarded" type="logic">
-            <obj_property name="ElementShortName">samples_discarded</obj_property>
-            <obj_property name="ObjectShortName">samples_discarded</obj_property>
-         </wvobject>
-         <wvobject fp_name="/tb_integration/samples_added" type="logic">
-            <obj_property name="ElementShortName">samples_added</obj_property>
-            <obj_property name="ObjectShortName">samples_added</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1160" type="group">
