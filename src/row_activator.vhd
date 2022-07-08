@@ -42,8 +42,8 @@ entity row_activator is
         rst                 : in std_logic; -- asynchronous reset
 
         -- param buffers
-        on_bias             : in t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(ON_BIAS_ID)) - 1); -- Value to be set to the row when it is active
-        off_bias            : in t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(OFF_BIAS_ID)) - 1); -- Value to be set to the row when it is deactivated
+        on_bias             : in t_param_array(0 to PARAM_ID_TO_SIZE(ON_BIAS_ID) - 1); -- Value to be set to the row when it is active
+        off_bias            : in t_param_array(0 to PARAM_ID_TO_SIZE(OFF_BIAS_ID) - 1); -- Value to be set to the row when it is deactivated
         num_rows            : in unsigned(bits_req(MAX_NUM_ROWS) - 1 downto 0); -- Num of rows that are going to be multiplexed
 
         new_row             : in std_logic;    -- Pulse that indicates that a new row has started

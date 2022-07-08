@@ -34,7 +34,7 @@ entity channels_controller is
         rst                     : in std_logic; -- asynchronous reset
 
         data_mode               : in std_logic_vector(bits_req(NUM_DATA_MODES) - 1 downto 0); -- Param that indicates which type of data should we insert in the data frames
-        servo_mode              : in t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SERVO_MODE_ID)) - 1); -- Param that indicates if the PID loop is active or we just ramp or set constant values for the lines
+        servo_mode              : in t_param_array(0 to PARAM_ID_TO_SIZE(SERVO_MODE_ID) - 1); -- Param that indicates if the PID loop is active or we just ramp or set constant values for the lines
         fb_dly                  : in unsigned(bits_req(MAX_FB_DLY) - 1 downto 0); -- Param that indicates how many 5 MHz cycles do we have to wait to set the fb (activate DAC)
 
         new_row                 : in std_logic; -- Signal that indicates that a new row has started

@@ -32,7 +32,7 @@ entity frame_builder is
         rst                     : in std_logic; -- asynchronous reset
 
         -- Param buffers
-        ret_data_setup          : in t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(RET_DATA_S_ID)) - 1);
+        ret_data_setup          : in t_param_array(0 to PARAM_ID_TO_SIZE(RET_DATA_S_ID) - 1);
         data_rate               : in unsigned(bits_req(MAX_DATA_RATE) - 1 downto 0); -- Refers to the ratio between the number of frames discarted and the ones thrown
         num_rows                : in unsigned(bits_req(MAX_ROWS) - 1 downto 0);
         num_cols                : in unsigned(bits_req(MAX_CHANNELS) - 1 downto 0);

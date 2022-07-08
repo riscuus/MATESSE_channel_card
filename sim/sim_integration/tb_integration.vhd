@@ -128,13 +128,13 @@ architecture Behavioral of tb_integration is
     signal row_num              : unsigned(bits_req(MAX_ROWS - 1) - 1 downto 0)   := (others => '0');
 
     -- buffers
-    signal data_rate        : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(DATA_RATE_ID)) - 1) := (others => (others => '0'));
-    signal num_rows         : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(NUM_ROWS_ID)) - 1) := (others => (others => '0'));
-    signal num_cols         : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(NUM_COLS_REP_ID)) - 1) := (others => (others => '0'));
-    signal sample_dly       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SAMPLE_DLY_ID)) - 1) := (others => (others => '0'));
-    signal sample_num       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SAMPLE_NUM_ID)) - 1) := (others => (others => '0'));
-    signal gain_0           : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_0_ID)) - 1) := (others => (others => '0'));
-    signal gain_1           : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_1_ID)) - 1) := (others => (others => '0'));
+    signal data_rate        : t_param_array(0 to PARAM_ID_TO_SIZE(DATA_RATE_ID) - 1) := (others => (others => '0'));
+    signal num_rows         : t_param_array(0 to PARAM_ID_TO_SIZE(NUM_ROWS_ID) - 1) := (others => (others => '0'));
+    signal num_cols         : t_param_array(0 to PARAM_ID_TO_SIZE(NUM_COLS_REP_ID) - 1) := (others => (others => '0'));
+    signal sample_dly       : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_DLY_ID) - 1) := (others => (others => '0'));
+    signal sample_num       : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_NUM_ID) - 1) := (others => (others => '0'));
+    signal gain_0           : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1) := (others => (others => '0'));
+    signal gain_1           : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_1_ID) - 1) := (others => (others => '0'));
 
     signal data_rate_int    : natural := 0;
     signal num_rows_int     : natural := 0;
@@ -627,13 +627,13 @@ begin
     new_row                 <= <<signal main_module.new_row                 : std_logic>>;
     row_num                 <= <<signal main_module.row_num                 : unsigned(bits_req(MAX_ROWS - 1) - 1 downto 0)>>;
     --buffers
-    data_rate               <= <<signal main_module.data_rate    : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(DATA_RATE_ID)) - 1)>>;
-    num_rows                <= <<signal main_module.num_rows     : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(NUM_ROWS_ID)) - 1)>>;
-    num_cols                <= <<signal main_module.num_cols     : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(NUM_COLS_REP_ID)) - 1)>>;
-    sample_num              <= <<signal main_module.sample_num   : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SAMPLE_NUM_ID)) - 1)>>;
-    sample_dly              <= <<signal main_module.sample_dly   : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SAMPLE_DLY_ID)) - 1)>>;
-    gain_0                  <= <<signal main_module.gain_0       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_0_ID)) - 1)>>;
-    gain_1                  <= <<signal main_module.gain_1       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_1_ID)) - 1)>>;
+    data_rate               <= <<signal main_module.data_rate    : t_param_array(0 to PARAM_ID_TO_SIZE(DATA_RATE_ID) - 1)>>;
+    num_rows                <= <<signal main_module.num_rows     : t_param_array(0 to PARAM_ID_TO_SIZE(NUM_ROWS_ID) - 1)>>;
+    num_cols                <= <<signal main_module.num_cols     : t_param_array(0 to PARAM_ID_TO_SIZE(NUM_COLS_REP_ID) - 1)>>;
+    sample_num              <= <<signal main_module.sample_num   : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_NUM_ID) - 1)>>;
+    sample_dly              <= <<signal main_module.sample_dly   : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_DLY_ID) - 1)>>;
+    gain_0                  <= <<signal main_module.gain_0       : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1)>>;
+    gain_1                  <= <<signal main_module.gain_1       : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_1_ID) - 1)>>;
 
     data_rate_int           <= to_integer(unsigned(data_rate(0)));
     num_rows_int            <= to_integer(unsigned(num_rows(0)));
@@ -652,42 +652,42 @@ begin
         -- #3: wrong param_id
         variable packet_3 : t_packet_record := (3, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => x"ff", payload_size => 2, packet_payload => (others => (others => '0')));
         -- #4: Wrong payload size (parser will not accept 0 length payload)
-        variable packet_4 : t_packet_record := (4,packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => ON_BIAS_ID, payload_size => 0, packet_payload => (others => (others => '0')));
+        variable packet_4 : t_packet_record := (4,packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(ON_BIAS_ID, PARAM_ID_WIDTH), payload_size => 0, packet_payload => (others => (others => '0')));
         -- #5: Wrong payload size (it does not  coincide with the specified size of this parameter, cmd handler should not accept it)
-        variable packet_5 : t_packet_record := (5, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => ON_BIAS_ID, payload_size => 3, packet_payload => (others => (others => '0')));
+        variable packet_5 : t_packet_record := (5, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(ON_BIAS_ID, PARAM_ID_WIDTH), payload_size => 3, packet_payload => (others => (others => '0')));
         -- #6: Good write
-        variable packet_6 : t_packet_record := (6, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => ON_BIAS_ID, payload_size => PARAM_ID_TO_SIZE(to_integer(ON_BIAS_ID)), packet_payload => (0  => x"0f0f0f00", 1  => x"0f0f0f01", 2  => x"0f0f0f02", 3  => x"0f0f0f03", 4  => x"0f0f0f04", 5  => x"0f0f0f05", 6  => x"0f0f0f06", 7  => x"0f0f0f07", 8  => x"0f0f0f08", 9  => x"0f0f0f09", 10 => x"0f0f0f10", 11 => x"0f0f0f11", others => (others => '0')));
+        variable packet_6 : t_packet_record := (6, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(ON_BIAS_ID, PARAM_ID_WIDTH), payload_size => PARAM_ID_TO_SIZE(ON_BIAS_ID), packet_payload => (0  => x"0f0f0f00", 1  => x"0f0f0f01", 2  => x"0f0f0f02", 3  => x"0f0f0f03", 4  => x"0f0f0f04", 5  => x"0f0f0f05", 6  => x"0f0f0f06", 7  => x"0f0f0f07", 8  => x"0f0f0f08", 9  => x"0f0f0f09", 10 => x"0f0f0f10", 11 => x"0f0f0f11", others => (others => '0')));
         -- #7: Good read
-        variable packet_7 : t_packet_record := (7, packet_type => cmd_rb, card_id => DAUGHTER_CARD_ID, param_id => ON_BIAS_ID, payload_size => 1, packet_payload => (others => (others => '0')));
+        variable packet_7 : t_packet_record := (7, packet_type => cmd_rb, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(ON_BIAS_ID, PARAM_ID_WIDTH), payload_size => 1, packet_payload => (others => (others => '0')));
         -- #8: Wrong start acquisition (Wrong parameter)
-        variable packet_8 : t_packet_record := (8, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => ON_BIAS_ID, payload_size => 1, packet_payload => (others => (others => '0')));
+        variable packet_8 : t_packet_record := (8, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(ON_BIAS_ID, PARAM_ID_WIDTH), payload_size => 1, packet_payload => (others => (others => '0')));
         -- #9: Wrong start acquisition (Good address but no previous setup)
-        variable packet_9 : t_packet_record := (9, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_ID, payload_size => 1, packet_payload => (others => (others => '0')));
+        variable packet_9 : t_packet_record := (9, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(RET_DATA_ID, PARAM_ID_WIDTH), payload_size => 1, packet_payload => (others => (others => '0')));
         -- #10: Wrong stop acquisition (acquisition_on = '0')
-        variable packet_10 : t_packet_record := (10, packet_type => cmd_st, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_ID, payload_size => 1, packet_payload => (others => (others => '0')));
+        variable packet_10 : t_packet_record := (10, packet_type => cmd_st, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(RET_DATA_ID, PARAM_ID_WIDTH), payload_size => 1, packet_payload => (others => (others => '0')));
         -- #11: Set acquisition config 
-        variable packet_11 : t_packet_record := (11, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_S_ID, payload_size => 2, packet_payload => (0 => x"00000003", 1 => x"00000006", others => (others => '0')));
+        variable packet_11 : t_packet_record := (11, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(RET_DATA_S_ID, PARAM_ID_WIDTH), payload_size => 2, packet_payload => (0 => x"00000003", 1 => x"00000006", others => (others => '0')));
         -- #12: Good start acquisition
-        variable packet_12 : t_packet_record := (12, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_ID, payload_size => 1, packet_payload => (others => (others => '0')));
+        variable packet_12 : t_packet_record := (12, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(RET_DATA_ID, PARAM_ID_WIDTH), payload_size => 1, packet_payload => (others => (others => '0')));
         -- #13: Good write but has to be ignored because acquisition is on
-        variable packet_13 : t_packet_record := (13, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => ON_BIAS_ID, payload_size => PARAM_ID_TO_SIZE(to_integer(ON_BIAS_ID)), packet_payload => (0  => x"0f0f0f00", 1  => x"0f0f0f01", 2  => x"0f0f0f02", 3  => x"0f0f0f03", 4  => x"0f0f0f04", 5  => x"0f0f0f05", 6  => x"0f0f0f06", 7  => x"0f0f0f07", 8  => x"0f0f0f08", 9  => x"0f0f0f09", 10 => x"0f0f0f10", 11 => x"0f0f0f11", others => (others => '0')));
+        variable packet_13 : t_packet_record := (13, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(ON_BIAS_ID, PARAM_ID_WIDTH), payload_size => PARAM_ID_TO_SIZE(ON_BIAS_ID), packet_payload => (0  => x"0f0f0f00", 1  => x"0f0f0f01", 2  => x"0f0f0f02", 3  => x"0f0f0f03", 4  => x"0f0f0f04", 5  => x"0f0f0f05", 6  => x"0f0f0f06", 7  => x"0f0f0f07", 8  => x"0f0f0f08", 9  => x"0f0f0f09", 10 => x"0f0f0f10", 11 => x"0f0f0f11", others => (others => '0')));
         -- #14: Bad write but has to be ignored because acquisition is on (wrong size)
         -- #15: bad start acquisition (acq already on)
-        variable packet_15 : t_packet_record := (14, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_ID, payload_size => 1, packet_payload => (others => (others => '0')));
+        variable packet_15 : t_packet_record := (14, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(RET_DATA_ID, PARAM_ID_WIDTH), payload_size => 1, packet_payload => (others => (others => '0')));
         -- #16: Good start acquisition (But sender still busy)
-        variable packet_16 : t_packet_record := (15, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_ID, payload_size => 1, packet_payload => (others => (others => '0')));
+        variable packet_16 : t_packet_record := (15, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(RET_DATA_ID, PARAM_ID_WIDTH), payload_size => 1, packet_payload => (others => (others => '0')));
         -- #17: Good stop (It should finish before last frame and set the corresponding bits)
-        variable packet_17 : t_packet_record := (16, packet_type => cmd_st, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_ID, payload_size => 1, packet_payload => (others => (others => '0')));
+        variable packet_17 : t_packet_record := (16, packet_type => cmd_st, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(RET_DATA_ID, PARAM_ID_WIDTH), payload_size => 1, packet_payload => (others => (others => '0')));
         -- #18: Good write sa fb cte 
-        variable packet_18 : t_packet_record := (17, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => SA_FB_ID, payload_size => PARAM_ID_TO_SIZE(to_integer(SA_FB_ID)), packet_payload => (0 => x"01010100", 1 => x"01010101", others => (others => '0')));
+        variable packet_18 : t_packet_record := (17, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(SA_FB_ID, PARAM_ID_WIDTH), payload_size => PARAM_ID_TO_SIZE(SA_FB_ID), packet_payload => (0 => x"01010100", 1 => x"01010101", others => (others => '0')));
         -- #19: Good write sa bias cte 
-        variable packet_19 : t_packet_record := (18, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => SA_BIAS_ID, payload_size => PARAM_ID_TO_SIZE(to_integer(SA_BIAS_ID)), packet_payload => (0 => x"0000F1F0", 1 => x"0000F1F1", others => (others => '0')));
+        variable packet_19 : t_packet_record := (18, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(SA_BIAS_ID, PARAM_ID_WIDTH), payload_size => PARAM_ID_TO_SIZE(SA_BIAS_ID), packet_payload => (0 => x"0000F1F0", 1 => x"0000F1F1", others => (others => '0')));
         -- #20: Good write (set ch0 -> servo_mode_const, ch1 -> servo_mode_PID)
-        variable packet_20 : t_packet_record := (19, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => SERVO_MODE_ID, payload_size => PARAM_ID_TO_SIZE(to_integer(SERVO_MODE_ID)), packet_payload => (0 => std_logic_vector(to_unsigned(SERVO_MODE_CONST, t_word'length)), 1 => std_logic_vector(to_unsigned(SERVO_MODE_PID, t_word'length)), others => (others => '0')));
+        variable packet_20 : t_packet_record := (19, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(SERVO_MODE_ID, PARAM_ID_WIDTH), payload_size => PARAM_ID_TO_SIZE(SERVO_MODE_ID), packet_payload => (0 => std_logic_vector(to_unsigned(SERVO_MODE_CONST, t_word'length)), 1 => std_logic_vector(to_unsigned(SERVO_MODE_PID, t_word'length)), others => (others => '0')));
         -- #21: Good write TES bias 
-        variable packet_21 : t_packet_record := (20, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => BIAS_ID, payload_size => PARAM_ID_TO_SIZE(to_integer(BIAS_ID)), packet_payload => (0 => x"FFFFFFF0", 1 => x"FFFFFFF1", 2 => x"FFFFFFF2", 3 => x"FFFFFFF3", others => (others => '0')));
+        variable packet_21 : t_packet_record := (20, packet_type => cmd_wb, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(BIAS_ID, PARAM_ID_WIDTH), payload_size => PARAM_ID_TO_SIZE(BIAS_ID), packet_payload => (0 => x"FFFFFFF0", 1 => x"FFFFFFF1", 2 => x"FFFFFFF2", 3 => x"FFFFFFF3", others => (others => '0')));
         -- #22: Good start acquisition
-        variable packet_22 : t_packet_record := (21, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => RET_DATA_ID, payload_size => 1, packet_payload => (others => (others => '0')));
+        variable packet_22 : t_packet_record := (21, packet_type => cmd_go, card_id => DAUGHTER_CARD_ID, param_id => to_unsigned(RET_DATA_ID, PARAM_ID_WIDTH), payload_size => 1, packet_payload => (others => (others => '0')));
 
 
     begin

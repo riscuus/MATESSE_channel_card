@@ -244,30 +244,30 @@ architecture Behavioral of main_module is
     signal TES_bias_DAC_CLK_signal  : std_logic := '0';
 
     -- Param buffers signals
-    signal data_mode        : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(DATA_MODE_ID)) - 1) := (others => (others => '0'));
-    signal servo_mode       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SERVO_MODE_ID)) - 1) := (others => (others => '0'));
-    signal fb_dly           : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(FB_DLY_ID)) - 1) := (others => (others => '0'));
-    signal num_rows         : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(NUM_ROWS_ID)) - 1) := (others => (others => '0'));
-    signal row_len          : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(ROW_LEN_ID)) - 1) := (others => (others => '0'));
-    signal on_bias          : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(ON_BIAS_ID)) - 1) := (others => (others => '0'));
-    signal off_bias         : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(OFF_BIAS_ID)) - 1) := (others => (others => '0'));
-    signal cnv_len          : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(CNV_LEN_ID)) - 1) := (others => (others => '0'));
-    signal sck_dly          : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SCK_DLY_ID)) - 1) := (others => (others => '0'));
-    signal sck_half_period  : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SCK_HALF_PERIOD_ID)) - 1) := (others => (others => '0'));
-    signal sample_dly       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SAMPLE_DLY_ID)) - 1) := (others => (others => '0'));
-    signal sample_num       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SAMPLE_NUM_ID)) - 1) := (others => (others => '0'));
-    signal gain_0           : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_0_ID)) - 1) := (others => (others => '0'));
-    signal gain_1           : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_1_ID)) - 1) := (others => (others => '0'));
-    signal tes_bias         : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(BIAS_ID)) - 1) := (others => (others => '0'));
-    signal ret_data_s       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(RET_DATA_S_ID)) - 1) := (others => (others => '0'));
-    signal data_rate        : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(DATA_RATE_ID)) - 1) := (others => (others => '0'));
-    signal num_cols         : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(NUM_COLS_REP_ID)) - 1) := (others => (others => '0'));
-    signal sa_fb_cte        : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SA_FB_ID)) - 1) := (others => (others => '0'));
-    signal sa_bias_cte      : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SA_BIAS_ID)) - 1) := (others => (others => '0'));
-    signal sq1_fb_cte       : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SQ1_FB_ID)) - 1) := (others => (others => '0'));
-    signal sq1_bias_cte     : t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(SQ1_BIAS_ID)) - 1) := (others => (others => '0'));
+    signal data_mode        : t_param_array(0 to PARAM_ID_TO_SIZE(DATA_MODE_ID) - 1) := (others => (others => '0'));
+    signal servo_mode       : t_param_array(0 to PARAM_ID_TO_SIZE(SERVO_MODE_ID) - 1) := (others => (others => '0'));
+    signal fb_dly           : t_param_array(0 to PARAM_ID_TO_SIZE(FB_DLY_ID) - 1) := (others => (others => '0'));
+    signal num_rows         : t_param_array(0 to PARAM_ID_TO_SIZE(NUM_ROWS_ID) - 1) := (others => (others => '0'));
+    signal row_len          : t_param_array(0 to PARAM_ID_TO_SIZE(ROW_LEN_ID) - 1) := (others => (others => '0'));
+    signal on_bias          : t_param_array(0 to PARAM_ID_TO_SIZE(ON_BIAS_ID) - 1) := (others => (others => '0'));
+    signal off_bias         : t_param_array(0 to PARAM_ID_TO_SIZE(OFF_BIAS_ID) - 1) := (others => (others => '0'));
+    signal cnv_len          : t_param_array(0 to PARAM_ID_TO_SIZE(CNV_LEN_ID) - 1) := (others => (others => '0'));
+    signal sck_dly          : t_param_array(0 to PARAM_ID_TO_SIZE(SCK_DLY_ID) - 1) := (others => (others => '0'));
+    signal sck_half_period  : t_param_array(0 to PARAM_ID_TO_SIZE(SCK_HALF_PERIOD_ID) - 1) := (others => (others => '0'));
+    signal sample_dly       : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_DLY_ID) - 1) := (others => (others => '0'));
+    signal sample_num       : t_param_array(0 to PARAM_ID_TO_SIZE(SAMPLE_NUM_ID) - 1) := (others => (others => '0'));
+    signal gain_0           : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1) := (others => (others => '0'));
+    signal gain_1           : t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_1_ID) - 1) := (others => (others => '0'));
+    signal tes_bias         : t_param_array(0 to PARAM_ID_TO_SIZE(BIAS_ID) - 1) := (others => (others => '0'));
+    signal ret_data_s       : t_param_array(0 to PARAM_ID_TO_SIZE(RET_DATA_S_ID) - 1) := (others => (others => '0'));
+    signal data_rate        : t_param_array(0 to PARAM_ID_TO_SIZE(DATA_RATE_ID) - 1) := (others => (others => '0'));
+    signal num_cols         : t_param_array(0 to PARAM_ID_TO_SIZE(NUM_COLS_REP_ID) - 1) := (others => (others => '0'));
+    signal sa_fb_cte        : t_param_array(0 to PARAM_ID_TO_SIZE(SA_FB_ID) - 1) := (others => (others => '0'));
+    signal sa_bias_cte      : t_param_array(0 to PARAM_ID_TO_SIZE(SA_BIAS_ID) - 1) := (others => (others => '0'));
+    signal sq1_fb_cte       : t_param_array(0 to PARAM_ID_TO_SIZE(SQ1_FB_ID) - 1) := (others => (others => '0'));
+    signal sq1_bias_cte     : t_param_array(0 to PARAM_ID_TO_SIZE(SQ1_BIAS_ID) - 1) := (others => (others => '0'));
 
-    type t_gain_array is array(0 to MAX_CHANNELS - 1) of t_param_array(0 to PARAM_ID_TO_SIZE(to_integer(GAIN_0_ID)) - 1);
+    type t_gain_array is array(0 to MAX_CHANNELS - 1) of t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1);
     signal gain_array : t_gain_array := (others => (others => (others => '0')));
 
 begin
@@ -767,15 +767,15 @@ begin
                 SEL_SIZE    => LINE_SEL_SIZE -- Req bits for 6 inputs (calc_fb, ramp, SF, SB, FF, FB)
             )             
             port map(     
-                selector                                                                                            => channels_line_selector(i),
-                data_in(1 * DAC_VOLTAGE_SIZE - 1 downto 0 * DAC_VOLTAGE_SIZE)                                             => sa_fb_data(i),
-                data_in(2 * DAC_VOLTAGE_SIZE - 1 downto 1 * DAC_VOLTAGE_SIZE)                                             => (others => '0'), -- Ramp not implemented yet
-                data_in(3 * DAC_VOLTAGE_SIZE - 1 downto 2 * DAC_VOLTAGE_SIZE)                                             => sa_fb_cte(i)(DAC_VOLTAGE_SIZE - 1 downto 0),
-                data_in(4 * DAC_VOLTAGE_SIZE - 1 downto 3 * DAC_VOLTAGE_SIZE)                                             => sa_bias_cte(i)(DAC_VOLTAGE_SIZE - 1 downto 0),
-                data_in(5 * DAC_VOLTAGE_SIZE - 1 downto 4 * DAC_VOLTAGE_SIZE)                                             => sq1_fb_cte(i)(DAC_VOLTAGE_SIZE - 1 downto 0),
-                data_in(6 * DAC_VOLTAGE_SIZE - 1 downto 5 * DAC_VOLTAGE_SIZE)                                             => sq1_bias_cte(i)(DAC_VOLTAGE_SIZE - 1 downto 0),
-                data_in(total_inputs(bits_req(NUM_CHANNEL_LINES)) * DAC_VOLTAGE_SIZE - 1 downto 6 * DAC_VOLTAGE_SIZE)    => (others => '0'),
-                data_out                                                                                            => channels_line_data(i)
+                selector => channels_line_selector(i),
+                data_in(1 * DAC_VOLTAGE_SIZE - 1 downto 0 * DAC_VOLTAGE_SIZE) => sa_fb_data(i),
+                data_in(2 * DAC_VOLTAGE_SIZE - 1 downto 1 * DAC_VOLTAGE_SIZE) => (others => '0'), -- Ramp not implemented yet
+                data_in(3 * DAC_VOLTAGE_SIZE - 1 downto 2 * DAC_VOLTAGE_SIZE) => sa_fb_cte(i)(DAC_VOLTAGE_SIZE - 1 downto 0),
+                data_in(4 * DAC_VOLTAGE_SIZE - 1 downto 3 * DAC_VOLTAGE_SIZE) => sa_bias_cte(i)(DAC_VOLTAGE_SIZE - 1 downto 0),
+                data_in(5 * DAC_VOLTAGE_SIZE - 1 downto 4 * DAC_VOLTAGE_SIZE) => sq1_fb_cte(i)(DAC_VOLTAGE_SIZE - 1 downto 0),
+                data_in(6 * DAC_VOLTAGE_SIZE - 1 downto 5 * DAC_VOLTAGE_SIZE) => sq1_bias_cte(i)(DAC_VOLTAGE_SIZE - 1 downto 0),
+                data_in(total_inputs(bits_req(NUM_CHANNEL_LINES)) * DAC_VOLTAGE_SIZE - 1 downto 6 * DAC_VOLTAGE_SIZE) => (others => '0'),
+                data_out => channels_line_data(i)
             );
 
         channel_data_serializer : entity concept.data_serializer_wrapper
@@ -798,7 +798,7 @@ begin
 
     TES_bias_setter_module : entity concept.TES_bias_setter
         generic map(
-            NUM_DACS    => PARAM_ID_TO_SIZE(to_integer(BIAS_ID)),
+            NUM_DACS    => PARAM_ID_TO_SIZE(BIAS_ID),
             DAC_DLY     => MAX_DAC_DLY 
         )
         port map(
@@ -877,8 +877,8 @@ begin
     -- DATA_MODE_ID
     data_mode_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(DATA_MODE_ID)),
-            param_id            => DATA_MODE_ID
+            param_size          => PARAM_ID_TO_SIZE(DATA_MODE_ID),
+            param_id            => to_unsigned(DATA_MODE_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -894,8 +894,8 @@ begin
     -- SERVO_MODE_ID
     servo_mode_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(SERVO_MODE_ID)),
-            param_id            => SERVO_MODE_ID
+            param_size          => PARAM_ID_TO_SIZE(SERVO_MODE_ID),
+            param_id            => to_unsigned(SERVO_MODE_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -911,8 +911,8 @@ begin
     -- FB_DLY_ID
     fb_dly_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(FB_DLY_ID)),
-            param_id            => FB_DLY_ID
+            param_size          => PARAM_ID_TO_SIZE(FB_DLY_ID),
+            param_id            => to_unsigned(FB_DLY_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -928,8 +928,8 @@ begin
     -- NUM_ROWS_ID
     num_rows_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(NUM_ROWS_ID)),
-            param_id            => NUM_ROWS_ID
+            param_size          => PARAM_ID_TO_SIZE(NUM_ROWS_ID),
+            param_id            => to_unsigned(NUM_ROWS_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -945,8 +945,8 @@ begin
     -- ROW_LEN_ID
     row_len_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(ROW_LEN_ID)),
-            param_id            => ROW_LEN_ID
+            param_size          => PARAM_ID_TO_SIZE(ROW_LEN_ID),
+            param_id            => to_unsigned(ROW_LEN_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -962,8 +962,8 @@ begin
     -- ON_BIAS_ID
     on_bias_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(ON_BIAS_ID)),
-            param_id            => ON_BIAS_ID
+            param_size          => PARAM_ID_TO_SIZE(ON_BIAS_ID),
+            param_id            => to_unsigned(ON_BIAS_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -979,8 +979,8 @@ begin
     -- OFF_BIAS_ID
     off_bias_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(OFF_BIAS_ID)),
-            param_id            => OFF_BIAS_ID
+            param_size          => PARAM_ID_TO_SIZE(OFF_BIAS_ID),
+            param_id            => to_unsigned(OFF_BIAS_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -996,8 +996,8 @@ begin
     -- CNV_LEN_ID
     cnv_len_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(CNV_LEN_ID)),
-            param_id            => CNV_LEN_ID
+            param_size          => PARAM_ID_TO_SIZE(CNV_LEN_ID),
+            param_id            => to_unsigned(CNV_LEN_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1013,8 +1013,8 @@ begin
     -- SCK_DLY_ID
     sck_dly_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(SCK_DLY_ID)),
-            param_id            => SCK_DLY_ID
+            param_size          => PARAM_ID_TO_SIZE(SCK_DLY_ID),
+            param_id            => to_unsigned(SCK_DLY_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1030,8 +1030,8 @@ begin
     -- SCK_HALF_PERIOD_ID
     sck_half_period_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(SCK_HALF_PERIOD_ID)),
-            param_id            => SCK_HALF_PERIOD_ID
+            param_size          => PARAM_ID_TO_SIZE(SCK_HALF_PERIOD_ID),
+            param_id            => to_unsigned(SCK_HALF_PERIOD_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1047,8 +1047,8 @@ begin
     -- SAMPLE_DLY_ID
     sample_dly_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(SAMPLE_DLY_ID)),
-            param_id            => SAMPLE_DLY_ID
+            param_size          => PARAM_ID_TO_SIZE(SAMPLE_DLY_ID),
+            param_id            => to_unsigned(SAMPLE_DLY_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1064,8 +1064,8 @@ begin
     -- SAMPLE_NUM_ID
     sample_num_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(SAMPLE_NUM_ID)),
-            param_id            => SAMPLE_NUM_ID
+            param_size          => PARAM_ID_TO_SIZE(SAMPLE_NUM_ID),
+            param_id            => to_unsigned(SAMPLE_NUM_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1081,8 +1081,8 @@ begin
     -- GAIN_0_ID
     gain_0_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(GAIN_0_ID)),
-            param_id            => GAIN_0_ID
+            param_size          => PARAM_ID_TO_SIZE(GAIN_0_ID),
+            param_id            => to_unsigned(GAIN_0_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1098,8 +1098,8 @@ begin
     -- GAIN_1_ID
     gain_1_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(GAIN_1_ID)),
-            param_id            => GAIN_1_ID
+            param_size          => PARAM_ID_TO_SIZE(GAIN_1_ID),
+            param_id            => to_unsigned(GAIN_1_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1115,8 +1115,8 @@ begin
     -- BIAS_ID
     tes_bias_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(BIAS_ID)),
-            param_id            => BIAS_ID
+            param_size          => PARAM_ID_TO_SIZE(BIAS_ID),
+            param_id            => to_unsigned(BIAS_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1132,8 +1132,8 @@ begin
     -- RET_DATA_S_ID
     ret_data_s_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(RET_DATA_S_ID)),
-            param_id            => RET_DATA_S_ID
+            param_size          => PARAM_ID_TO_SIZE(RET_DATA_S_ID),
+            param_id            => to_unsigned(RET_DATA_S_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1149,8 +1149,8 @@ begin
     -- DATA_RATE_ID
     data_rate_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(DATA_RATE_ID)),
-            param_id            => DATA_RATE_ID
+            param_size          => PARAM_ID_TO_SIZE(DATA_RATE_ID),
+            param_id            => to_unsigned(DATA_RATE_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1166,8 +1166,8 @@ begin
     -- NUM_COLS_REP_ID
     num_cols_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(NUM_COLS_REP_ID)),
-            param_id            => NUM_COLS_REP_ID
+            param_size          => PARAM_ID_TO_SIZE(NUM_COLS_REP_ID),
+            param_id            => to_unsigned(NUM_COLS_REP_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1183,8 +1183,8 @@ begin
     -- SA_FB_ID
     sa_fb_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(SA_FB_ID)),
-            param_id            => SA_FB_ID
+            param_size          => PARAM_ID_TO_SIZE(SA_FB_ID),
+            param_id            => to_unsigned(SA_FB_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1200,8 +1200,8 @@ begin
     -- SA_BIAS_ID
     sa_bias_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(SA_BIAS_ID)),
-            param_id            => SA_BIAS_ID
+            param_size          => PARAM_ID_TO_SIZE(SA_BIAS_ID),
+            param_id            => to_unsigned(SA_BIAS_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1217,8 +1217,8 @@ begin
     -- SQ1_FB_ID
     sq1_fb_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(SQ1_FB_ID)),
-            param_id            => SQ1_FB_ID
+            param_size          => PARAM_ID_TO_SIZE(SQ1_FB_ID),
+            param_id            => to_unsigned(SQ1_FB_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,
@@ -1234,8 +1234,8 @@ begin
     -- SQ1_BIAS_ID
     sq1_bias_buffer : entity concept.param_buffer
         generic map(
-            param_size          => PARAM_ID_TO_SIZE(to_integer(SQ1_BIAS_ID)),
-            param_id            => SQ1_BIAS_ID
+            param_size          => PARAM_ID_TO_SIZE(SQ1_BIAS_ID),
+            param_id            => to_unsigned(SQ1_BIAS_ID, PARAM_ID_WIDTH)
         )                       
         port map(               
             clk                 => sys_clk_5,

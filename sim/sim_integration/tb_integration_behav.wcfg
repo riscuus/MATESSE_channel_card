@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="28841666666667fs"></ZoomStartTime>
-      <ZoomEndTime time="101791666666668fs"></ZoomEndTime>
-      <Cursor1Time time="41000000000000fs"></Cursor1Time>
+      <ZoomStartTime time="36970400000000fs"></ZoomStartTime>
+      <ZoomEndTime time="103570400000001fs"></ZoomEndTime>
+      <Cursor1Time time="56570400000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="254"></NameColumnWidth>
-      <ValueColumnWidth column_width="115"></ValueColumnWidth>
+      <ValueColumnWidth column_width="111"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="21" />
    <wvobject fp_name="/tb_integration/sys_clk_100" type="logic">
@@ -1600,6 +1600,7 @@
    <wvobject fp_name="group1671" type="group">
       <obj_property name="label">channels_controller</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_integration/main_module/channels_controller_module/data_mode" type="array">
          <obj_property name="ElementShortName">data_mode[2:0]</obj_property>
          <obj_property name="ObjectShortName">data_mode[2:0]</obj_property>
