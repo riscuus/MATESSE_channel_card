@@ -1,3 +1,8 @@
+% -----------------------------------------------------------------------------------
+% This script generates the input signal and a pre-implemented biquad butterworth filter
+% Allows to plot the input signal in time and frequency as well as the filtered signals. 
+% -----------------------------------------------------------------------------------
+
 adc_freq = 5e6;
 row_len = 100;
 num_rows = 12;
