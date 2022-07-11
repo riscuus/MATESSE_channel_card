@@ -98,7 +98,7 @@ begin
     b1_prod <= shift_right(y_n * b1, M); -- To maintain M fixed point we need to shift right to truncate the least significant bits
     -- 64 = 32 + 32
     b2_prod <= shift_right(y_n * b2, M); -- To maintain M fixed point we need to shift right to truncate the least significant bits
-    -- 64 = 32 * 32
+    -- 64 = 32 + 32
     a1_prod <= 2 * x_n; -- Because of the way numeric_std treats the integer by signed multiplication shifting is not needed
     -- 64 = max(32, 64)
     delay_buffer_in(0) <= std_logic_vector(x_n - b2_prod);
@@ -137,7 +137,6 @@ begin
                     end if;
                 when write_ram =>
                     ram_write_en <= '0';
-
 
                     y_reg <= y_n;
                     y_valid <= '1';

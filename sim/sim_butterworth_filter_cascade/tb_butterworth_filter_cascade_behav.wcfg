@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_butterworth_filter_cascade_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_butterworth_filter_cascade" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="68200000001fs"></ZoomEndTime>
+      <Cursor1Time time="11000000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="254"></NameColumnWidth>
+      <ValueColumnWidth column_width="95"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="18" />
+   <wvobject fp_name="/tb_butterworth_filter_cascade/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/rst" type="logic">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/filter_coeff" type="array">
+      <obj_property name="ElementShortName">filter_coeff[0:5][31:0]</obj_property>
+      <obj_property name="ObjectShortName">filter_coeff[0:5][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/b11" type="array">
+      <obj_property name="ElementShortName">b11[31:0]</obj_property>
+      <obj_property name="ObjectShortName">b11[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/b12" type="array">
+      <obj_property name="ElementShortName">b12[31:0]</obj_property>
+      <obj_property name="ObjectShortName">b12[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/b21" type="array">
+      <obj_property name="ElementShortName">b21[31:0]</obj_property>
+      <obj_property name="ObjectShortName">b21[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/b22" type="array">
+      <obj_property name="ElementShortName">b22[31:0]</obj_property>
+      <obj_property name="ObjectShortName">b22[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/k1" type="array">
+      <obj_property name="ElementShortName">k1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">k1[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/k2" type="array">
+      <obj_property name="ElementShortName">k2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">k2[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/x" type="array">
+      <obj_property name="ElementShortName">x[31:0]</obj_property>
+      <obj_property name="ObjectShortName">x[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/x_row" type="array">
+      <obj_property name="ElementShortName">x_row[3:0]</obj_property>
+      <obj_property name="ObjectShortName">x_row[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/x_valid" type="logic">
+      <obj_property name="ElementShortName">x_valid</obj_property>
+      <obj_property name="ObjectShortName">x_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/y_valid" type="logic">
+      <obj_property name="ElementShortName">y_valid</obj_property>
+      <obj_property name="ObjectShortName">y_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/y" type="array">
+      <obj_property name="ElementShortName">y[31:0]</obj_property>
+      <obj_property name="ObjectShortName">y[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="group406" type="group">
+      <obj_property name="label">biquad_1</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="group432" type="group">
+         <obj_property name="label">y[n]</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/x_n" type="array">
+            <obj_property name="ElementShortName">x_n[31:0]</obj_property>
+            <obj_property name="ObjectShortName">x_n[31:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/delay_buffer_out[1]" type="array">
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="ElementShortName">[1][63:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][63:0]</obj_property>
+            <obj_property name="label">delay_buffer_out[1][63:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/y_n" type="array">
+            <obj_property name="ElementShortName">y_n[31:0]</obj_property>
+            <obj_property name="ObjectShortName">y_n[31:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group408" type="group">
+         <obj_property name="label">b1_prod</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/b1" type="array">
+            <obj_property name="ElementShortName">b1[31:0]</obj_property>
+            <obj_property name="ObjectShortName">b1[31:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/y_n" type="array">
+            <obj_property name="ElementShortName">y_n[31:0]</obj_property>
+            <obj_property name="ObjectShortName">y_n[31:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/b1_prod" type="array">
+            <obj_property name="ElementShortName">b1_prod[63:0]</obj_property>
+            <obj_property name="ObjectShortName">b1_prod[63:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group412" type="group">
+         <obj_property name="label">b2_prod</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/b2" type="array">
+            <obj_property name="ElementShortName">b2[31:0]</obj_property>
+            <obj_property name="ObjectShortName">b2[31:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/y_n" type="array">
+            <obj_property name="ElementShortName">y_n[31:0]</obj_property>
+            <obj_property name="ObjectShortName">y_n[31:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/b2_prod" type="array">
+            <obj_property name="ElementShortName">b2_prod[63:0]</obj_property>
+            <obj_property name="ObjectShortName">b2_prod[63:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group417" type="group">
+         <obj_property name="label">delay_buffer_in(0)</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/b2_prod" type="array">
+            <obj_property name="ElementShortName">b2_prod[63:0]</obj_property>
+            <obj_property name="ObjectShortName">b2_prod[63:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/x_n" type="array">
+            <obj_property name="ElementShortName">x_n[31:0]</obj_property>
+            <obj_property name="ObjectShortName">x_n[31:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/delay_buffer_in[0]" type="array">
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="ElementShortName">[0][63:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][63:0]</obj_property>
+            <obj_property name="label">delay_buffer_in[0][63:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group425" type="group">
+         <obj_property name="label">delay_buffer_in(1)</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/delay_buffer_out[0]" type="array">
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="ElementShortName">[0][63:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][63:0]</obj_property>
+            <obj_property name="label">delay_buffer_out[0][63:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/a1_prod" type="array">
+            <obj_property name="ElementShortName">a1_prod[63:0]</obj_property>
+            <obj_property name="ObjectShortName">a1_prod[63:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/b1_prod" type="array">
+            <obj_property name="ElementShortName">b1_prod[63:0]</obj_property>
+            <obj_property name="ObjectShortName">b1_prod[63:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/delay_buffer_in[1]" type="array">
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="ElementShortName">[1][63:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][63:0]</obj_property>
+            <obj_property name="label">delay_buffer_in[1][63:0]</obj_property>
+            <obj_property name="Radix">REALRADIX</obj_property>
+            <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+            <obj_property name="radix_fractionWidth">14</obj_property>
+            <obj_property name="radix_otherWidth">0</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/y_valid" type="logic">
+         <obj_property name="ElementShortName">y_valid</obj_property>
+         <obj_property name="ObjectShortName">y_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/y_reg" type="array">
+         <obj_property name="ElementShortName">y_reg[31:0]</obj_property>
+         <obj_property name="ObjectShortName">y_reg[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/y" type="array">
+         <obj_property name="ElementShortName">y[31:0]</obj_property>
+         <obj_property name="ObjectShortName">y[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group407" type="group">
+      <obj_property name="label">biquad_2</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/delay_buffer_out" type="array">
+      <obj_property name="ElementShortName">delay_buffer_out[0:1][63:0]</obj_property>
+      <obj_property name="ObjectShortName">delay_buffer_out[0:1][63:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_butterworth_filter_cascade/filter_module/biquad_0/biquad_core_module/delay_buffer_in" type="array">
+      <obj_property name="ElementShortName">delay_buffer_in[0:1][63:0]</obj_property>
+      <obj_property name="ObjectShortName">delay_buffer_in[0:1][63:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+</wave_config>
