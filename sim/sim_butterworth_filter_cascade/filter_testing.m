@@ -2,7 +2,8 @@
 % This script generates the input signal and a pre-implemented 4 pole butterworth filter
 % Allows to plot the input signal in time and frequency as well as the filtered signals. 
 % -----------------------------------------------------------------------------------
-
+%%
+% PART 1 : Generate input signal
 adc_freq = 5e6;
 row_len = 100;
 num_rows = 12;
@@ -15,8 +16,13 @@ t = (0:L-1)*T;                          % Time vector
 freq = 1/20 * Fs;                       % Frequency of the signal
 x = (16000 / 1.7) * (sin(2*pi*freq*t) + 0.7*sin(2*pi*6*freq*t)); % Signal to filter
 
-% plot signal to be filtered
+input_signal_file = fopen("input_signal.txt", "w");
+fprintf(input_signal_file, '%f\n', x);
+fclose(input_signal_file);
+%%
+% PART 2: plot the results
 
+% plot signal to be filtered
 subplot(3, 2, 1);
 plot(t(1:100), x(1:100));
 title("Input signal");
@@ -36,7 +42,7 @@ title("FFT(Input signal)");
 xlabel("frequency (Hz)");
 ylabel("FFT(x)");
 
-% Filter signal
+% Filter signal in matlab
 y = filter(Hd_4,x);
 
 subplot(3, 2, 3);
@@ -45,7 +51,7 @@ title("Matlab Filtered signal");
 xlabel("time (s)");
 ylabel("y");
 
-% Calculate and plot fft of filtered signal
+% Calculate and plot fft of filtered signal in matlab
 fft_y = fft(y);
 P2_y = abs(fft_y/L);
 P1_y = P2_y(1:L/2+1);
@@ -56,18 +62,20 @@ title("FFT(Matlab filtered signal)");
 xlabel("frequency (Hz)");
 ylabel("FFT(y)");
 
-% Read output from biquad simulation and plot it
+% Read filtered signal from vhdl
 vhdl_file = fopen("output_signal.txt", "r");
 vhdl_y = fscanf(vhdl_file, '%d');
 fclose(vhdl_file);
 vhdl_y = vhdl_y';
 
+% Plot vhdl filtered signal in time
 subplot(3, 2, 5);
 plot(t(1:100), vhdl_y(1:100));
 title("VHDL output signal");
 xlabel("time (s)");
 ylabel("vhdl_y");
 
+% Plot vhdl filtered signal in frequency 
 fft_vhdl_y = fft(vhdl_y);
 P2_vhdl_y = abs(fft_vhdl_y/L);
 P1_vhdl_y = P2_vhdl_y(1:L/2+1);
