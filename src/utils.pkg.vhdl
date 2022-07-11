@@ -193,7 +193,7 @@ package utils is
             FLTR_RST_ID         => 1,
             RET_DATA_ID         => 1,
             DATA_MODE_ID        => 1,
-            FILTR_COEFF_ID      => IIR_FILTER_POLES * 2,
+            FILTR_COEFF_ID      => 6,
             SERVO_MODE_ID       => MAX_CHANNELS,
             RAMP_DLY_ID         => 1,
             RAMP_AMP_ID         => 1,
