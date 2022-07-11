@@ -39,6 +39,7 @@ entity BRAM_single_wrapper is
         BRAM_SIZE   : string;  -- ("18Kb")  "18Kb" or "36Kb"
         READ_DEPTH  : natural; -- (512)  512, 1024, 2048, 4096, 8192, 16384, 32768
         ADDR_WIDTH  : natural; -- (9)  9 <-> 15
+        WRITE_MODE  : string;  -- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
         WE_WIDTH    : natural  -- (4)  1, 2, 4, 8
     );
     port(
