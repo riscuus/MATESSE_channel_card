@@ -103,13 +103,25 @@ begin
             readline(input_file, v_in_line);
             read(v_in_line, v_x);
             x <= to_signed(v_x, x'length);
-            x_valid <= '1';
-            wait for 200 ns;
-            x_valid <= '0';
-            wait for (ROW_LEN * NUM_ROWS - 1) * 200 ns; 
+            wait for (ROW_LEN * NUM_ROWS) * 200 ns; 
         end loop;
         file_close(input_file);
         wait;
+    end process;
+
+    set_valid_data : process(rst, clk)
+    begin
+        if(rst = '1') then
+            x_valid <= '0';
+        elsif(rising_edge(clk)) then
+            if (clk_counter = ROW_LEN * NUM_ROWS - 1) then
+                x_valid <= '1';
+                clk_counter <= 0;
+            else
+                x_valid <= '0';
+                clk_counter <= clk_counter + 1;
+            end if;
+        end if;
     end process;
 
     write_data : process
