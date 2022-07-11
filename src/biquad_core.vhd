@@ -28,11 +28,11 @@ use concept.utils.all;
 
 entity biquad_core is
     generic(
-        COEFF_WIDTH     : natural := 32;
-        TRUNC_WIDTH     : natural := 5;
-        DATA_WIDTH      : natural := 32;
-        ROW_WIDTH       : natural := 4;
-        RAM_ADDR_WIDTH  : natural := 9
+        COEFF_WIDTH     : natural; -- := 32;
+        TRUNC_WIDTH     : natural; -- := 5;
+        DATA_WIDTH      : natural; -- := 32;
+        ROW_WIDTH       : natural; -- := 4;
+        RAM_ADDR_WIDTH  : natural  -- := 9
     );
     port(
         clk                 : in std_logic;
@@ -40,7 +40,7 @@ entity biquad_core is
 
         b1                  : in signed(COEFF_WIDTH - 1 downto 0);
         b2                  : in signed(COEFF_WIDTH - 1 downto 0);
-        k                   : in signed(TRUNC_WIDTH - 1 downto 0);
+        k                   : in unsigned(TRUNC_WIDTH - 1 downto 0);
         x                   : in signed(DATA_WIDTH - 1 downto 0);
         x_row               : in unsigned(ROW_WIDTH - 1 downto 0);
         x_valid             : in std_logic;
@@ -95,20 +95,17 @@ begin
     y_n <= x_n + signed(delay_buffer_out(1)(DATA_WIDTH - 1 downto 0));
 
     -- 64 = 32 + 32
-    b2_prod <= shift_right(y_n * b2, M); -- To maintain M fixed point we need to shift right to truncate the least significant bits
-    -- 64 = max(32, 64)
-    --delay_buffer_in(0) <= std_logic_vector(shift_right(x_n - b2_prod, COEFF_WIDTH - 1));
-    delay_buffer_in(0) <= std_logic_vector(x_n - b2_prod);
-
+    b1_prod <= shift_right(y_n * b1, M); -- To maintain M fixed point we need to shift right to truncate the least significant bits
     -- 64 = 32 + 32
-    b1_prod <= shift_right(y_n * b1, M);
-
+    b2_prod <= shift_right(y_n * b2, M); -- To maintain M fixed point we need to shift right to truncate the least significant bits
     -- 64 = 32 * 32
-    a1_prod <= 2 * x_n; -- Bc the way numeric_std treats the integer multiplication shifting is not needed
+    a1_prod <= 2 * x_n; -- Because of the way numeric_std treats the integer by signed multiplication shifting is not needed
+    -- 64 = max(32, 64)
+    delay_buffer_in(0) <= std_logic_vector(x_n - b2_prod);
     -- 64 = max(64, 64, 64)
     delay_buffer_in(1) <= std_logic_vector(a1_prod - b1_prod + signed(delay_buffer_out(0)));
     
-    y <= y_reg;
+    y <= shift_right(y_reg, to_integer(k));
     y_row <= address_reg;
     ram_write_addr <= resize(address_reg, ram_write_addr'length);
 

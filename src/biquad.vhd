@@ -28,11 +28,11 @@ use concept.utils.all;
 
 entity biquad is
     generic(
-        COEFF_WIDTH     : natural := 15;
-        TRUNC_WIDTH     : natural := 5;
-        DATA_WIDTH      : natural := 32;
-        ROW_WIDTH       : natural := 4;
-        RAM_ADDR_WIDTH  : natural := 9
+        COEFF_WIDTH     : natural; -- := 15;
+        TRUNC_WIDTH     : natural; -- := 5;
+        DATA_WIDTH      : natural; -- := 32;
+        ROW_WIDTH       : natural; -- := 4;
+        RAM_ADDR_WIDTH  : natural  -- := 9
     );
     port(
         clk                 : in std_logic;
@@ -40,7 +40,7 @@ entity biquad is
 
         b1                  : in signed(COEFF_WIDTH - 1 downto 0);
         b2                  : in signed(COEFF_WIDTH - 1 downto 0);
-        k                   : in signed(TRUNC_WIDTH - 1 downto 0);
+        k                   : in unsigned(TRUNC_WIDTH - 1 downto 0);
         x                   : in signed(DATA_WIDTH - 1 downto 0);
         x_row               : in unsigned(ROW_WIDTH - 1 downto 0);
         x_valid             : in std_logic;
@@ -65,10 +65,11 @@ begin
 
     biquad_core_module : entity concept.biquad_core
         generic map(
-            COEFF_WIDTH => COEFF_WIDTH,
-            TRUNC_WIDTH => TRUNC_WIDTH,
-            DATA_WIDTH  => DATA_WIDTH,
-            ROW_WIDTH   => ROW_WIDTH
+            COEFF_WIDTH     => COEFF_WIDTH,
+            TRUNC_WIDTH     => TRUNC_WIDTH,
+            DATA_WIDTH      => DATA_WIDTH,
+            ROW_WIDTH       => ROW_WIDTH,
+            RAM_ADDR_WIDTH  => RAM_ADDR_WIDTH
         )
         port map(               
             clk                 => clk,

@@ -33,13 +33,14 @@ end tb_biquad;
 
 architecture behave of tb_biquad is
 
-    constant COEFF_WIDTH : natural := 32;
-    constant TRUNC_WIDTH : natural := 5;
-    constant DATA_WIDTH  : natural := 32;
-    constant ROW_WIDTH   : natural := 4;
+    constant COEFF_WIDTH    : natural := 32;
+    constant TRUNC_WIDTH    : natural := 5;
+    constant DATA_WIDTH     : natural := 32;
+    constant ROW_WIDTH      : natural := 4;
+    constant RAM_ADDR_WIDTH : natural := 9;
 
     constant NUM_ROWS   : natural := 1; -- 12
-    constant ROW_LEN    : natural :=    10; -- 100
+    constant ROW_LEN    : natural := 10; -- 100
     constant ADC_FREQ   : natural := 5000000;
     constant F_S        : natural := ADC_FREQ / (100 * 12);
 
@@ -53,7 +54,7 @@ architecture behave of tb_biquad is
     -- 0.5277280004128642731 * 2^14 = 8646
     signal b2       : signed(COEFF_WIDTH - 1 downto 0) := to_signed(8646, COEFF_WIDTH);
 
-    signal k        : signed(TRUNC_WIDTH - 1 downto 0) := (others => '0');
+    signal k        : unsigned(TRUNC_WIDTH - 1 downto 0) := to_unsigned(1, TRUNC_WIDTH);
 
     signal x        : signed(DATA_WIDTH - 1 downto 0)  := (others => '0');
     signal x_row    : unsigned(ROW_WIDTH - 1 downto 0) := (others => '0');
@@ -134,7 +135,8 @@ begin
             COEFF_WIDTH => COEFF_WIDTH,
             TRUNC_WIDTH => TRUNC_WIDTH,
             DATA_WIDTH  => DATA_WIDTH,
-            ROW_WIDTH   => ROW_WIDTH
+            ROW_WIDTH   => ROW_WIDTH,
+            RAM_ADDR_WIDTH  => RAM_ADDR_WIDTH
         )
         port map(
             clk     => clk,
