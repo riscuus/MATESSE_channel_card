@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_biquad_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_biquad" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="13640000001fs"></ZoomEndTime>
+      <Cursor1Time time="3500000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="254"></NameColumnWidth>
+      <ValueColumnWidth column_width="95"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="13" />
+   <wvobject fp_name="/tb_biquad/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_biquad/rst" type="logic">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_biquad/b1" type="array">
+      <obj_property name="ElementShortName">b1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">b1[31:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">14</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_biquad/b2" type="array">
+      <obj_property name="ElementShortName">b2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">b2[31:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">14</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_biquad/x_row" type="array">
+      <obj_property name="ElementShortName">x_row[3:0]</obj_property>
+      <obj_property name="ObjectShortName">x_row[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_biquad/biquad_module/y_row" type="array">
+      <obj_property name="ElementShortName">y_row[3:0]</obj_property>
+      <obj_property name="ObjectShortName">y_row[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_biquad/x_valid" type="logic">
+      <obj_property name="ElementShortName">x_valid</obj_property>
+      <obj_property name="ObjectShortName">x_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_biquad/biquad_module/y_valid" type="logic">
+      <obj_property name="ElementShortName">y_valid</obj_property>
+      <obj_property name="ObjectShortName">y_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="group79" type="group">
+      <obj_property name="label">x[n] -&gt; y[n]</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_biquad/x" type="array">
+         <obj_property name="ElementShortName">x[31:0]</obj_property>
+         <obj_property name="ObjectShortName">x[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/x" type="array">
+         <obj_property name="ElementShortName">x[31:0]</obj_property>
+         <obj_property name="ObjectShortName">x[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/x_reg" type="array">
+         <obj_property name="ElementShortName">x_reg[31:0]</obj_property>
+         <obj_property name="ObjectShortName">x_reg[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/x_n" type="array">
+         <obj_property name="ElementShortName">x_n[31:0]</obj_property>
+         <obj_property name="ObjectShortName">x_n[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/delay_buffer_out[1]" type="array">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">[1][63:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][63:0]</obj_property>
+         <obj_property name="label">delay_buffer_out(1)[63:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/y_n" type="array">
+         <obj_property name="ElementShortName">y_n[31:0]</obj_property>
+         <obj_property name="ObjectShortName">y_n[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/y_reg" type="array">
+         <obj_property name="ElementShortName">y_reg[31:0]</obj_property>
+         <obj_property name="ObjectShortName">y_reg[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/y" type="array">
+         <obj_property name="ElementShortName">y[31:0]</obj_property>
+         <obj_property name="ObjectShortName">y[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/y_valid" type="logic">
+         <obj_property name="ElementShortName">y_valid</obj_property>
+         <obj_property name="ObjectShortName">y_valid</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group80" type="group">
+      <obj_property name="label">x[n] -&gt; buffer_in_0</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/y_n" type="array">
+         <obj_property name="ElementShortName">y_n[31:0]</obj_property>
+         <obj_property name="ObjectShortName">y_n[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/b2_prod" type="array">
+         <obj_property name="ElementShortName">b2_prod[63:0]</obj_property>
+         <obj_property name="ObjectShortName">b2_prod[63:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/x_n" type="array">
+         <obj_property name="ElementShortName">x_n[31:0]</obj_property>
+         <obj_property name="ObjectShortName">x_n[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/delay_buffer_in[0]" type="array">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">[0][63:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][63:0]</obj_property>
+         <obj_property name="label">delay_buffer_in(0)[63:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group106" type="group">
+      <obj_property name="label">buffer_out(0) -&gt; buffer_in(1)</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/delay_buffer_out[0]" type="array">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">[0][63:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][63:0]</obj_property>
+         <obj_property name="label">delay_buffer_out(0)[63:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/a1_prod" type="array">
+         <obj_property name="ElementShortName">a1_prod[63:0]</obj_property>
+         <obj_property name="ObjectShortName">a1_prod[63:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/b1_prod" type="array">
+         <obj_property name="ElementShortName">b1_prod[63:0]</obj_property>
+         <obj_property name="ObjectShortName">b1_prod[63:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/delay_buffer_in[1]" type="array">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">[1][63:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][63:0]</obj_property>
+         <obj_property name="label">delay_buffer_in(1)[63:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group105" type="group">
+      <obj_property name="label">ram interface</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/ram_write_addr" type="array">
+         <obj_property name="ElementShortName">ram_write_addr[8:0]</obj_property>
+         <obj_property name="ObjectShortName">ram_write_addr[8:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/ram_write_en" type="logic">
+         <obj_property name="ElementShortName">ram_write_en</obj_property>
+         <obj_property name="ObjectShortName">ram_write_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/ram_0_write_data" type="array">
+         <obj_property name="ElementShortName">ram_0_write_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ram_0_write_data[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/ram_0_read_data" type="array">
+         <obj_property name="ElementShortName">ram_0_read_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ram_0_read_data[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/ram_1_write_data" type="array">
+         <obj_property name="ElementShortName">ram_1_write_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ram_1_write_data[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/ram_1_read_data" type="array">
+         <obj_property name="ElementShortName">ram_1_read_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ram_1_read_data[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group40" type="group">
+      <obj_property name="label">signals biquad core</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/y" type="array">
+         <obj_property name="ElementShortName">y[31:0]</obj_property>
+         <obj_property name="ObjectShortName">y[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">14</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/y_row" type="array">
+         <obj_property name="ElementShortName">y_row[3:0]</obj_property>
+         <obj_property name="ObjectShortName">y_row[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/y_valid" type="logic">
+         <obj_property name="ElementShortName">y_valid</obj_property>
+         <obj_property name="ObjectShortName">y_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/delay_buffer_in" type="array">
+         <obj_property name="ElementShortName">delay_buffer_in[0:1][63:0]</obj_property>
+         <obj_property name="ObjectShortName">delay_buffer_in[0:1][63:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/delay_buffer_out" type="array">
+         <obj_property name="ElementShortName">delay_buffer_out[0:1][63:0]</obj_property>
+         <obj_property name="ObjectShortName">delay_buffer_out[0:1][63:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/x_reg" type="array">
+         <obj_property name="ElementShortName">x_reg[31:0]</obj_property>
+         <obj_property name="ObjectShortName">x_reg[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/x_n" type="array">
+         <obj_property name="ElementShortName">x_n[31:0]</obj_property>
+         <obj_property name="ObjectShortName">x_n[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/b1_prod" type="array">
+         <obj_property name="ElementShortName">b1_prod[63:0]</obj_property>
+         <obj_property name="ObjectShortName">b1_prod[63:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_biquad/biquad_module/biquad_core_module/a1_prod" type="array">
+         <obj_property name="ElementShortName">a1_prod[63:0]</obj_property>
+         <obj_property name="ObjectShortName">a1_prod[63:0]</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>
