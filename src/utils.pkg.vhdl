@@ -16,6 +16,7 @@ package utils is
     constant MAX_CHANNELS           : natural := 2; -- Max channels that the daughter board can handle
     constant DATA_PKT_HEADER_SIZE   : natural := 43;
     constant MAX_ROWS               : natural := 12; -- Max rows that the daughter board can handle
+    constant ROW_NUM_WIDTH          : natural := bits_req(MAX_ROWS - 1);
     constant MAX_PAYLOAD            : natural := DATA_PKT_HEADER_SIZE + MAX_ROWS * MAX_CHANNELS; -- Max payload that any packet will have
     constant MAX_REPLY_PAYLOAD      : natural := 58; -- Max payload that a reply packet will have
     constant MAX_ROW_LEN            : natural := 65535;
@@ -42,6 +43,7 @@ package utils is
     constant PARAM_RAM_BRAM_SIZE  : string  := "18Kb";
     constant PARAM_RAM_READ_DEPTH : natural := 512;
     constant PARAM_RAM_ADDR_WIDTH : natural := 9;
+    constant PARAM_RAM_WRITE_MODE : string := "WRITE_FIRST";
     constant PARAM_RAM_WE_WIDTH   : natural := 4;
     -- FB RAM constants
     constant FB_RAM_DATA_WIDTH : natural := WORD_WIDTH; 
@@ -49,8 +51,23 @@ package utils is
     constant FB_RAM_READ_DEPTH : natural := 512;
     constant FB_RAM_ADDR_WIDTH : natural := 9;
     constant FB_RAM_WE_WIDTH   : natural := 4;
-
-    constant IIR_FILTER_POLES       : natural := 4; -- This will define the depth of the buffers and the size of the coef arrays
+    -- FILTER RAM constants
+    constant FILTER_RAM_DATA_WIDTH : natural := WORD_WIDTH; 
+    constant FILTER_RAM_BRAM_SIZE  : string  := "18Kb";
+    constant FILTER_RAM_READ_DEPTH : natural := 512;
+    constant FILTER_RAM_ADDR_WIDTH : natural := 9;
+    constant FILTER_RAM_WRITE_MODE : string  := "READ_FIRST"; 
+    constant FILTER_RAM_WE_WIDTH   : natural := 4;
+    -- FILTER constants
+    constant FILTER_COEFF_WIDTH    : natural := WORD_WIDTH; -- Number of bits in which the coefficient are encoded (we also suppose 1.14 SBF format)
+    constant FILTER_TRUNC_WIDTH    : natural := 5; -- Truncation factor 2^k, where k goes from 0 to 2^TRUNC_WIDTH
+    constant FILTER_ROW_WIDTH      : natural := ROW_NUM_WIDTH;
+    constant B11_DEF               : std_logic_vector(WORD_WIDTH - 1 downto 0) := std_logic_vector(to_signed(-25246, WORD_WIDTH));
+    constant B12_DEF               : std_logic_vector(WORD_WIDTH - 1 downto 0) := std_logic_vector(to_signed(11687, WORD_WIDTH));
+    constant B21_DEF               : std_logic_vector(WORD_WIDTH - 1 downto 0) := std_logic_vector(to_signed(-20991, WORD_WIDTH));
+    constant B22_DEF               : std_logic_vector(WORD_WIDTH - 1 downto 0) := std_logic_vector(to_signed(6956, WORD_WIDTH));
+    constant K1_DEF                : std_logic_vector(WORD_WIDTH - 1 downto 0) := std_logic_vector(to_unsigned(4, WORD_WIDTH));
+    constant K2_DEF                : std_logic_vector(WORD_WIDTH - 1 downto 0) := std_logic_vector(to_unsigned(4, WORD_WIDTH));
 
     
     -- signed integer array
@@ -112,6 +129,7 @@ package utils is
     constant DATA_MODE_RAW      : natural := 3;
 
     constant NUM_DATA_MODES     : natural := 4; -- (error, fb, filt_fb, raw)
+    constant DATA_SEL_SIZE      : natural := bits_req(NUM_DATA_MODES - 1);
 
     -- The possible reply errors
     constant ERROR_GO_WITH_NO_SETUP     : t_word := x"00000001";
@@ -279,6 +297,7 @@ package utils is
     constant SCK_DLY_DEF            : t_param_array(0 to PARAM_ID_TO_SIZE(SCK_DLY_ID) - 1)          := (0 => std_logic_vector(to_unsigned(1, t_word'length)));
     constant SCK_HALF_PERIOD_DEF    : t_param_array(0 to PARAM_ID_TO_SIZE(SCK_HALF_PERIOD_ID) - 1)  := (0 => std_logic_vector(to_unsigned(1, t_word'length)));
     constant SERVO_MODE_DEF         : t_param_array(0 to PARAM_ID_TO_SIZE(SERVO_MODE_ID) - 1)       := (others => std_logic_vector(to_unsigned(SERVO_MODE_PID, t_word'length)));
+    constant FILTR_COEFF_DEF        : t_param_array(0 to PARAM_ID_TO_SIZE(FILTR_COEFF_ID) - 1)      := (0 => B11_DEF, 1 => B12_DEF, 2 => B21_DEF, 3 => B22_DEF, 4 => K1_DEF, 5 => K2_DEF);
 
 end package;
 

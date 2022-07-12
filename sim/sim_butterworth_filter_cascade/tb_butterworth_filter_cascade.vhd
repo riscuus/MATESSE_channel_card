@@ -49,7 +49,7 @@ architecture behave of tb_butterworth_filter_cascade is
     signal clk : std_logic := '0';
     signal rst : std_logic := '0';
 
-    signal filter_coeff : t_param_array(0 to PARAM_ID_TO_SIZE(FILTR_COEFF_ID) - 1) := (others => (others => '0'));
+    signal filtr_coeff : t_param_array(0 to PARAM_ID_TO_SIZE(FILTR_COEFF_ID) - 1) := (others => (others => '0'));
 
     -- -1.540944328506029359360240960086230188608 * 2^14 = -25246
     signal b11       : signed(WORD_WIDTH - 1 downto 0) := to_signed(-25246, WORD_WIDTH);
@@ -80,12 +80,12 @@ architecture behave of tb_butterworth_filter_cascade is
 
 begin
 
-    filter_coeff(0) <= std_logic_vector(b11);
-    filter_coeff(1) <= std_logic_vector(b12);
-    filter_coeff(2) <= std_logic_vector(b21);
-    filter_coeff(3) <= std_logic_vector(b22);
-    filter_coeff(4) <= std_logic_vector(k1);
-    filter_coeff(5) <= std_logic_vector(k2);
+    filtr_coeff(0) <= std_logic_vector(b11);
+    filtr_coeff(1) <= std_logic_vector(b12);
+    filtr_coeff(2) <= std_logic_vector(b21);
+    filtr_coeff(3) <= std_logic_vector(b22);
+    filtr_coeff(4) <= std_logic_vector(k1);
+    filtr_coeff(5) <= std_logic_vector(k2);
 
     -- 5 CLK generation
     clk_generation : process 
@@ -169,7 +169,7 @@ begin
             clk             => clk,
             rst             => rst,
 
-            filter_coeff    => filter_coeff,
+            filtr_coeff    => filtr_coeff,
 
             x               => x,
             x_row           => x_row,

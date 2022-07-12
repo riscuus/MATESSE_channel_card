@@ -138,7 +138,7 @@ architecture Behavioral of main_module is
     signal channels_ctr_DAC_start_pulse : std_logic := '0';
     signal channels_DAC_addr        : std_logic_vector(DAC_ADDR_SIZE - 1 downto 0) := (others => '0');
     signal channels_line_selector   : t_line_sel_array := (others => (others => '0'));
-    signal channels_data_selector   : unsigned(bits_req(NUM_DATA_MODES) - 1 downto 0) := (others => '0');
+    signal channels_data_selector   : unsigned(DATA_SEL_SIZE - 1 downto 0) := (others => '0');
 
     -- row_selector signals
     signal new_row      : std_logic := '0';
@@ -203,6 +203,15 @@ architecture Behavioral of main_module is
         )
     );
 
+    -- butterworth filter output
+    signal filter_output : t_channel_record_array := (
+        others => (
+            value => (others => '0'),
+            row_num => (others => '0'),
+            valid => '0'
+        )
+    );
+
     type fb_ram_addr_signal_array is array(0 to MAX_CHANNELS - 1) of unsigned(FB_RAM_ADDR_WIDTH - 1 downto 0);
     signal fb_ram_write_addr_signal : fb_ram_addr_signal_array := (others => (others => '0'));
 
@@ -225,6 +234,11 @@ architecture Behavioral of main_module is
     signal channels_DAC_CLK_signal : std_logic := '0'; -- Needed because we need to read it
 
     -- channels readout -> frame_builder
+    type t_data_value_vector_array is array(0 to MAX_CHANNELS - 1) of std_logic_vector(WORD_WIDTH - 1 downto 0);
+    type t_data_row_num_vector_array is array(0 to MAX_CHANNELS - 1) of std_logic_vector(ROW_NUM_WIDTH - 1 downto 0);
+    signal data_value_vector_array : t_data_value_vector_array := (others => (others => '0'));
+    signal data_row_num_vector_array : t_data_row_num_vector_array := (others => (others => '0'));
+
     signal channels_data : t_channel_record_array := (
         others => (
             value => (others => '0'),
@@ -266,6 +280,7 @@ architecture Behavioral of main_module is
     signal sa_bias_cte      : t_param_array(0 to PARAM_ID_TO_SIZE(SA_BIAS_ID) - 1) := (others => (others => '0'));
     signal sq1_fb_cte       : t_param_array(0 to PARAM_ID_TO_SIZE(SQ1_FB_ID) - 1) := (others => (others => '0'));
     signal sq1_bias_cte     : t_param_array(0 to PARAM_ID_TO_SIZE(SQ1_BIAS_ID) - 1) := (others => (others => '0'));
+    signal filtr_coeff     : t_param_array(0 to PARAM_ID_TO_SIZE(FILTR_COEFF_ID) - 1) := (others => (others => '0'));
 
     type t_gain_array is array(0 to MAX_CHANNELS - 1) of t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1);
     signal gain_array : t_gain_array := (others => (others => (others => '0')));
@@ -448,6 +463,7 @@ begin
             BRAM_SIZE   => PARAM_RAM_BRAM_SIZE,
             READ_DEPTH  => PARAM_RAM_READ_DEPTH,
             ADDR_WIDTH  => PARAM_RAM_ADDR_WIDTH,
+            WRITE_MODE  => PARAM_RAM_WRITE_MODE,
             WE_WIDTH    => PARAM_RAM_WE_WIDTH
         )
         port map(
@@ -793,6 +809,78 @@ begin
                 serial_data                                                             => channels_DAC_SDI_vector(i)
             );
 
+        filter_module : entity concept.butterworth_filter_cascade
+            generic map(
+                COEFF_WIDTH     => FILTER_COEFF_WIDTH,
+                TRUNC_WIDTH     => FILTER_TRUNC_WIDTH,
+                ROW_WIDTH       => FILTER_ROW_WIDTH,
+                RAM_DATA_WIDTH  => FILTER_RAM_DATA_WIDTH,
+                RAM_BRAM_SIZE   => FILTER_RAM_BRAM_SIZE,
+                RAM_READ_DEPTH  => FILTER_RAM_READ_DEPTH,
+                RAM_ADDR_WIDTH  => FILTER_RAM_ADDR_WIDTH,
+                RAM_WRITE_MODE  => FILTER_RAM_WRITE_MODE,
+                RAM_WE_WIDTH    => FILTER_RAM_WE_WIDTH
+            )
+            port map(
+                clk             => sys_clk_5,
+                rst             => sys_rst,
+
+                filtr_coeff     => filtr_coeff,
+                x               => fb_sample(i).value,
+                x_row           => fb_sample(i).row_num,
+                x_valid         => fb_sample(i).valid,
+
+                y               => filter_output(i).value,
+                y_row           => filter_output(i).row_num,
+                y_valid         => filter_output(i).valid
+            );
+
+    channels_data_value_multiplexer : entity concept.mux
+        generic map(
+            DATA_SIZE   => WORD_WIDTH,
+            SEL_SIZE    => DATA_SEL_SIZE
+        )
+        port map(
+            selector => channels_data_selector,
+            data_in(1 * WORD_WIDTH - 1 downto 0 * WORD_WIDTH) => (others => '0'), -- error data
+            data_in(2 * WORD_WIDTH - 1 downto 1 * WORD_WIDTH) => std_logic_vector(fb_sample(i).value), -- FB
+            data_in(3 * WORD_WIDTH - 1 downto 2 * WORD_WIDTH) => std_logic_vector(filter_output(i).value), -- Filtered FB
+            data_in(4 * WORD_WIDTH - 1 downto 3 * WORD_WIDTH) => (others => '0'), -- RAW
+            data_out => data_value_vector_array(i)
+        );
+
+    channels_data_row_num_multiplexer : entity concept.mux
+        generic map(
+            DATA_SIZE   => ROW_NUM_WIDTH,
+            SEL_SIZE    => DATA_SEL_SIZE
+        )
+        port map(
+            selector => channels_data_selector,
+            data_in(1 * ROW_NUM_WIDTH - 1 downto 0 * ROW_NUM_WIDTH) => (others => '0'), -- error data
+            data_in(2 * ROW_NUM_WIDTH - 1 downto 1 * ROW_NUM_WIDTH) => std_logic_vector(fb_sample(i).row_num), -- FB
+            data_in(3 * ROW_NUM_WIDTH - 1 downto 2 * ROW_NUM_WIDTH) => std_logic_vector(filter_output(i).row_num), -- Filtered FB
+            data_in(4 * ROW_NUM_WIDTH - 1 downto 3 * ROW_NUM_WIDTH) => (others => '0'), -- RAW
+            data_out => data_row_num_vector_array(0) 
+        );
+
+
+    channels_data_valid_multiplexer : entity concept.mux
+        generic map(
+            DATA_SIZE   => 1, -- it is an std_logic
+            SEL_SIZE    => DATA_SEL_SIZE
+        )
+        port map(
+            selector => channels_data_selector,
+            data_in(0) => '0', -- error data
+            data_in(1) => fb_sample(i).valid, -- FB
+            data_in(2) => filter_output(i).valid, -- Filtered FB
+            data_in(3) => '0', -- RAW
+            data_out(0) => channels_data(i).valid
+        );
+
+    channels_data(i).value <= signed(data_value_vector_array(i));
+    channels_data(i).row_num <= unsigned(data_row_num_vector_array(i));
+
     end generate;
 
 
@@ -841,8 +929,6 @@ begin
             DAC_start_pulse => TES_bias_DAC_start_pulse,
             serial_data     => open
         );
-
-    channels_data <= fb_sample;
 
     frame_builder_module : entity concept.frame_builder
         port map(
@@ -1246,6 +1332,23 @@ begin
             update_data         => param_data,
             default_value       => (others => (others => '0')),
             param_data          => sq1_bias_cte
+        );
+
+    -- FILTR_COEFF_ID
+    filtr_coeff_buffer : entity concept.param_buffer
+        generic map(
+            param_size          => PARAM_ID_TO_SIZE(FILTR_COEFF_ID),
+            param_id            => to_unsigned(FILTR_COEFF_ID, PARAM_ID_WIDTH)
+        )                       
+        port map(               
+            clk                 => sys_clk_5,
+            rst                 => sys_rst,
+                                
+            update              => update_param_pulse,
+            param_id_to_update  => param_id_to_update,
+            update_data         => param_data,
+            default_value       => FILTR_COEFF_DEF,
+            param_data          => filtr_coeff
         );
 
 end Behavioral;

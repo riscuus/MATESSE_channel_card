@@ -30,20 +30,24 @@ entity butterworth_filter_cascade is
     generic(
         COEFF_WIDTH     : natural; -- := 15;
         TRUNC_WIDTH     : natural; -- := 5;
-        DATA_WIDTH      : natural; -- := 32;
         ROW_WIDTH       : natural; -- := 4;
-        RAM_ADDR_WIDTH  : natural  -- := 9
+        RAM_DATA_WIDTH  : natural; -- := 32; (This also defines the data_width of the input and output data of the filter)
+        RAM_BRAM_SIZE   : string;  -- := 18kb
+        RAM_READ_DEPTH  : natural; -- := 512
+        RAM_ADDR_WIDTH  : natural; -- := 9
+        RAM_WRITE_MODE  : string;  -- := READ_FIRST
+        RAM_WE_WIDTH    : natural  -- := 4
     );
     port(
         clk                 : in std_logic;
         rst                 : in std_logic;
 
-        filter_coeff        : in t_param_array(0 to PARAM_ID_TO_SIZE(FILTR_COEFF_ID) - 1);
-        x                   : in signed(DATA_WIDTH - 1 downto 0);
+        filtr_coeff        : in t_param_array(0 to PARAM_ID_TO_SIZE(FILTR_COEFF_ID) - 1);
+        x                   : in signed(RAM_DATA_WIDTH - 1 downto 0);
         x_row               : in unsigned(ROW_WIDTH - 1 downto 0);
         x_valid             : in std_logic;
 
-        y                   : out signed(DATA_WIDTH - 1 downto 0);
+        y                   : out signed(RAM_DATA_WIDTH - 1 downto 0);
         y_row               : out unsigned(ROW_WIDTH - 1 downto 0);
         y_valid             : out std_logic
     );
@@ -59,26 +63,30 @@ architecture behave of butterworth_filter_cascade is
     signal k1   : unsigned(TRUNC_WIDTH - 1 downto 0) := (others => '0');
     signal k2   : unsigned(TRUNC_WIDTH - 1 downto 0) := (others => '0');
 
-    signal y_inter          : signed(DATA_WIDTH - 1 downto 0) := (others => '0');
+    signal y_inter          : signed(RAM_DATA_WIDTH - 1 downto 0) := (others => '0');
     signal y_row_inter      : unsigned(ROW_WIDTH - 1 downto 0) := (others => '0');
     signal y_valid_inter    : std_logic := '0';
 begin
 
-    b11 <= signed(filter_coeff(0)(COEFF_WIDTH - 1 downto 0));
-    b12 <= signed(filter_coeff(1)(COEFF_WIDTH - 1 downto 0));
-    b21 <= signed(filter_coeff(2)(COEFF_WIDTH - 1 downto 0));
-    b22 <= signed(filter_coeff(3)(COEFF_WIDTH - 1 downto 0));
-    k1  <= unsigned(filter_coeff(4)(TRUNC_WIDTH - 1 downto 0));
-    k2  <= unsigned(filter_coeff(5)(TRUNC_WIDTH - 1 downto 0));
+    b11 <=   signed(filtr_coeff(0)(COEFF_WIDTH - 1 downto 0));
+    b12 <=   signed(filtr_coeff(1)(COEFF_WIDTH - 1 downto 0));
+    b21 <=   signed(filtr_coeff(2)(COEFF_WIDTH - 1 downto 0));
+    b22 <=   signed(filtr_coeff(3)(COEFF_WIDTH - 1 downto 0));
+    k1  <= unsigned(filtr_coeff(4)(TRUNC_WIDTH - 1 downto 0));
+    k2  <= unsigned(filtr_coeff(5)(TRUNC_WIDTH - 1 downto 0));
 
 
     biquad_0 : entity concept.biquad
     generic map(
-        COEFF_WIDTH     => COEFF_WIDTH,
-        TRUNC_WIDTH     => TRUNC_WIDTH,
-        DATA_WIDTH      => DATA_WIDTH,
-        ROW_WIDTH       => ROW_WIDTH,
-        RAM_ADDR_WIDTH  => RAM_ADDR_WIDTH
+        COEFF_WIDTH    => COEFF_WIDTH,
+        TRUNC_WIDTH    => TRUNC_WIDTH,
+        ROW_WIDTH      => ROW_WIDTH,
+        RAM_DATA_WIDTH => RAM_DATA_WIDTH,
+        RAM_BRAM_SIZE  => RAM_BRAM_SIZE,
+        RAM_READ_DEPTH => RAM_READ_DEPTH,
+        RAM_ADDR_WIDTH => RAM_ADDR_WIDTH,
+        RAM_WRITE_MODE => RAM_WRITE_MODE,
+        RAM_WE_WIDTH   => RAM_WE_WIDTH
     )
     port map(
         clk                 => clk,
@@ -98,11 +106,15 @@ begin
 
     biquad_1 : entity concept.biquad
     generic map(
-        COEFF_WIDTH     => COEFF_WIDTH,
-        TRUNC_WIDTH     => TRUNC_WIDTH,
-        DATA_WIDTH      => DATA_WIDTH,
-        ROW_WIDTH       => ROW_WIDTH,
-        RAM_ADDR_WIDTH  => RAM_ADDR_WIDTH
+        COEFF_WIDTH    => COEFF_WIDTH,
+        TRUNC_WIDTH    => TRUNC_WIDTH,
+        ROW_WIDTH      => ROW_WIDTH,
+        RAM_DATA_WIDTH => RAM_DATA_WIDTH,
+        RAM_BRAM_SIZE  => RAM_BRAM_SIZE,
+        RAM_READ_DEPTH => RAM_READ_DEPTH,
+        RAM_ADDR_WIDTH => RAM_ADDR_WIDTH,
+        RAM_WRITE_MODE => RAM_WRITE_MODE,
+        RAM_WE_WIDTH   => RAM_WE_WIDTH
     )
     port map(
         clk                 => clk,

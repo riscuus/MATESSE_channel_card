@@ -48,7 +48,7 @@ entity channels_controller is
         DAC_start_pulse         : out std_logic; -- Pulse to start the DAC controller
         DAC_address             : out std_logic_vector(DAC_ADDR_SIZE - 1 downto 0); -- Address of the DAC that we are updating (corresponds either to the SF, SB, FF or FB). The same for all channels
         line_sel                : out t_line_sel_array; -- Selector for the multiplexer that chooses which data to set in the DAC. We have different selector per channel
-        data_sel                : out unsigned(bits_req(NUM_DATA_MODES) - 1 downto 0) -- Selector for the multiplexer that chooses which data to put in the data frame
+        data_sel                : out unsigned(DATA_SEL_SIZE - 1 downto 0) -- Selector for the multiplexer that chooses which data to put in the data frame
     );
 
 end channels_controller;
