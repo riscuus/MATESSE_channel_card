@@ -39,7 +39,7 @@ architecture behave of tb_butterworth_filter_cascade is
     constant ROW_WIDTH      : natural := 4;
     constant RAM_ADDR_WIDTH : natural := 9;
 
-    constant NUM_ROWS   : natural := 1; -- 12
+    constant NUM_ROWS   : natural := 2; -- 12
     constant ROW_LEN    : natural := 10; -- 100
     constant ADC_FREQ   : natural := 5000000;
     constant F_S        : natural := ADC_FREQ / (100 * 12);
@@ -76,7 +76,8 @@ architecture behave of tb_butterworth_filter_cascade is
 
     -- File needed signals
     file input_file : text;
-    file output_file : text;
+    file output_file_0 : text;
+    file output_file_1 : text;
 
 begin
 
@@ -129,7 +130,14 @@ begin
         if(rst = '1') then
             x_valid <= '0';
         elsif(rising_edge(clk)) then
-            if (clk_counter = ROW_LEN * NUM_ROWS - 1) then
+            -- New row starts
+            if (clk_counter = ROW_LEN - 1) then
+                -- Update x_row and valid pulse
+                if (x_row = NUM_ROWS - 1) then
+                    x_row <= (others => '0');
+                else
+                    x_row <= x_row + 1;
+                end if;
                 x_valid <= '1';
                 clk_counter <= 0;
             else
@@ -143,27 +151,39 @@ begin
         variable v_out_line : line;
         variable y_int : integer;
     begin
-        file_open(output_file, "C:\dev\MATESSE_channel_card_repo\sim\sim_butterworth_filter_cascade\output_signal.txt", write_mode);
-        while samples_counter < NUM_SIGNAL_SAMPLES loop
+        file_open(output_file_0, "C:\dev\MATESSE_channel_card_repo\sim\sim_butterworth_filter_cascade\output_signal_0.txt", write_mode);
+        file_open(output_file_1, "C:\dev\MATESSE_channel_card_repo\sim\sim_butterworth_filter_cascade\output_signal_1.txt", write_mode);
+        while samples_counter < NUM_ROWS * NUM_SIGNAL_SAMPLES loop
             wait until y_valid = '1';
             wait for 200 ns; -- To allow y to be set corectly
             y_int := to_integer(y);
             write(v_out_line, y_int);
-            writeline(output_file, v_out_line);
+            if (x_row = 0) then
+                writeline(output_file_0, v_out_line);
+            elsif(x_row = to_unsigned(1, x_row'length)) then
+                writeline(output_file_1, v_out_line);
+            else
+                report "Invalid x_row: " & integer'image(to_integer(x_row));
+            end if;
             samples_counter <= samples_counter + 1;
             wait for 1 ps;
         end loop;
-        file_close(output_file);
+        file_close(output_file_0);
+        file_close(output_file_1);
         wait;
     end process;
 
     filter_module : entity concept.butterworth_filter_cascade
         generic map(
-            COEFF_WIDTH => COEFF_WIDTH,
-            TRUNC_WIDTH => TRUNC_WIDTH,
-            DATA_WIDTH  => DATA_WIDTH,
-            ROW_WIDTH   => ROW_WIDTH,
-            RAM_ADDR_WIDTH  => RAM_ADDR_WIDTH
+            COEFF_WIDTH     => COEFF_WIDTH,
+            TRUNC_WIDTH     => TRUNC_WIDTH,
+            ROW_WIDTH       => ROW_WIDTH,
+            RAM_DATA_WIDTH  => FILTER_RAM_DATA_WIDTH,
+            RAM_BRAM_SIZE   => FILTER_RAM_BRAM_SIZE,
+            RAM_READ_DEPTH  => FILTER_RAM_READ_DEPTH,
+            RAM_ADDR_WIDTH  => FILTER_RAM_ADDR_WIDTH,
+            RAM_WRITE_MODE  => FILTER_RAM_WRITE_MODE,
+            RAM_WE_WIDTH    => FILTER_RAM_WE_WIDTH
         )
         port map(
             clk             => clk,

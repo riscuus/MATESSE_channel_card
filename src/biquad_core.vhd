@@ -64,7 +64,7 @@ architecture behave of biquad_core is
     constant M : natural := 14; -- Number of decimal bits
     constant BUFFER_DEPTH : natural := 2;
 
-    type stateType is (idle, write_ram, set_output_valid);
+    type stateType is (idle, set_ram_params, write_ram);
     type t_delay_buffer is array(0 to BUFFER_DEPTH - 1) of std_logic_vector(INT_SIG_WIDTH - 1 downto 0);
 
     signal state                : stateType := idle;
@@ -128,26 +128,25 @@ begin
         elsif (rising_edge(clk)) then
             case state is
                 when idle =>
+                    y_valid <= '0';
                     if (x_valid = '1') then
                         x_reg <= x;
                         address_reg <= x_row;
-                        ram_write_en <= '1';
 
-                        state <= write_ram;
+                        state <= set_ram_params;
                     end if;
+                when set_ram_params =>
+                    ram_write_en <= '1';
+                    state <= write_ram;
+
                 when write_ram =>
                     ram_write_en <= '0';
 
                     y_reg <= y_n;
                     y_valid <= '1';
 
-                    state <= set_output_valid;
-
-                when set_output_valid =>
-                    y_valid <= '0';
-
                     state <= idle;
-                    
+
                 when others =>
                     state <= idle;
             end case;
