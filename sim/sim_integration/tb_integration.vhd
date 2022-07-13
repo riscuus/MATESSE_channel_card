@@ -764,7 +764,7 @@ begin
         report "[TEST 12]";
         check_packet_received(packet_12);
         check_reply_ok_async(packet_12, (others => (others => '0')), 0, reply_ok_async, reply_ok_async_data_to_read, reply_ok_async_data_length, check_reply_ok_signal);
-        --check_data_packets(to_integer(unsigned(packet_11.packet_payload(1))) - to_integer(unsigned(packet_11.packet_payload(0))) + 1, calc_data_packet, calc_data_payload);
+        check_data_packets(to_integer(unsigned(packet_11.packet_payload(1))) - to_integer(unsigned(packet_11.packet_payload(0))) + 1, calc_data_packet, calc_data_payload);
 
         -- #13: Good write but has to be ignored because acquisition is on
         --report "[TEST 13]";
