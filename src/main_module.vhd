@@ -973,7 +973,7 @@ begin
             update              => update_param_pulse,
             param_id_to_update  => param_id_to_update,
             update_data         => param_data,
-            default_value       => (others => (others => '0')),
+            default_value       => DATA_MODE_DEF,
             param_data          => data_mode
         );
 

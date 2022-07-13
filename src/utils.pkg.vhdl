@@ -297,6 +297,7 @@ package utils is
     constant SCK_DLY_DEF            : t_param_array(0 to PARAM_ID_TO_SIZE(SCK_DLY_ID) - 1)          := (0 => std_logic_vector(to_unsigned(1, t_word'length)));
     constant SCK_HALF_PERIOD_DEF    : t_param_array(0 to PARAM_ID_TO_SIZE(SCK_HALF_PERIOD_ID) - 1)  := (0 => std_logic_vector(to_unsigned(1, t_word'length)));
     constant SERVO_MODE_DEF         : t_param_array(0 to PARAM_ID_TO_SIZE(SERVO_MODE_ID) - 1)       := (others => std_logic_vector(to_unsigned(SERVO_MODE_PID, t_word'length)));
+    constant DATA_MODE_DEF          : t_param_array(0 to PARAM_ID_TO_SIZE(DATA_MODE_ID) - 1)        := (0 => std_logic_vector(to_unsigned(1, t_word'length)));
     constant FILTR_COEFF_DEF        : t_param_array(0 to PARAM_ID_TO_SIZE(FILTR_COEFF_ID) - 1)      := (0 => B11_DEF, 1 => B12_DEF, 2 => B21_DEF, 3 => B22_DEF, 4 => K1_DEF, 5 => K2_DEF);
 
 end package;
