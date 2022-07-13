@@ -11,9 +11,9 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="37028420000000fs"></ZoomStartTime>
-      <ZoomEndTime time="37037390000001fs"></ZoomEndTime>
-      <Cursor1Time time="37029800000000fs"></Cursor1Time>
+      <ZoomStartTime time="74548750000000fs"></ZoomStartTime>
+      <ZoomEndTime time="75090250000001fs"></ZoomEndTime>
+      <Cursor1Time time="74663250000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="254"></NameColumnWidth>
@@ -38,7 +38,6 @@
       <wvobject fp_name="group1160" type="group">
          <obj_property name="label">packet_params</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/PC_packet_type" type="other">
             <obj_property name="ElementShortName">PC_packet_type</obj_property>
             <obj_property name="ObjectShortName">PC_packet_type</obj_property>
@@ -127,7 +126,7 @@
       <wvobject fp_name="/tb_integration/PC_packet_parser/packet_payload" type="array">
          <obj_property name="ElementShortName">packet_payload[0:66][31:0]</obj_property>
          <obj_property name="ObjectShortName">packet_payload[0:66][31:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_integration/PC_packet_parser/params_valid" type="logic">
          <obj_property name="ElementShortName">params_valid</obj_property>
@@ -178,15 +177,16 @@
       <wvobject fp_name="group1178" type="group">
          <obj_property name="label">decoded_packet</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
       </wvobject>
       <wvobject fp_name="group1044" type="group">
          <obj_property name="label">states</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
       </wvobject>
       <wvobject fp_name="group1064" type="group">
          <obj_property name="label">payload</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
       </wvobject>
       <wvobject fp_name="/tb_integration/parser_params_valid" type="logic">
          <obj_property name="ElementShortName">parser_params_valid</obj_property>
@@ -321,7 +321,6 @@
    <wvobject fp_name="group1231" type="group">
       <obj_property name="label">packet_sender</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="group1394" type="group">
          <obj_property name="label">output_packet_fields</obj_property>
          <obj_property name="DisplayName">label</obj_property>
@@ -456,6 +455,7 @@
       <wvobject fp_name="group1640" type="group">
          <obj_property name="label">DAC_gate_controller</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/row_activator_module/DAC_start_pulse" type="logic">
             <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
             <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
@@ -492,7 +492,6 @@
       <wvobject fp_name="group2100" type="group">
          <obj_property name="label">Data_serializer_wrapper</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/row_activator_module/address" type="array">
             <obj_property name="ElementShortName">address[1:0]</obj_property>
             <obj_property name="ObjectShortName">address[1:0]</obj_property>
@@ -538,6 +537,7 @@
       <wvobject fp_name="group1599" type="group">
          <obj_property name="label">adc_simulator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/\ADC_simulators(0)\/ADC_simulator/data" type="array">
             <obj_property name="ElementShortName">data[15:0]</obj_property>
             <obj_property name="ObjectShortName">data[15:0]</obj_property>
@@ -559,6 +559,7 @@
       <wvobject fp_name="group1604" type="group">
          <obj_property name="label">input_shift_register</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/input_shift_register_module/valid_word" type="logic">
             <obj_property name="ElementShortName">valid_word</obj_property>
             <obj_property name="ObjectShortName">valid_word</obj_property>
@@ -572,6 +573,7 @@
       <wvobject fp_name="group1633" type="group">
          <obj_property name="label">sample_selector</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_selector_module/valid_sample" type="logic">
             <obj_property name="ElementShortName">valid_sample</obj_property>
             <obj_property name="ObjectShortName">valid_sample</obj_property>
@@ -597,11 +599,25 @@
             <obj_property name="ElementShortName">acc_sample</obj_property>
             <obj_property name="ObjectShortName">acc_sample</obj_property>
             <obj_property name="isExpanded"></obj_property>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_accumulator_module/acc_sample.value" type="array">
+               <obj_property name="ElementShortName">.value[31:0]</obj_property>
+               <obj_property name="ObjectShortName">.value[31:0]</obj_property>
+               <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_accumulator_module/acc_sample.row_num" type="array">
+               <obj_property name="ElementShortName">.row_num[3:0]</obj_property>
+               <obj_property name="ObjectShortName">.row_num[3:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/sample_accumulator_module/acc_sample.valid" type="logic">
+               <obj_property name="ElementShortName">.valid</obj_property>
+               <obj_property name="ObjectShortName">.valid</obj_property>
+            </wvobject>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1648" type="group">
          <obj_property name="label">feedback_calculator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/feedback_calculator_module/sa_fb_gain" type="array">
             <obj_property name="ElementShortName">sa_fb_gain[31:0]</obj_property>
             <obj_property name="ObjectShortName">sa_fb_gain[31:0]</obj_property>
@@ -610,7 +626,6 @@
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/feedback_calculator_module/fb_sample" type="array">
             <obj_property name="ElementShortName">fb_sample</obj_property>
             <obj_property name="ObjectShortName">fb_sample</obj_property>
-            <obj_property name="isExpanded"></obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group1655" type="group">
@@ -621,14 +636,17 @@
       <wvobject fp_name="group1661" type="group">
          <obj_property name="label">feedback_reader</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/feedback_reader_module/sa_fb_data" type="array">
             <obj_property name="ElementShortName">sa_fb_data[15:0]</obj_property>
             <obj_property name="ObjectShortName">sa_fb_data[15:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="group963" type="group">
          <obj_property name="label">channel_mux</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_mux/selector" type="array">
             <obj_property name="ElementShortName">selector[2:0]</obj_property>
             <obj_property name="ObjectShortName">selector[2:0]</obj_property>
@@ -1050,7 +1068,6 @@
       <wvobject fp_name="group3016" type="group">
          <obj_property name="label">data_serializer</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(0)\/channel_data_serializer/DAC_start_pulse" type="logic">
             <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
             <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
@@ -1073,10 +1090,10 @@
    <wvobject fp_name="group3342" type="group">
       <obj_property name="label">Channel 1</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="group1599" type="group">
          <obj_property name="label">adc_simulator</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/\ADC_simulators(1)\/ADC_simulator/nCNV" type="logic">
             <obj_property name="ElementShortName">nCNV</obj_property>
             <obj_property name="ObjectShortName">nCNV</obj_property>
@@ -1572,6 +1589,7 @@
       <wvobject fp_name="group2993" type="group">
          <obj_property name="label">data_serializer</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/\channels_readout(1)\/channel_data_serializer/DAC_start_pulse" type="logic">
             <obj_property name="ElementShortName">DAC_start_pulse</obj_property>
             <obj_property name="ObjectShortName">DAC_start_pulse</obj_property>
@@ -1594,7 +1612,6 @@
    <wvobject fp_name="group1671" type="group">
       <obj_property name="label">channels_controller</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_integration/main_module/channels_controller_module/data_mode" type="array">
          <obj_property name="ElementShortName">data_mode[2:0]</obj_property>
          <obj_property name="ObjectShortName">data_mode[2:0]</obj_property>
@@ -1725,7 +1742,6 @@
    <wvobject fp_name="group1684" type="group">
       <obj_property name="label">TES_bias_setter</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_integration/main_module/TES_bias_setter_module/set_bias" type="logic">
          <obj_property name="ElementShortName">set_bias</obj_property>
          <obj_property name="ObjectShortName">set_bias</obj_property>
@@ -1758,6 +1774,7 @@
       <wvobject fp_name="group3029" type="group">
          <obj_property name="label">TES_bias_data_serializer</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_integration/main_module/TES_bias_data_serializer/parallel_data" type="array">
             <obj_property name="ElementShortName">parallel_data[17:0]</obj_property>
             <obj_property name="ObjectShortName">parallel_data[17:0]</obj_property>
