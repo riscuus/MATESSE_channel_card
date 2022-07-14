@@ -15,7 +15,8 @@ t = (0:L-1)*T;                          % Time vector
 f = Fs*(0:(L/2))/L;                     % Frequency vector
 
 freq = 1/20 * Fs;                       % Frequency of the signal
-x = (16000 / 1.7) * (sin(2*pi*freq*t) + 0.7*sin(2*pi*6*freq*t)); % Signal to filter
+%x = (16000 / 1.7) * (sin(2*pi*freq*t) + 0.7*sin(2*pi*6*freq*t)); % Signal to filter
+x = (16000 / 1.7) * (sawtooth(2*pi*freq*t) + 0.7*sawtooth(2*pi*6*freq*t)); %+ 0.7*sin(2*pi*6*freq*t));
 
 input_signal_file = fopen("input_signal.txt", "w");
 fprintf(input_signal_file, '%f\n', x);
