@@ -41,9 +41,10 @@ entity signal_generator is
 
         enable_slow         : in std_logic; -- We only trigger if enable is active high
         enable_fast         : in std_logic; -- We only trigger if enable is active high
-        n_cycles            : in unsigned(NUM_CYCLES_WIDTH - 1 downto 0); -- Num clk cycles for each sample of the slow signal. Defines freq of slow signal
-        cycles_multplr      : in unsigned(CYCLES_MULTPLR_WIDTH - 1 downto 0); -- Num_cycles_fast = n_cycles * cycles_multplr. Defines freq of fast signal
+        n_cycles            : in unsigned(NUM_CYCLES_WIDTH - 1 downto 0); -- Num clk cycles for each sample of the fast signal. Defines freq of fast signal
+        cycles_multplr      : in unsigned(CYCLES_MULTPLR_WIDTH - 1 downto 0); -- Num_cycles_slow = n_cycles * cycles_multplr. Defines freq of slow signal
 
+        downscaling         : in unsigned(K_GAIN_WIDTH - 1 downto 0);
         k_gain              : in unsigned(K_GAIN_WIDTH - 1 downto 0); -- Gain of the signal. We consider we have an initial signal from 0 to 1. we multiply by 2^K
         offset              : in unsigned(DATA_WIDTH - 1 downto 0); -- Offset applied to the amplified signal
 
@@ -137,8 +138,10 @@ begin
 
         signal_0            => signal_slow,
         signal_1            => signal_fast,
+        signal_1_en         => enable_fast,
         signals_valid       => signals_valid,
 
+        downscaling         => downscaling,
         k_gain              => k_gain,
         offset              => offset,
 

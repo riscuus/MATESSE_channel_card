@@ -34,16 +34,18 @@ architecture behave of tb_signal_generator is
 
     -- We want a fast freq of around 200 Hz -> freq = 1 / (n_cycles * (2*2^M - 2) * T_sample )
     constant NUM_CYCLES_WIDTH        : natural := 6; -- We want the fast signal around 
-    constant CYCLES_MULTPLR_WIDTH    : natural := 4; -- We can make the slow signal around 11 times slower
+    constant CYCLES_MULTPLR_WIDTH    : natural := 5; -- We can make the slow signal around 32 times slower
     constant K_GAIN_WIDTH            : natural := 4; -- We can amplify from 1 to 11. This covers the whole range
     constant DATA_WIDTH              : natural := 16; -- 16 DAC bits
     constant M                       : natural := 8; -- For going from 0 to 1 we will take 256 samples
 
     signal clk : std_logic := '0';
+    signal clk_100 : std_logic := '0';
     signal rst : std_logic := '0';
 
-    signal n_cycles : unsigned(NUM_CYCLES_WIDTH - 1 downto 0) := to_unsigned(50, NUM_CYCLES_WIDTH); -- This will provide us around 200 Hz for the slow sgnal
-    signal cycles_multplr : unsigned(CYCLES_MULTPLR_WIDTH - 1 downto 0) := to_unsigned(6, CYCLES_MULTPLR_WIDTH);
+    signal n_cycles : unsigned(NUM_CYCLES_WIDTH - 1 downto 0) := to_unsigned(6, NUM_CYCLES_WIDTH); -- This will provide us around 1200 Hz for the fast signal
+    signal cycles_multplr : unsigned(CYCLES_MULTPLR_WIDTH - 1 downto 0) := to_unsigned(8, CYCLES_MULTPLR_WIDTH);
+    signal downscaling : unsigned(K_GAIN_WIDTH - 1 downto 0) := to_unsigned(1, K_GAIN_WIDTH);
     signal k_gain : unsigned(K_GAIN_WIDTH - 1 downto 0) := to_unsigned(9, K_GAIN_WIDTH);
     signal offset : unsigned(DATA_WIDTH - 1 downto 0) := to_unsigned(1400, DATA_WIDTH);
 
@@ -51,6 +53,9 @@ architecture behave of tb_signal_generator is
 
     signal data         : std_logic_vector(DATA_WIDTH - 1 downto 0) := (others => '0');
     signal data_valid   : std_logic := '0';
+
+    signal CS       : std_logic := '0';
+    signal SCLK     : std_logic := '0'; 
 
     file gen_signal_file : text;
 
@@ -63,6 +68,15 @@ begin
         wait for 100 ns; 
         clk <= '0';
         wait for 100 ns;
+    end process;
+
+    -- 100 CLK generation
+    clk_100_generation : process 
+    begin
+        clk_100 <= '1';
+        wait for 5 ns; 
+        clk_100 <= '0';
+        wait for 5 ns;
     end process;
 
     -- Reset generation
@@ -94,11 +108,45 @@ begin
             n_cycles            => n_cycles,
             cycles_multplr      => cycles_multplr,
 
+            downscaling         => downscaling,
             k_gain              => k_gain,
             offset              => offset,
 
             data                => data,
             data_valid          => data_valid
+        );
+
+    DAC_gate_ctrl_module : entity concept.DAC_gate_controller
+        generic map(
+            SCLK_TOTAL_PULSES   => DAC_VOLTAGE_SIZE + DAC_ADDR_SIZE,
+            SCLK_HALF_PERIOD    => DAC_SCLK_HALF_PERIOD,
+            LDAC_SETUP          => DAC_LDAC_SETUP,
+            LDAC_WIDTH          => DAC_LDAC_WIDTH,
+            LDAC_HOLD           => DAC_LDAC_HOLD
+        )
+        port map(
+            clk                     => clk_100,
+            rst                     => rst,
+
+            start_conv_pulse        => data_valid,
+            CS                      => CS,
+            SCLK                    => SCLK,
+            LDAC                    => open
+        );
+
+
+    data_serializer_wrapper : entity concept.data_serializer_wrapper
+        port map(
+            clk             => clk_100,
+            rst             => rst,
+
+            gate_read       => CS,
+            data_clk        => SCLK,
+            valid           => '1',
+            parallel_data   => "00" & data,
+            busy_flag       => '0',
+            DAC_start_pulse => data_valid,
+            serial_data     => open
         );
     
     data_exporter : process

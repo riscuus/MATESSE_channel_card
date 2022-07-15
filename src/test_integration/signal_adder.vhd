@@ -38,8 +38,10 @@ entity signal_adder is
 
         signal_0            : in unsigned(M - 1 downto 0); -- Data has M bits
         signal_1            : in unsigned(M - 1 downto 0); -- Data has M bits
+        signal_1_en         : in std_logic; -- Indicates if the signal 1 is present or not
         signals_valid       : in std_logic; 
         
+        downscaling         : in unsigned(K_GAIN_WIDTH - 1 downto 0); -- signal 1 will be downscaled a factor 2^downscaling
         k_gain              : in unsigned(K_GAIN_WIDTH - 1 downto 0); -- We will shift left k_gain bits, and shift right M bits
         offset              : in unsigned(DATA_WIDTH - 1 downto 0);
 
@@ -65,7 +67,9 @@ architecture behave of signal_adder is
 begin
 
     -- 2M = max(2M, 2M)
-    signal_sum <= shift_right(resize(signal_0, signal_sum'length) + resize(signal_1, signal_sum'length), 1); -- We divide by 2 to scale again to a fractional value between 0 and 1
+    -- We sum and divide by 2 to scale again (approximately) to a fractional value between 0 and 1 (if signal_1 enabled)
+    signal_sum <= shift_right(resize(signal_0, signal_sum'length) + resize(shift_right(signal_1, to_integer(downscaling)), signal_sum'length), 1) when signal_1_en = '1' else
+                  resize(signal_0, signal_sum'length);
     signal_amp <= shift_left(signal_sum, to_integer(k_gain) - M)(DATA_WIDTH - 1 downto 0);
     signal_off <= signal_amp_reg + offset;
 

@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="4618100000000fs"></ZoomStartTime>
-      <ZoomEndTime time="5206100000001fs"></ZoomEndTime>
-      <Cursor1Time time="4686600000000fs"></Cursor1Time>
+      <ZoomStartTime time="7579000000fs"></ZoomStartTime>
+      <ZoomEndTime time="468079000001fs"></ZoomEndTime>
+      <Cursor1Time time="84329000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="254"></NameColumnWidth>
-      <ValueColumnWidth column_width="87"></ValueColumnWidth>
+      <ValueColumnWidth column_width="83"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="13" />
+   <WVObjectSize size="14" />
    <wvobject fp_name="/tb_signal_generator/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -33,8 +33,8 @@
       <obj_property name="ObjectShortName">n_cycles[5:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_signal_generator/cycles_multplr" type="array">
-      <obj_property name="ElementShortName">cycles_multplr[3:0]</obj_property>
-      <obj_property name="ObjectShortName">cycles_multplr[3:0]</obj_property>
+      <obj_property name="ElementShortName">cycles_multplr[4:0]</obj_property>
+      <obj_property name="ObjectShortName">cycles_multplr[4:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_signal_generator/k_gain" type="array">
@@ -106,13 +106,13 @@
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_signal_generator/signal_generator_module/generator_triggerer_slow/num_cycles" type="array">
-         <obj_property name="ElementShortName">num_cycles[9:0]</obj_property>
-         <obj_property name="ObjectShortName">num_cycles[9:0]</obj_property>
+         <obj_property name="ElementShortName">num_cycles[10:0]</obj_property>
+         <obj_property name="ObjectShortName">num_cycles[10:0]</obj_property>
          <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_signal_generator/signal_generator_module/generator_triggerer_slow/clk_counter" type="array">
-         <obj_property name="ElementShortName">clk_counter[9:0]</obj_property>
-         <obj_property name="ObjectShortName">clk_counter[9:0]</obj_property>
+         <obj_property name="ElementShortName">clk_counter[10:0]</obj_property>
+         <obj_property name="ObjectShortName">clk_counter[10:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_signal_generator/signal_generator_module/generator_triggerer_slow/new_sample" type="logic">
          <obj_property name="ElementShortName">new_sample</obj_property>
@@ -204,6 +204,31 @@
       <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/data_valid" type="logic">
          <obj_property name="ElementShortName">data_valid</obj_property>
          <obj_property name="ObjectShortName">data_valid</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group211" type="group">
+      <obj_property name="label">DAC_gate_controller</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_signal_generator/DAC_gate_ctrl_module/start_conv_pulse" type="logic">
+         <obj_property name="ElementShortName">start_conv_pulse</obj_property>
+         <obj_property name="ObjectShortName">start_conv_pulse</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/DAC_gate_ctrl_module/CS" type="logic">
+         <obj_property name="ElementShortName">CS</obj_property>
+         <obj_property name="ObjectShortName">CS</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/DAC_gate_ctrl_module/LDAC" type="logic">
+         <obj_property name="ElementShortName">LDAC</obj_property>
+         <obj_property name="ObjectShortName">LDAC</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/DAC_gate_ctrl_module/SCLK" type="logic">
+         <obj_property name="ElementShortName">SCLK</obj_property>
+         <obj_property name="ObjectShortName">SCLK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/data_serializer_wrapper/serial_data" type="logic">
+         <obj_property name="ElementShortName">serial_data</obj_property>
+         <obj_property name="ObjectShortName">serial_data</obj_property>
       </wvobject>
    </wvobject>
 </wave_config>
