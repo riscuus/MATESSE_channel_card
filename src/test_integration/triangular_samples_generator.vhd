@@ -86,7 +86,7 @@ begin
                     data_valid_reg <= '0';
 
                     if (decreasing = '0') then -- Increasing side
-                        if (samples_counter = MAX_SAMPLE - 1) then
+                        if (samples_counter = MAX_SAMPLE) then -- Max sample is already 2^M - 1
                             decreasing <= '1';
                             next_value <= next_value - 1;
                             samples_counter <= (others => '0');
@@ -95,7 +95,7 @@ begin
                             samples_counter <= samples_counter + 1;
                         end if;
                     else -- decreasing side
-                        if (samples_counter = (MAX_SAMPLE - 1) - 2) then -- We only allow 2^M - 2 decreasing samples because the 0 and the 2^M - 1 will be considered in the increasing side
+                        if (samples_counter = (MAX_SAMPLE) - 2) then -- We only allow 2^M - 2 decreasing samples because the 0 and the 2^M - 1 will be considered in the increasing side
                             decreasing <= '0';
                             next_value <= (others => '0');
                             samples_counter <= (others => '0');

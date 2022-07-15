@@ -66,7 +66,7 @@ begin
 
     -- 2M = max(2M, 2M)
     signal_sum <= shift_right(resize(signal_0, signal_sum'length) + resize(signal_1, signal_sum'length), 1); -- We divide by 2 to scale again to a fractional value between 0 and 1
-    signal_amp <= shift_right(shift_left(signal_sum, to_integer(k_gain)), M)(DATA_WIDTH - 1 downto 0);
+    signal_amp <= shift_left(signal_sum, to_integer(k_gain) - M)(DATA_WIDTH - 1 downto 0);
     signal_off <= signal_amp_reg + offset;
 
     data <= std_logic_vector(signal_off_reg);

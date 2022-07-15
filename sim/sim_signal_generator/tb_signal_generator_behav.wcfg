@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_signal_generator_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_signal_generator" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="4618100000000fs"></ZoomStartTime>
+      <ZoomEndTime time="5206100000001fs"></ZoomEndTime>
+      <Cursor1Time time="4686600000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="254"></NameColumnWidth>
+      <ValueColumnWidth column_width="87"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="13" />
+   <wvobject fp_name="/tb_signal_generator/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_signal_generator/rst" type="logic">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_signal_generator/n_cycles" type="array">
+      <obj_property name="ElementShortName">n_cycles[5:0]</obj_property>
+      <obj_property name="ObjectShortName">n_cycles[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_signal_generator/cycles_multplr" type="array">
+      <obj_property name="ElementShortName">cycles_multplr[3:0]</obj_property>
+      <obj_property name="ObjectShortName">cycles_multplr[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_signal_generator/k_gain" type="array">
+      <obj_property name="ElementShortName">k_gain[3:0]</obj_property>
+      <obj_property name="ObjectShortName">k_gain[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_signal_generator/offset" type="array">
+      <obj_property name="ElementShortName">offset[15:0]</obj_property>
+      <obj_property name="ObjectShortName">offset[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_signal_generator/signal_generator_module/data" type="array">
+      <obj_property name="ElementShortName">data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">data[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_signal_generator/signal_generator_module/data_valid" type="logic">
+      <obj_property name="ElementShortName">data_valid</obj_property>
+      <obj_property name="ObjectShortName">data_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="group14" type="group">
+      <obj_property name="label">generator_triggerer_fast</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/generator_triggerer_fast/num_cycles" type="array">
+         <obj_property name="ElementShortName">num_cycles[5:0]</obj_property>
+         <obj_property name="ObjectShortName">num_cycles[5:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/generator_triggerer_fast/clk_counter" type="array">
+         <obj_property name="ElementShortName">clk_counter[5:0]</obj_property>
+         <obj_property name="ObjectShortName">clk_counter[5:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/generator_triggerer_fast/new_sample" type="logic">
+         <obj_property name="ElementShortName">new_sample</obj_property>
+         <obj_property name="ObjectShortName">new_sample</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group15" type="group">
+      <obj_property name="label">samples_generator_fast</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/triangular_samples_generator_fast/next_sample" type="logic">
+         <obj_property name="ElementShortName">next_sample</obj_property>
+         <obj_property name="ObjectShortName">next_sample</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/triangular_samples_generator_fast/decreasing" type="logic">
+         <obj_property name="ElementShortName">decreasing</obj_property>
+         <obj_property name="ObjectShortName">decreasing</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/triangular_samples_generator_fast/samples_counter" type="array">
+         <obj_property name="ElementShortName">samples_counter[7:0]</obj_property>
+         <obj_property name="ObjectShortName">samples_counter[7:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/triangular_samples_generator_fast/data_valid" type="logic">
+         <obj_property name="ElementShortName">data_valid</obj_property>
+         <obj_property name="ObjectShortName">data_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/triangular_samples_generator_fast/data" type="array">
+         <obj_property name="ElementShortName">data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">data[7:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group37" type="group">
+      <obj_property name="label">generator_triggerer_slow</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/generator_triggerer_slow/num_cycles" type="array">
+         <obj_property name="ElementShortName">num_cycles[9:0]</obj_property>
+         <obj_property name="ObjectShortName">num_cycles[9:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/generator_triggerer_slow/clk_counter" type="array">
+         <obj_property name="ElementShortName">clk_counter[9:0]</obj_property>
+         <obj_property name="ObjectShortName">clk_counter[9:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/generator_triggerer_slow/new_sample" type="logic">
+         <obj_property name="ElementShortName">new_sample</obj_property>
+         <obj_property name="ObjectShortName">new_sample</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group38" type="group">
+      <obj_property name="label">samples_generator_slow</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/triangular_samples_generator_slow/next_sample" type="logic">
+         <obj_property name="ElementShortName">next_sample</obj_property>
+         <obj_property name="ObjectShortName">next_sample</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/triangular_samples_generator_slow/decreasing" type="logic">
+         <obj_property name="ElementShortName">decreasing</obj_property>
+         <obj_property name="ObjectShortName">decreasing</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/triangular_samples_generator_slow/samples_counter" type="array">
+         <obj_property name="ElementShortName">samples_counter[7:0]</obj_property>
+         <obj_property name="ObjectShortName">samples_counter[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/triangular_samples_generator_slow/data_valid" type="logic">
+         <obj_property name="ElementShortName">data_valid</obj_property>
+         <obj_property name="ObjectShortName">data_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/triangular_samples_generator_slow/data" type="array">
+         <obj_property name="ElementShortName">data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">data[7:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group16" type="group">
+      <obj_property name="label">signal_adder</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/signal_0" type="array">
+         <obj_property name="ElementShortName">signal_0[7:0]</obj_property>
+         <obj_property name="ObjectShortName">signal_0[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/signal_1" type="array">
+         <obj_property name="ElementShortName">signal_1[7:0]</obj_property>
+         <obj_property name="ObjectShortName">signal_1[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/signals_valid" type="logic">
+         <obj_property name="ElementShortName">signals_valid</obj_property>
+         <obj_property name="ObjectShortName">signals_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/signal_sum" type="array">
+         <obj_property name="ElementShortName">signal_sum[15:0]</obj_property>
+         <obj_property name="ObjectShortName">signal_sum[15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/signal_sum_reg" type="array">
+         <obj_property name="ElementShortName">signal_sum_reg[15:0]</obj_property>
+         <obj_property name="ObjectShortName">signal_sum_reg[15:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/signal_amp" type="array">
+         <obj_property name="ElementShortName">signal_amp[15:0]</obj_property>
+         <obj_property name="ObjectShortName">signal_amp[15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/signal_amp_reg" type="array">
+         <obj_property name="ElementShortName">signal_amp_reg[15:0]</obj_property>
+         <obj_property name="ObjectShortName">signal_amp_reg[15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/signal_off" type="array">
+         <obj_property name="ElementShortName">signal_off[15:0]</obj_property>
+         <obj_property name="ObjectShortName">signal_off[15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/signal_off_reg" type="array">
+         <obj_property name="ElementShortName">signal_off_reg[15:0]</obj_property>
+         <obj_property name="ObjectShortName">signal_off_reg[15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/data" type="array">
+         <obj_property name="ElementShortName">data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">data[15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_signal_generator/signal_generator_module/signal_adder/data_valid" type="logic">
+         <obj_property name="ElementShortName">data_valid</obj_property>
+         <obj_property name="ObjectShortName">data_valid</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>
