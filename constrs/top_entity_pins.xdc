@@ -318,7 +318,7 @@ set_property -dict {PACKAGE_PIN T11 IOSTANDARD LVCMOS33} [get_ports TES_bias_DAC
 #set_property -dict {PACKAGE_PIN R11 IOSTANDARD LVCMOS33} [get_ports SDI_IO28]
 set_property -dict {PACKAGE_PIN T13 IOSTANDARD LVCMOS33} [get_ports ADC_SDO_1_IO29]
 set_property -dict {PACKAGE_PIN T12 IOSTANDARD LVCMOS33} [get_ports channels_DAC_SDI_1_IO30]
-#set_property -dict {PACKAGE_PIN V13 IOSTANDARD LVCMOS33} [get_ports {SDI_CH[3]}]
+set_property -dict {PACKAGE_PIN V13 IOSTANDARD LVCMOS33} [get_ports ADC_CLKOUT_IO31]
 #set_property -dict {PACKAGE_PIN U12 IOSTANDARD LVCMOS33} [get_ports {SDI_CH[4]}]
 #set_property -dict {PACKAGE_PIN V15 IOSTANDARD LVCMOS33} [get_ports {SDI_CH[5]}]
 #set_property -dict {PACKAGE_PIN V14 IOSTANDARD LVCMOS33} [get_ports {SDI_CH[6]}]
