@@ -35,6 +35,9 @@
 ###set_false_path -from [get_ports sys_rst_n]
 ###set_false_path -through [get_cells aresetn_reg]
 
+# Property to allow clkout signal to be used as clock for the ddr input module
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets ADC_CLKOUT_IO31_IBUF]
+
 ##set_property IOB TRUE [get_cells {u1/io_exp_ctrl/SM_read_IOEXP/reg_shift_reg[0]}]
 ## ----------------------------------------------------
 ##  PCIE HARD IP CONSTRAINTS
@@ -258,6 +261,7 @@ set_property -dict {PACKAGE_PIN H13 IOSTANDARD LVCMOS33} [get_ports btn3]
 set_property -dict {PACKAGE_PIN L13 IOSTANDARD LVCMOS33} [get_ports ADC_CNV_IO0]
 set_property -dict {PACKAGE_PIN N13 IOSTANDARD LVCMOS33} [get_ports ADC_SCK_IO1]
 set_property -dict {PACKAGE_PIN L16 IOSTANDARD LVCMOS33} [get_ports ADC_SDO_IO2]
+set_property -dict {PACKAGE_PIN V13 IOSTANDARD LVCMOS33} [get_ports ADC_CLKOUT_IO31]
 
 # DAC U0, U1
 set_property -dict {PACKAGE_PIN R14 IOSTANDARD LVCMOS33} [get_ports DAC_LD_IO3]
