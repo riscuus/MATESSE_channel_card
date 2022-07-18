@@ -31,8 +31,8 @@ use concept.utils.all;
 entity uart_controller is
   generic(
     clk_freq  :  integer    := 100_000_000;  --frequency of system clock in hertz
-    baud_rate :  integer    := 19_200;      --data link baud rate in bits/second
-    os_rate   :  integer    := 16;          --oversampling rate to find center of receive bits (in samples per baud period)
+    baud_rate :  integer    := 19_200; -- 2_048_000; --data link baud rate in bits/second
+    os_rate   :  integer    := 16; --8; --oversampling rate to find center of receive bits (in samples per baud period)
     d_width   :  integer    := 8;           --data bus width
     parity    :  integer    := 1;           --0 for no parity, 1 for parity
     parity_eo :  std_logic  := '0');        --'0' for even, '1' for odd parity
@@ -106,41 +106,43 @@ begin
       rx_error <= '0';                                       --clear receive errors
       rx_data <= (others => '0');                            --clear received data output
       rx_state <= idle;                                      --put in idle state
-    elsif(clk'event and clk = '1' and os_pulse = '1') then --enable clock at oversampling rate
-      case rx_state is
-        when idle =>                                           --idle state
-          rx_busy <= '0';                                        --clear receive busy flag
-          if(rx = '0') then                                      --start bit might be present
-            if(os_count < os_rate/2) then                          --oversampling pulse counter is not at start bit center
-              os_count := os_count + 1;                              --increment oversampling pulse counter
-              rx_state <= idle;                                      --remain in idle state
-            else                                                   --oversampling pulse counter is at bit center
-              os_count := 0;                                         --clear oversampling pulse counter
-              rx_count := 0;                                         --clear the bits received counter
-              rx_busy <= '1';                                        --assert busy flag
-              rx_buffer <= rx & rx_buffer(parity+d_width downto 1);  --shift the start bit into receive buffer							
-              rx_state <= receive;                                   --advance to receive state
-            end if;
-          else                                                   --start bit not present
-            os_count := 0;                                         --clear oversampling pulse counter
-            rx_state <= idle;                                      --remain in idle state
-          end if;
-        when receive =>                                        --receive state
-          if(os_count < os_rate-1) then                          --not center of bit
-            os_count := os_count + 1;                              --increment oversampling pulse counter
-            rx_state <= receive;                                   --remain in receive state
-          elsif(rx_count < parity+d_width) then                  --center of bit and not all bits received
-            os_count := 0;                                         --reset oversampling pulse counter    
-            rx_count := rx_count + 1;                              --increment number of bits received counter
-            rx_buffer <= rx & rx_buffer(parity+d_width downto 1);  --shift new received bit into receive buffer
-            rx_state <= receive;                                   --remain in receive state
-          else                                                   --center of stop bit
-            rx_data <= rx_buffer(d_width downto 1);                --output data received to user logic
-            rx_error <= rx_buffer(0) or parity_error or not rx;    --output start, parity, and stop bit error flag
-            rx_busy <= '0';                                        --deassert received busy flag
-            rx_state <= idle;                                      --return to idle state
-          end if;
-      end case;
+    elsif(clk'event and clk = '1') then
+        if(os_pulse = '1') then --enable clock at oversampling rate
+            case rx_state is
+              when idle =>                                           --idle state
+                rx_busy <= '0';                                        --clear receive busy flag
+                if(rx = '0') then                                      --start bit might be present
+                  if(os_count < os_rate/2) then                          --oversampling pulse counter is not at start bit center
+                    os_count := os_count + 1;                              --increment oversampling pulse counter
+                    rx_state <= idle;                                      --remain in idle state
+                  else                                                   --oversampling pulse counter is at bit center
+                    os_count := 0;                                         --clear oversampling pulse counter
+                    rx_count := 0;                                         --clear the bits received counter
+                    rx_busy <= '1';                                        --assert busy flag
+                    rx_buffer <= rx & rx_buffer(parity+d_width downto 1);  --shift the start bit into receive buffer							
+                    rx_state <= receive;                                   --advance to receive state
+                  end if;
+                else                                                   --start bit not present
+                  os_count := 0;                                         --clear oversampling pulse counter
+                  rx_state <= idle;                                      --remain in idle state
+                end if;
+              when receive =>                                        --receive state
+                if(os_count < os_rate-1) then                          --not center of bit
+                  os_count := os_count + 1;                              --increment oversampling pulse counter
+                  rx_state <= receive;                                   --remain in receive state
+                elsif(rx_count < parity+d_width) then                  --center of bit and not all bits received
+                  os_count := 0;                                         --reset oversampling pulse counter    
+                  rx_count := rx_count + 1;                              --increment number of bits received counter
+                  rx_buffer <= rx & rx_buffer(parity+d_width downto 1);  --shift new received bit into receive buffer
+                  rx_state <= receive;                                   --remain in receive state
+                else                                                   --center of stop bit
+                  rx_data <= rx_buffer(d_width downto 1);                --output data received to user logic
+                  rx_error <= rx_buffer(0) or parity_error or not rx;    --output start, parity, and stop bit error flag
+                  rx_busy <= '0';                                        --deassert received busy flag
+                  rx_state <= idle;                                      --return to idle state
+                end if;
+            end case;
+        end if;
     end if;
   end process;
     
