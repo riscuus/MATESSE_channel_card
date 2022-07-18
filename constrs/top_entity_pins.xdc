@@ -261,7 +261,7 @@ set_property -dict {PACKAGE_PIN R15 IOSTANDARD LVCMOS33} [get_ports row_activato
 set_property -dict {PACKAGE_PIN T15 IOSTANDARD LVCMOS33} [get_ports row_activator_DAC_CS_1_IO9]
 set_property -dict {PACKAGE_PIN H16 IOSTANDARD LVCMOS33} [get_ports row_activator_DAC_CS_2_IO10]
 set_property -dict {PACKAGE_PIN H17 IOSTANDARD LVCMOS33} [get_ports row_activator_DAC_CLK_IO11]
-#set_property -dict {PACKAGE_PIN K14 IOSTANDARD LVCMOS33} [get_ports SDI_IO12]
+set_property -dict {PACKAGE_PIN K14 IOSTANDARD LVCMOS33} [get_ports row_activator_DAC_SDI_IO12]
 set_property -dict {PACKAGE_PIN G16 IOSTANDARD LVCMOS33} [get_ports TES_bias_DAC_LDAC_IO13]
 
 
@@ -315,7 +315,7 @@ set_property -dict {PACKAGE_PIN G16 IOSTANDARD LVCMOS33} [get_ports TES_bias_DAC
 ## Note: these pins are shared with PMOD Headers JC and JD and cannot be used at the same time as the applicable PMOD interface(s)
 set_property -dict {PACKAGE_PIN U11 IOSTANDARD LVCMOS33} [get_ports TES_bias_DAC_CS_IO26]
 set_property -dict {PACKAGE_PIN T11 IOSTANDARD LVCMOS33} [get_ports TES_bias_DAC_CLK_IO27]
-#set_property -dict {PACKAGE_PIN R11 IOSTANDARD LVCMOS33} [get_ports SDI_IO28]
+set_property -dict {PACKAGE_PIN R11 IOSTANDARD LVCMOS33} [get_ports TES_bias_DAC_SDI_IO28]
 set_property -dict {PACKAGE_PIN T13 IOSTANDARD LVCMOS33} [get_ports ADC_SDO_1_IO29]
 set_property -dict {PACKAGE_PIN T12 IOSTANDARD LVCMOS33} [get_ports channels_DAC_SDI_1_IO30]
 set_property -dict {PACKAGE_PIN V13 IOSTANDARD LVCMOS33} [get_ports ADC_CLKOUT_IO31]

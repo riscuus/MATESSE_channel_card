@@ -39,11 +39,13 @@ entity top_entity is
         row_activator_DAC_CS_2_IO10 : out std_logic;
         row_activator_DAC_CLK_IO11  : out std_logic;
         row_activator_DAC_LDAC_IO7  : out std_logic;
+        row_activator_DAC_SDI_IO12  : out std_logic;
 
         -- TES bias DAC interface
         TES_bias_DAC_CS_IO26        : out std_logic;
         TES_bias_DAC_CLK_IO27       : out std_logic;
         TES_bias_DAC_LDAC_IO13      : out std_logic;
+        TES_bias_DAC_SDI_IO28       : out std_logic;
 
         -- Channels DAC interface
         channels_DAC_CS_IO4         : out std_logic;
@@ -55,7 +57,7 @@ entity top_entity is
         -- ADC interface
         ADC_CNV_IO0                 : out std_logic;
         ADC_SCK_IO1                 : out std_logic;
-        --ADC_CLKOUT                  : in std_logic;
+        ADC_CLKOUT_IO31             : in std_logic;
         ADC_SDO_0_IO2               : in std_logic;
         ADC_SDO_1_IO29              : in std_logic
      );
@@ -67,13 +69,11 @@ architecture RTL of top_entity is
     signal sys_clk_5    : std_logic := '0';
     signal sys_clk_100  : std_logic := '0';
 
-    signal sync_frame   : std_logic := '0';
+    signal sync_frame   : std_logic := '1';
     signal ADC_CLKOUT   : std_logic := '0';
 
 begin
 
-    ADC_SCK_IO1 <= ADC_CLKOUT; -- Temporal fix until board is modified
-    
 ---------------------------------------------------------------------
 ---------------- Clock Distribution ---------------------------------
 ---------------------------------------------------------------------
@@ -107,11 +107,13 @@ begin
             row_activator_DAC_CS_2  => row_activator_DAC_CS_2_IO10,
             row_activator_DAC_CLK   => row_activator_DAC_CLK_IO11,
             row_activator_DAC_LDAC  => row_activator_DAC_LDAC_IO7,
+            row_activator_DAC_SDI   => row_activator_DAC_SDI_IO12,
                 
             -- TES bias DAC interface  -- TES bias DAC int
             TES_bias_DAC_CS         => TES_bias_DAC_CS_IO26,
             TES_bias_DAC_CLK        => TES_bias_DAC_CLK_IO27,
             TES_bias_DAC_LDAC       => TES_bias_DAC_LDAC_IO13,
+            TES_bias_DAC_SDI        => TES_bias_DAC_SDI_IO28,
                 
             -- Channels DAC interface  -- Channels DAC int
             channels_DAC_CS         => channels_DAC_CS_IO4,
@@ -122,8 +124,8 @@ begin
                 
             -- ADC interface           -- ADC int
             ADC_CNV                 => ADC_CNV_IO0,
-            ADC_SCK                 => ADC_CLKOUT,
-            ADC_CLKOUT              => ADC_CLKOUT,
+            ADC_SCK                 => ADC_SCK_IO1,
+            ADC_CLKOUT              => ADC_CLKOUT_IO31,
             ADC_SDO_0               => ADC_SDO_0_IO2,
             ADC_SDO_1               => ADC_SDO_1_IO29
         );
