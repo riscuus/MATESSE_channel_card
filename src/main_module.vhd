@@ -41,11 +41,13 @@ entity main_module is
         row_activator_DAC_CS_2  : out std_logic;
         row_activator_DAC_CLK   : out std_logic;
         row_activator_DAC_LDAC  : out std_logic;
+        row_activator_DAC_SDI   : out std_logic;
 
         -- TES bias DAC interface
         TES_bias_DAC_CS         : out std_logic;
         TES_bias_DAC_CLK        : out std_logic;
         TES_bias_DAC_LDAC       : out std_logic;
+        TES_bias_DAC_SDI        : out std_logic;
         
         -- Channels DAC interface
         channels_DAC_CS         : out std_logic;
@@ -602,7 +604,7 @@ begin
             parallel_data   => row_activator_DAC_data,
             busy_flag       => '0',
             DAC_start_pulse => row_activator_DAC_start_pulse,
-            serial_data     => open
+            serial_data     => row_activator_DAC_SDI
         );
 
     ADC_triggerer_module : entity concept.ADC_triggerer
@@ -927,7 +929,7 @@ begin
             parallel_data   => TES_bias_DAC_data,
             busy_flag       => '0',
             DAC_start_pulse => TES_bias_DAC_start_pulse,
-            serial_data     => open
+            serial_data     => TES_bias_DAC_SDI
         );
 
     frame_builder_module : entity concept.frame_builder
