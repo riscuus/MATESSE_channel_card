@@ -32,13 +32,13 @@ entity DAC_driver is
         SCLK_HALF_PERIOD    : natural; -- The number of 100 MHz clk cycles for the serial clk half period 
         LDAC_SETUP          : natural; -- The number of 100 MHz clk cycles for the LDAC setup time
         LDAC_WIDTH          : natural; -- The number of 100 MHz clk cycles to be activated the LDAC pulse
-        LDAC_HOLD           : natural; -- The number of 100 MHz clk cycles for the LDAC hold time
+        LDAC_HOLD           : natural -- The number of 100 MHz clk cycles for the LDAC hold time
     );
     port(
         clk                 : in std_logic; -- 100MHz clock
         rst                 : in std_logic; -- Async reset
 
-        start_conv_pulse    : in std_logic;
+        start_pulse         : in std_logic;
         parallel_data       : in std_logic_vector(DATA_WIDTH - 1 downto 0);
 
         CS                  : out std_logic;
@@ -50,9 +50,16 @@ end DAC_driver;
 
 
 architecture behave OF DAC_driver is
-
+    signal CS_signal   : std_logic := '0';
+    signal SCLK_signal : std_logic := '0';
+    signal LDAC_signal : std_logic := '0';
+    signal SDI_signal : std_logic := '0';
 
 begin
+    CS   <= CS_signal;
+    SCLK <= SCLK_signal;
+    LDAC <= LDAC_signal;
+    SDI  <= SDI_signal;
 
     DAC_gate_ctrl_module : entity concept.DAC_gate_controller
         generic map(
@@ -66,10 +73,10 @@ begin
             clk                 => clk,
             rst                 => rst,
             
-            start_conv_pulse    => start_conv_pulse,
-            CS                  => CS,
-            SCLK                => SCLK,
-            LDAC                => LDAC
+            start_conv_pulse    => start_pulse,
+            CS                  => CS_signal,
+            SCLK                => SCLK_signal,
+            LDAC                => LDAC_signal
         );
 
     DAC_data_serializer_module : entity concept.data_serializer_wrapper
@@ -77,13 +84,13 @@ begin
             clk             => clk,
             rst             => rst,
 
-            gate_read       => CS,
-            data_clk        => SCLK,
+            gate_read       => CS_signal,
+            data_clk        => SCLK_signal,
             valid           => '1',
             parallel_data   => parallel_data,
             busy_flag       => '0',
-            DAC_start_pulse => DAC_start_pulse,
-            serial_data     => SDI
+            DAC_start_pulse => start_pulse,
+            serial_data     => SDI_signal
         );
 
 end behave;
