@@ -1,3 +1,21 @@
+----------------------------------------------------------------------------------
+-- Company: NASA Goddard Space Flight Center
+-- Engineer: Albert Risco
+-- 
+-- Create Date: 05/24/2022
+-- Module Name: top_entity.vhd
+-- Project Name: channel_card_v1
+-- Target Devices: Spartan 7 xc7s25csga324-1
+-- Tool Versions: Vivado 2019.1
+-- Description: Module that works as the top entity to be implemented in the FPGA. Its outputs are directly the physical
+--              outputs of the FPGA
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
 library IEEE;
 use     IEEE.std_logic_1164.all;
 use     IEEE.numeric_std.all;
