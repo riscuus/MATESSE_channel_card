@@ -862,7 +862,7 @@ begin
             data_in(2 * ROW_NUM_WIDTH - 1 downto 1 * ROW_NUM_WIDTH) => std_logic_vector(fb_sample(i).row_num), -- FB
             data_in(3 * ROW_NUM_WIDTH - 1 downto 2 * ROW_NUM_WIDTH) => std_logic_vector(filter_output(i).row_num), -- Filtered FB
             data_in(4 * ROW_NUM_WIDTH - 1 downto 3 * ROW_NUM_WIDTH) => (others => '0'), -- RAW
-            data_out => data_row_num_vector_array(0) 
+            data_out => data_row_num_vector_array(i) 
         );
 
 
