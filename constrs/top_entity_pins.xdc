@@ -35,6 +35,9 @@
 ###set_false_path -from [get_ports sys_rst_n]
 ###set_false_path -through [get_cells aresetn_reg]
 
+# Property to allow clkout signal to be used as clock for the ddr input module
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets ADC_CLKOUT_IO31_IBUF]
+
 ##set_property IOB TRUE [get_cells {u1/io_exp_ctrl/SM_read_IOEXP/reg_shift_reg[0]}]
 ## ----------------------------------------------------
 ##  PCIE HARD IP CONSTRAINTS
