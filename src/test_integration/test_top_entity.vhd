@@ -95,10 +95,6 @@ architecture RTL of test_top_entity is
     component vio_test_top_entity
       port (
         clk         : in std_logic;
-        probe_in0   : in std_logic_vector(0 downto 0);
-        probe_in1   : in std_logic_vector(0 downto 0);
-        probe_in2   : in std_logic_vector(15 downto 0);
-        probe_in3   : in std_logic_vector(0 downto 0);
         probe_out0  : out std_logic_vector(0 downto 0);
         probe_out1  : out std_logic_vector(0 downto 0);
         probe_out2  : out std_logic_vector(5 downto 0);
@@ -222,10 +218,6 @@ begin
     vio : vio_test_top_entity
         port map(
             clk             => sys_clk_100,
-            probe_in0(0)    => ADC_CLKOUT_IO31,
-            probe_in1(0)    => ADC_SDO_0_IO2,
-            probe_in2       => signal_gen_data(DAC_VOLTAGE_SIZE - 1 downto 0),
-            probe_in3(0)    => signal_gen_data_valid,
             probe_out0(0)   => enable_slow,
             probe_out1(0)   => enable_fast,
             probe_out2      => n_cycles,
