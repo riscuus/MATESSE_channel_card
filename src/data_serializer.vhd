@@ -44,7 +44,7 @@ end data_serializer;
 architecture behave of data_serializer is
 
     -- Machine states
-    type StateType is (INIT, REG_LOADED, WAIT_GATE, WAIT_FIRST_DATA_CLK_OUT, FIRST_BIT, WAIT_NEXT_DATA_CLK_OUT, 
+    type StateType is (INIT, WAIT_GATE, WAIT_FIRST_DATA_CLK_OUT, FIRST_BIT, WAIT_NEXT_DATA_CLK_OUT, 
                        NEXT_DATA, END_STREAM);
     signal state : StateType;
 
@@ -81,12 +81,12 @@ begin
             when INIT =>
                 counter <= 0;
                 reg_shift <= (others => '0');
+
                 if valid = '1' and DAC_start_pulse = '1' then 
-                    state <= REG_LOADED;
+                    reg_shift(17 downto 0) <= parallel_data(17 downto 0);
+                    state <= WAIT_GATE;
                 end if;
-            when REG_LOADED =>
-                reg_shift(17 downto 0) <= parallel_data(17 downto 0);
-                state <= WAIT_GATE;
+
             when WAIT_GATE => 
                 if cs_fall_pulse = '1' then
                     state <= WAIT_FIRST_DATA_CLK_OUT;
@@ -94,11 +94,11 @@ begin
             when WAIT_FIRST_DATA_CLK_OUT =>
                 if data_clk_fall_pulse = '1' then
                     state <= FIRST_BIT;
+                    counter <= 0;
+                    reg_shift <= reg_shift(18-2 downto 0) & '0';
+                    state <= WAIT_NEXT_DATA_CLK_OUT;
                 end if;
-            when FIRST_BIT => 
-                counter <= 0;
-                reg_shift <= reg_shift(18-2 downto 0) & '0';
-                state <= WAIT_NEXT_DATA_CLK_OUT;
+
             when WAIT_NEXT_DATA_CLK_OUT =>
                 if counter = 17 then
                     state <= END_STREAM;
