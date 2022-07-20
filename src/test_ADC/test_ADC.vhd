@@ -28,7 +28,7 @@ use IEEE.numeric_std.all;
 
 
 library concept;
-use concept.all;
+use concept.utils.all;
 
 
 entity test_ADC is
@@ -69,7 +69,8 @@ entity test_ADC is
         -- ADC control signals
         ADC_CNV_IO0          : out std_logic;
         ADC_SCK_IO1          : out std_logic;
-        ADC_SDO_IO2          : in std_logic
+        ADC_SDO_IO2          : in std_logic;
+        ADC_CLKOUT_IO31      : in std_logic
 
         --DAC_send_pulse       : in std_logic;
         --DAC_selector_signal  : in std_logic_vector(2 downto 0)
@@ -78,6 +79,13 @@ entity test_ADC is
 end test_ADC;
 
 architecture Behavioral of test_ADC is
+
+    constant DLY_CYCLES_WIDTH : natural := 2;
+
+    -- global clks
+    signal sys_clk_100 : std_logic := '0';
+    signal sys_clk_200 : std_logic := '0';
+
     -- Global rst
     signal sys_rst  : std_logic := '0';
 
@@ -112,12 +120,14 @@ architecture Behavioral of test_ADC is
     signal ADC_SCK_signal       : std_logic := '0';
     signal ADC_CNV_signal       : std_logic := '1';
     signal ADC_SDO_signal       : std_logic := '0';
+    signal ADC_CLKOUT_signal    : std_logic := '0';
 
-    -- ADC input shift register signals
-    signal parallel_ddr_data    : std_logic_vector(1 downto 0) := (others => '0');
-    signal CNV_fall_pulse       : std_logic := '0';
-    signal valid_word           : std_logic := '0';
-    signal parallel_word_data   : std_logic_vector(15 downto 0) := (others => '0');
+    -- DDR -> input shift register
+    signal parallel_ddr         : std_logic_vector(1 downto 0) := (others => '0');
+    signal ddr_valid            : std_logic := '0';
+    signal ddr_valid_stretched  : std_logic := '0';
+    signal ADC_word             : std_logic_vector(15 downto 0) := (others => '0');
+    signal ADC_word_valid       : std_logic := '0';
 
     -- Volatge generator signals
         -- In this test code we have two ways of generating different volatge values for the DACs, one is by 
@@ -143,12 +153,31 @@ architecture Behavioral of test_ADC is
     signal cnv_length_signal        : std_logic_vector(3 downto 0) := "0100";
     signal sck_delay_signal         : std_logic_vector(3 downto 0) := "0100";
     signal sck_half_period_signal   : std_logic_vector(3 downto 0) := "0001";
+    signal ddr_dly_cycles           : std_logic_vector(DLY_CYCLES_WIDTH - 1 downto 0);
     signal sys_rst_vio              : std_logic := '0';
 
     -- Signals to keep for debugging
     attribute keep : string;
-    attribute keep of parallel_word_data    : signal is "true";
     attribute keep of voltage_signals       : signal is "true";
+    attribute keep of parallel_ddr          : signal is "true";
+    attribute keep of ddr_valid             : signal is "true";
+    attribute keep of ddr_valid_stretched   : signal is "true";
+    attribute keep of ADC_word              : signal is "true";
+    attribute keep of ADC_word_valid        : signal is "true";
+
+    component clk_wiz_0
+        port
+        (
+        -- Status and control signals
+        reset             : in     std_logic;
+        locked            : out    std_logic;
+        -- Clock in ports
+        clk_in1           : in     std_logic;
+        -- Clock out ports
+        clk_out1          : out    std_logic;
+        clk_out2          : out    std_logic
+        );
+    end component;
 
     -- Component declarations
     component vio_test_adc
@@ -164,7 +193,8 @@ architecture Behavioral of test_ADC is
             probe_out7  : out std_logic_vector(3 downto 0);
             probe_out8  : out std_logic_vector(3 downto 0);
             probe_out9  : out std_logic_vector(3 downto 0);
-            probe_out10 : out std_logic_vector(0 downto 0)
+            probe_out10 : out std_logic_vector(0 downto 0);
+            probe_out11 : out std_logic_vector(1 downto 0)
         );
     end component;
 
@@ -174,32 +204,55 @@ begin
     ----- OUTPUTS ASSIGMENTS -----
 
     -- ADC control signals
-    ADC_CNV_IO0     <= ADC_CNV_signal;
-    ADC_SCK_IO1     <= ADC_SCK_signal;
-    ADC_SDO_signal  <= ADC_SDO_IO2;
+    ADC_CNV_IO0         <= ADC_CNV_signal;
+    ADC_SCK_IO1         <= ADC_SCK_signal;
+    ADC_SDO_signal      <= ADC_SDO_IO2;
+    ADC_CLKOUT_signal   <= ADC_CLKOUT_IO31;
 
     -- Sys rst assigment
     sys_rst <= sys_rst_btn or sys_rst_vio;
 
     ---- SUBCOMPONENTS DECLARATIONS ----
 
-    -- DAC Controller
-
-    DAC_controller : entity concept.DAC_controller
+    clk_wizard : clk_wiz_0
         port map(
-            clock               => sys_clk,
-            rst                 => sys_rst,
-            start_conv_pulse    => voltage_signals(19),
-            CS                  => DAC_CS_signal,
-            CLK                 => DAC_CK_signal,
-            LDAC                => DAC_LDAC_signal
+            -- Status and control signals
+            reset             => sys_rst,
+            locked            => open,
+            -- Clock in ports
+            clk_in1           => sys_clk,
+            -- Clock out ports
+            clk_out1          => sys_clk_100,
+            clk_out2          => sys_clk_200
+        );
+
+    -- DAC Controller
+    DAC_driver : entity concept.DAC_driver
+        generic map(
+            DATA_WIDTH          => DAC_VOLTAGE_SIZE + DAC_ADDR_SIZE,
+            SCLK_TOTAL_PULSES   => DAC_VOLTAGE_SIZE + DAC_ADDR_SIZE,
+            SCLK_HALF_PERIOD    => DAC_SCLK_HALF_PERIOD,
+            LDAC_SETUP          => DAC_LDAC_SETUP,
+            LDAC_WIDTH          => DAC_LDAC_WIDTH,
+            LDAC_HOLD           => DAC_LDAC_HOLD
+        )
+        port map(
+            clk                => sys_clk_100,
+            rst                => sys_rst,
+
+            start_pulse        => voltage_signals(19),
+            parallel_data      => voltage_signals(17 downto 0), -- 18 bits
+
+            CS                 => DAC_CS_signal,
+            SCLK               => DAC_CK_signal,
+            LDAC               => DAC_LDAC_signal,
+            SDI                => DAC_SDI_signal
         );
 
     -- DAC voltage generators
-
     DAC_btn_voltage_generator : entity concept.DAC_voltage_generator
         port map(
-            clk                 => sys_clk,
+            clk                 => sys_clk_100,
             rst                 => sys_rst,
             enabled             => DAC_enabled,
             v0_pulse            => btn0,
@@ -213,7 +266,7 @@ begin
 
     DAC_custom_voltage_generator : entity concept.custom_voltage_generator
         port map(
-            clk                 => sys_clk,
+            clk                 => sys_clk_100,
             rst                 => sys_rst,
             address             => DAC_address,
             voltage             => DAC_voltage,
@@ -221,19 +274,6 @@ begin
             parallel_data       => custom_voltage_signals(17 downto 0),
             data_valid          => custom_voltage_signals(18),
             DAC_start_pulse     => custom_voltage_signals(19)
-        );
-
-    DAC_function_generator : entity concept.function_generator
-        port map(
-            clk                 => sys_clk,
-            rst                 => sys_rst,
-            enabled             => DAC_enabled,
-            address             => DAC_address,
-            amplitude           => unsigned(DAC_function_amplitude),
-            offset              => DAC_function_offset,
-            DAC_start_pulse     => function_voltage_signals(19),
-            data_valid          => function_voltage_signals(18),
-            parallel_data       => function_voltage_signals(17 downto 0)
         );
 
     -- Multiplexer to choose between btn or custom volatge
@@ -245,20 +285,6 @@ begin
             a3      => function_voltage_signals,
             b       => voltage_signals
         );
-
-    -- DAC data serializer
-    data_serializer_wrapper : entity concept.data_serializer_wrapper
-        port map(
-            clk                 => sys_clk,
-            rst                 => sys_rst,
-            gate_read           => DAC_CS_signal,
-            data_clk            => DAC_CK_signal,
-            valid               => voltage_signals(18), 
-            parallel_data       => voltage_signals(17 downto 0),
-            busy_flag           => busy_flag, 
-            DAC_start_pulse     => voltage_signals(19),
-            serial_data         => DAC_SDI_signal
-            );
 
     -- DAC selectors
     DAC_SDI_selector : entity concept.demux_1_to_6
@@ -319,69 +345,85 @@ begin
     DAC_LD_IO3 <= DAC_LD_channel0 or DAC_LD_channel1;
     DAC_LD_IO7 <= DAC_LD_row_select1 or DAC_LD_row_select2 or DAC_LD_row_select3;
 
-    -- ADC start pulse generator
+    ------------------------------------------------------------------------
+    ------------------------- ADC readout ----------------------------------
+    ------------------------------------------------------------------------
 
+    -- ADC start pulse generator
     ADC_start_pulse_generator : entity concept.ADC_start_pulse_generator
         port map(
-            clk                 => sys_clk,
+            clk                 => sys_clk_100,
             rst                 => sys_rst,
             enabled             => ADC_enabled,
             ADC_start_pulse     => ADC_start_pulse
         );
     
     -- ADC controller
-
-    ADC_controller : entity concept.ADC_controller
+    ADC_gate_controller : entity concept.ADC_gate_controller
+        generic map(
+            NUM_OF_SCK_CYCLES => ADC_DATA_SIZE / 2
+        )
         port map(
-            clk             => sys_clk,
+            clk             => sys_clk_100,
             rst             => sys_rst,
+
+            cnv_len         => unsigned(cnv_length_signal),
+            sck_dly         => unsigned(sck_delay_signal),
+            sck_half_period => unsigned(sck_half_period_signal),
+
             start_pulse     => ADC_start_pulse,
+
             CNV             => ADC_CNV_signal,
-            SCK             => ADC_SCK_signal,
-            CNV_LENGTH      => to_integer(unsigned(cnv_length_signal)),
-            SCK_DELAY       => to_integer(unsigned(sck_delay_signal)),
-            SCK_HALF_PERIOD => to_integer(unsigned(sck_half_period_signal))
+            SCK             => ADC_SCK_signal
         );
 
-    -- ADC DDR input reader
-
-    ddr_input : entity concept.ddr_input
-        port map (
-            clock           => ADC_SCK_signal,
-            reset           => sys_rst,
-            output_en       => ADC_enabled,
-            ddr_in          => ADC_SDO_signal,
-            parallel_out    => parallel_ddr_data
-        );
-
-    -- ADC CNV falling edge detector
-
-    fall_edge_detector_CNV : entity concept.FallEdgeDetector
-        port map (
-            clk             => sys_clk,
+    -- ADC SCK DDR clocked input reader
+    SCK_clocked_ddr_input : entity concept.clocked_ddr_input
+        generic map(
+            DLY_CYCLES_WIDTH => DLY_CYCLES_WIDTH
+        )
+        port map( 
             rst             => sys_rst,
-            signal_in       => ADC_CNV_signal,
-            signal_out      => CNV_fall_pulse
+            clk             => sys_clk_200,
+            dly_cycles      => unsigned(ddr_dly_cycles),
+            serial_clk      => ADC_SCK_signal,
+            serial_in       => ADC_SDO_signal,
+            parallel_out    => parallel_ddr,
+            parallel_valid  => ddr_valid
         );
 
-    -- ADC input shift register
-
-    input_shift_register : entity concept.input_shift_register
+    ddr_stretcher : entity concept.pulse_stretcher
+        generic map (
+            conversion_ratio    => 2,
+            stretching_length   => 1
+        )
         port map(
-            clk                     => sys_clk,
-            rst                     => sys_rst,
-            serial_clk              => ADC_SCK_signal,
-            iddr_parallel_output    => parallel_ddr_data,
-            conv_started            => CNV_fall_pulse,
-            valid_word              => valid_word,
-            parallel_data           => parallel_word_data
+            clk             => sys_clk_200,
+            rst             => sys_rst,
+
+            fast_pulse      => ddr_valid,
+            stretched_pulse => ddr_valid_stretched
         );
+    
+    input_shift_register : entity concept.input_shift_register
+        generic map(
+            ADC_WORD_LENGTH => ADC_DATA_SIZE,
+            DDR_bits        => 2
+        )
+        port map( 
+            clk             => sys_clk_100,
+            rst             => sys_rst,
+            ddr_parallel    => parallel_ddr,
+            ddr_valid       => ddr_valid_stretched,
+            ADC_word        => ADC_word,
+            valid_word      => ADC_word_valid
+        );
+
 
     -- VIO component
-    
     vio : vio_test_ADC
         port map(
-            clk             => sys_clk,
+            clk             => sys_clk_200,
             probe_out0      => generator_sel,
             probe_out1      => DAC_voltage,
             probe_out2      => DAC_address,
@@ -392,7 +434,8 @@ begin
             probe_out7      => cnv_length_signal,
             probe_out8      => sck_delay_signal,
             probe_out9      => sck_half_period_signal,
-            probe_out10(0)  => sys_rst_vio
+            probe_out10(0)  => sys_rst_vio,
+            probe_out11     => ddr_dly_cycles
         );
 
 end Behavioral;
