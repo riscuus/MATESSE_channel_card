@@ -76,17 +76,18 @@ begin
                 when wait_SCK_high =>
                     if (SCK = '1') then
                         counter <= counter + 1;
-                        if (counter = ADC_WORD_LENGTH - 1) then
-                            counter <= (others => '0');
-                        else
-                            state <= wait_SCK_low;
-                        end if;
+                        state <= wait_SCK_low;
                     end if;
                 
                 when wait_SCK_low =>
                     if (SCK = '0') then
                         counter <= counter + 1;
-                        state <= wait_SCK_high;
+                        if (counter = ADC_WORD_LENGTH - 1) then
+                            counter <= (others => '0');
+                            state <= idle;
+                        else
+                            state <= wait_SCK_high;
+                        end if;
                     end if;
 
                 when others =>
