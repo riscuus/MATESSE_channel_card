@@ -28,6 +28,7 @@ entity main_module is
     port(
         sys_clk_5               : in std_logic; -- 5MHz clock
         sys_clk_100             : in std_logic; -- 100MHz clock
+        sys_clk_200             : in std_logic; -- 200MHz clock
         sys_rst                 : in std_logic; -- asynchronous reset
 
         -- UART interface
@@ -164,7 +165,9 @@ architecture Behavioral of main_module is
 
     -- ddr_input -> input_shift_register
     type ddr_parallel_array is array(0 to MAX_CHANNELS - 1) of std_logic_vector(1 downto 0);
-    signal ddr_parallel     : ddr_parallel_array := (others => (others=> '0'));
+    signal ddr_parallel         : ddr_parallel_array := (others => (others=> '0'));
+    signal ddr_valid            : std_logic_vector(MAX_CHANNELS - 1 downto 0) := (others => '0');
+    signal ddr_valid_stretched  : std_logic_vector(MAX_CHANNELS - 1 downto 0) := (others => '0');
 
     -- fall_edge_dector (cnv) -> input_shift_register
     signal cnv_fall_pulse : std_logic := '0';
@@ -303,6 +306,13 @@ begin
     TES_bias_DAC_CLK        <= TES_bias_DAC_CLK_signal;
     -- ADC
     ADC_CNV                 <= ADC_CNV_signal;
+    channels_DAC_SDI_0      <= channels_DAC_SDI_vector(0);
+    channels_DAC_SDI_1      <= channels_DAC_SDI_vector(1);
+    ADC_SDO_vector(0)       <= ADC_SDO_0;
+    ADC_SDO_vector(1)       <= ADC_SDO_1;
+
+    gain_array(0) <= gain_0; 
+    gain_array(1) <= gain_1;
 
     -- UART module
     uart_controller_module : entity concept.uart_controller
@@ -638,48 +648,52 @@ begin
             SCK             => ADC_SCK
         );
 
-    fall_edge_detector_CNV : entity concept.FallEdgeDetector
-        port map (
-            clk             => sys_clk_100,
-            rst             => sys_rst,
-            signal_in       => ADC_CNV_signal,
-            signal_out      => cnv_fall_pulse
-        );
-
-
-    channels_DAC_SDI_0 <= channels_DAC_SDI_vector(0);
-    channels_DAC_SDI_1 <= channels_DAC_SDI_vector(1);
-    ADC_SDO_vector(0) <= ADC_SDO_0;
-    ADC_SDO_vector(1) <= ADC_SDO_1;
-
-    gain_array(0) <= gain_0; 
-    gain_array(1) <= gain_1;
 
     channels_readout : for i in 0 to MAX_CHANNELS - 1 generate
 
-        ddr_input_module : entity concept.ddr_input
-            port map(
-                clock        => ADC_CLKOUT,
-                reset        => sys_rst,
+        ddr_input_module : entity concept.clocked_ddr_input
+            generic map(
+                DLY_CYCLES_WIDTH => DDR_DLY_CYCLES_WIDTH
+            )
+            port map( 
+                rst             => sys_rst,
+                clk             => sys_clk_200,
 
-                output_en    => '1',
-                ddr_in       => ADC_SDO_vector(i),
-                parallel_out => ddr_parallel(i)
+                dly_cycles      => to_unsigned(DDR_DLY_CYCLES, DDR_DLY_CYCLES_WIDTH),
+
+                serial_clk      => ADC_SCK,
+                serial_in       => ADC_SDO_vector(i),
+                parallel_out    => ddr_parallel(i),
+                parallel_valid  => ddr_valid(i)
             );
 
+        ddr_stretcher : entity concept.pulse_stretcher
+            generic map (
+                conversion_ratio    => 2, -- 200MHz / 100 MHz
+                stretching_length   => 1
+            )
+            port map(
+                clk             => sys_clk_200,
+                rst             => sys_rst,
+
+                fast_pulse      => ddr_valid(i),
+                stretched_pulse => ddr_valid_stretched(i)
+            );
+
+        input_shift_register : entity concept.input_shift_register
+            generic map(
+                ADC_WORD_LENGTH => ADC_DATA_SIZE,
+                DDR_bits        => 2
+            )
+            port map( 
+                clk             => sys_clk_100,
+                rst             => sys_rst,
+                ddr_parallel    => ddr_parallel(i),
+                ddr_valid       => ddr_valid_stretched(i),
+                ADC_word        => parallel_data(i),
+                valid_word      => valid_word(i)
+            );
         
-        input_shift_register_module : entity concept.input_shift_register
-            port map(
-                clk                     => sys_clk_100,
-                rst                     => sys_rst,
-
-                serial_clk              => ADC_CLKOUT,
-                iddr_parallel_output    => ddr_parallel(i),
-                conv_started            => ADC_CNV_signal,
-                valid_word              => valid_word(i),
-                parallel_data           => parallel_data(i)
-            );
-
         sample_selector_module : entity concept.sample_selector
             generic map(
                 MAX_SAMPLE_NUM  => MAX_SAMPLE_NUM,

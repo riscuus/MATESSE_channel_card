@@ -38,6 +38,9 @@ package utils is
     -- ADC constants
     constant ADC_DATA_SIZE          : natural := 16;
     constant ADC_PARAMS_WIDTH       : natural := 4;
+    -- DDR input constants
+    constant DDR_DLY_CYCLES_WIDTH   : natural := 2;
+    constant DDR_DLY_CYCLES         : natural := 1;
     -- PARAMS RAM constants
     constant PARAM_RAM_DATA_WIDTH : natural := WORD_WIDTH; 
     constant PARAM_RAM_BRAM_SIZE  : string  := "18Kb";
