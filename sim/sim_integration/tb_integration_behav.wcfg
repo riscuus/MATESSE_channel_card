@@ -12,9 +12,9 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="37025070000000fs"></ZoomStartTime>
-      <ZoomEndTime time="37029595000001fs"></ZoomEndTime>
-      <Cursor1Time time="37025010000000fs"></Cursor1Time>
+      <ZoomStartTime time="37018008333334fs"></ZoomStartTime>
+      <ZoomEndTime time="37091758333335fs"></ZoomEndTime>
+      <Cursor1Time time="37030300000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="254"></NameColumnWidth>
@@ -569,10 +569,6 @@
             <obj_property name="ElementShortName">SDO</obj_property>
             <obj_property name="ObjectShortName">SDO</obj_property>
          </wvobject>
-         <wvobject fp_name="/tb_integration/\ADC_simulators(0)\/ADC_simulator/data" type="array">
-            <obj_property name="ElementShortName">data[15:0]</obj_property>
-            <obj_property name="ObjectShortName">data[15:0]</obj_property>
-         </wvobject>
          <wvobject fp_name="/tb_integration/\ADC_simulators(0)\/ADC_simulator/data_reg" type="array">
             <obj_property name="ElementShortName">data_reg[15:0]</obj_property>
             <obj_property name="ObjectShortName">data_reg[15:0]</obj_property>
@@ -580,6 +576,7 @@
          <wvobject fp_name="/tb_integration/\ADC_simulators(0)\/ADC_simulator/counter" type="array">
             <obj_property name="ElementShortName">counter[3:0]</obj_property>
             <obj_property name="ObjectShortName">counter[3:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/tb_integration/\ADC_simulators(0)\/ADC_simulator/state" type="other">
             <obj_property name="ElementShortName">state</obj_property>
