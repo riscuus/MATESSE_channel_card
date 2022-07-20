@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_clocked_ddr_input_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_clocked_ddr_input" />
+            <top_module name="utils" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="194500000fs"></ZoomStartTime>
+      <ZoomEndTime time="381900001fs"></ZoomEndTime>
+      <Cursor1Time time="297500000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="255"></NameColumnWidth>
+      <ValueColumnWidth column_width="66"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="16" />
+   <wvobject fp_name="/tb_clocked_ddr_input/sys_rst" type="logic">
+      <obj_property name="ElementShortName">sys_rst</obj_property>
+      <obj_property name="ObjectShortName">sys_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/sys_clk_100" type="logic">
+      <obj_property name="ElementShortName">sys_clk_100</obj_property>
+      <obj_property name="ObjectShortName">sys_clk_100</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/sys_clk_200" type="logic">
+      <obj_property name="ElementShortName">sys_clk_200</obj_property>
+      <obj_property name="ObjectShortName">sys_clk_200</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/ADC_start_pulse" type="logic">
+      <obj_property name="ElementShortName">ADC_start_pulse</obj_property>
+      <obj_property name="ObjectShortName">ADC_start_pulse</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/ADC_CNV_signal" type="logic">
+      <obj_property name="ElementShortName">ADC_CNV_signal</obj_property>
+      <obj_property name="ObjectShortName">ADC_CNV_signal</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/ADC_SCK_signal" type="logic">
+      <obj_property name="ElementShortName">ADC_SCK_signal</obj_property>
+      <obj_property name="ObjectShortName">ADC_SCK_signal</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/ADC_SDO_signal" type="logic">
+      <obj_property name="ElementShortName">ADC_SDO_signal</obj_property>
+      <obj_property name="ObjectShortName">ADC_SDO_signal</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/clocked_ddr_input/rising_bit_reg" type="logic">
+      <obj_property name="ElementShortName">rising_bit_reg</obj_property>
+      <obj_property name="ObjectShortName">rising_bit_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/parallel_ddr" type="array">
+      <obj_property name="ElementShortName">parallel_ddr[1:0]</obj_property>
+      <obj_property name="ObjectShortName">parallel_ddr[1:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/clocked_ddr_input/state" type="other">
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/ddr_valid" type="logic">
+      <obj_property name="ElementShortName">ddr_valid</obj_property>
+      <obj_property name="ObjectShortName">ddr_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/ddr_valid_stretched" type="logic">
+      <obj_property name="ElementShortName">ddr_valid_stretched</obj_property>
+      <obj_property name="ObjectShortName">ddr_valid_stretched</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/clocked_ddr_input/cycles_ctr" type="array">
+      <obj_property name="ElementShortName">cycles_ctr[1:0]</obj_property>
+      <obj_property name="ObjectShortName">cycles_ctr[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/input_shift_register/ADC_word" type="array">
+      <obj_property name="ElementShortName">ADC_word[15:0]</obj_property>
+      <obj_property name="ObjectShortName">ADC_word[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/input_shift_register/valid_word" type="logic">
+      <obj_property name="ElementShortName">valid_word</obj_property>
+      <obj_property name="ObjectShortName">valid_word</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_clocked_ddr_input/input_shift_register/counter" type="array">
+      <obj_property name="ElementShortName">counter[2:0]</obj_property>
+      <obj_property name="ObjectShortName">counter[2:0]</obj_property>
+   </wvobject>
+</wave_config>
