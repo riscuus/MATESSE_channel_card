@@ -36,7 +36,7 @@
 ###set_false_path -through [get_cells aresetn_reg]
 
 # Property to allow clkout signal to be used as clock for the ddr input module
-set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets ADC_CLKOUT_IO31_IBUF]
+#set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets ADC_CLKOUT_IO31_IBUF]
 
 ##set_property IOB TRUE [get_cells {u1/io_exp_ctrl/SM_read_IOEXP/reg_shift_reg[0]}]
 ## ----------------------------------------------------
@@ -145,10 +145,10 @@ set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets ADC_CLKOUT_IO31_IBUF]
 ## - rename the used ports (in each line, after get_ports) according to the top level signal names in the project
 
 ## Clock signal
-#set_property -dict { PACKAGE_PIN F14   IOSTANDARD LVCMOS33 } [get_ports { CLK12MHZ }]; #IO_L13P_T2_MRCC_15 Sch=uclk
-#create_clock -add -name sys_clk_pin -period 83.333 -waveform {0 41.667} [get_ports { CLK12MHZ }];
-set_property -dict {PACKAGE_PIN R2 IOSTANDARD SSTL135} [get_ports clk_100]
-create_clock -period 10.000 -name sys_clk_pin -waveform {0.000 5.000} -add [get_ports clk_100]
+set_property -dict { PACKAGE_PIN F14   IOSTANDARD LVCMOS33 } [get_ports clk_12]; #IO_L13P_T2_MRCC_15 Sch=uclk
+create_clock -add -name sys_clk_pin -period 83.333 -waveform {0 41.667} [get_ports clk_12];
+#set_property -dict {PACKAGE_PIN R2 IOSTANDARD SSTL135} [get_ports clk_100]
+#create_clock -period 10.000 -name sys_clk_pin -waveform {0.000 5.000} -add [get_ports clk_100]
 
 # Switches
 # SW[0]
