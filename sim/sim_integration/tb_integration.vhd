@@ -31,6 +31,7 @@ end tb_integration;
 architecture Behavioral of tb_integration is
 
     -- Constants
+    constant T_HALF_CLK_200         : time := 2500 ps;
     constant T_HALF_CLK_100         : time := 5 ns;
     constant T_HALF_CLK_5           : time := 100 ns;
     constant RST_START              : time := 32 ns;
@@ -43,9 +44,10 @@ architecture Behavioral of tb_integration is
     constant SIM_DURATION           : time := 200 ms;
 
     -- Clock
-    signal sys_clk_100  : std_logic;
-    signal sys_clk_5    : std_logic;
-    signal sys_rst      : std_logic;
+    signal sys_clk_200  : std_logic := '0';
+    signal sys_clk_100  : std_logic := '0';
+    signal sys_clk_5    : std_logic := '0';
+    signal sys_rst      : std_logic := '0';
 
     -- External
     signal sync_frame : std_logic := '0';
@@ -381,6 +383,15 @@ architecture Behavioral of tb_integration is
 
 begin
 
+    -- 200 CLK generation
+    clk_200_generation : process 
+    begin
+        sys_clk_200 <= '1';
+        wait for T_HALF_CLK_200; 
+        sys_clk_200 <= '0';
+        wait for T_HALF_CLK_200;
+    end process;
+
     -- 100 CLK generation
     clk_100_generation : process 
     begin
@@ -550,6 +561,9 @@ begin
 
     ADC_simulators : for i in 0 to MAX_CHANNELS - 1 generate
         ADC_simulator : entity concept.ADC_simulator
+            generic map(
+                ADC_WORD_LENGTH => ADC_DATA_SIZE
+            )
             port map(
                 clk     => sys_clk_100,
                 rst     => sys_rst,
@@ -566,6 +580,7 @@ begin
         port map(
             sys_clk_5               => sys_clk_5,
             sys_clk_100             => sys_clk_100,
+            sys_clk_200             => sys_clk_200,
             sys_rst                 => sys_rst,
 
             -- UART interface
