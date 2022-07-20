@@ -41,7 +41,7 @@ end ADC_start_pulse_generator;
 
 architecture Behavioral of ADC_start_pulse_generator is
     -- Number of 100MHz clock cycles to trigger a new ADC reading
-    constant SIGNAL_PERIOD : positive := 25;
+    constant SIGNAL_PERIOD : positive := 20;
     -- Counter of the clock cycles
     signal counter : natural range 0 to SIGNAL_PERIOD;
     -- start pulse signal to be able to read its state
