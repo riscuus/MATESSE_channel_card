@@ -18,60 +18,82 @@
 ----------------------------------------------------------------------------------
 
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+library concept;
+use concept.utils.all;
 
 
 entity ADC_simulator is
-    Port ( 
+    generic (
+        ADC_WORD_LENGTH : natural -- 16
+    );
+    port ( 
         clk     : in std_logic; -- 100Mhz clock
         rst     : in std_logic; -- Async reset
         nCNV    : in std_logic; -- CNV signal active low for the ADC
         SCK     : in std_logic; -- Serial clock for the ADC
-        data    : in std_logic_vector(15 downto 0); -- Data to be sent through the serial output
+        data    : in std_logic_vector(ADC_WORD_LENGTH - 1 downto 0); -- Data to be sent through the serial output
         SDO     : out std_logic -- Serial data output
     );
 end ADC_simulator;
 
 architecture Behavioral of ADC_simulator is
     -- Register that stores the data at the moment of capture
-    signal data_reg : std_logic_vector(15 downto 0) := (others => '0');
+    signal data_reg     : std_logic_vector(ADC_WORD_LENGTH - 1 downto 0) := (others => '0');
     -- Keeps track of the bit that has to be sent
-    signal counter : integer range 0 to 15 := 15;
-    -- Register to know when the conversion is about to start
-    signal cnv_high : std_logic;
+    signal counter : unsigned(bits_req(ADC_WORD_LENGTH - 1) - 1 downto 0) := (others => '0');
+
+    type stateType is (idle, wait_nCNV_low, wait_SCK_high, wait_SCK_low);
+    signal state : stateType := idle;
 
 begin
 
-    activate_module : process (rst, clk)
+    SDO <= data_reg(to_integer((ADC_WORD_LENGTH - 1) - counter));
+
+    main_logic : process(rst, clk)
     begin
         if(rst = '1') then
-            cnv_high <= '0';
-        elsif (rising_edge(clk)) then
-            if(nCNV = '1') then
-                cnv_high <= '1';
-            end if;
-            if(nCNV = '0' and cnv_high = '1') then
-                data_reg <= data;
-                cnv_high <= '0';
-            end if;
+            data_reg <= (others => '0');
+            counter <= (others => '0');
+
+            state <= idle;
+
+        elsif(rising_edge(clk)) then
+            case state is
+                when idle =>
+                    if (nCNV = '1') then
+                        state <= wait_nCNV_low;
+                    end if;
+                when wait_nCNV_low =>
+                    if (nCNV = '0') then
+                        data_reg <= data;
+                        state <= wait_SCK_high;
+                    end if;
+                
+                when wait_SCK_high =>
+                    if (SCK = '1') then
+                        counter <= counter + 1;
+                        if (counter = ADC_WORD_LENGTH - 1) then
+                            counter <= (others => '0');
+                        else
+                            state <= wait_SCK_low;
+                        end if;
+                    end if;
+                
+                when wait_SCK_low =>
+                    if (SCK = '0') then
+                        counter <= counter + 1;
+                        state <= wait_SCK_high;
+                    end if;
+
+                when others =>
+                    state <= idle;
+            end case;
         end if;
     end process;
 
-    sck_output : process (SCK)
-    begin
-        if(rising_edge(SCK)) then
-            counter <= counter - 1;
-        end if;
-        if(falling_edge(SCK)) then
-            if(counter = 0) then
-                counter <= 15;
-            else
-                counter <= counter - 1;
-            end if;
-        end if;
-    end process;
-
-    SDO <= data_reg(counter);
 
 end Behavioral;
