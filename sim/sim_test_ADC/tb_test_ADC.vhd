@@ -372,7 +372,7 @@ begin
     ADC_simulator : entity concept.ADC_simulator
         port map(
             clk     => sys_clk,
-            nrst    => sys_rst,
+            rst    => sys_rst,
             nCNV    => ADC_CNV_signal,
             SCK     => ADC_SCK_signal,
             SDO     => ADC_SDO_signal,
@@ -384,7 +384,7 @@ begin
     test_ADC_module : entity concept.test_ADC
         port map(
             sys_clk         => sys_clk,
-            sys_rst         => sys_rst,
+            sys_rst_btn     => sys_rst,
             -- Enabling
             DAC_enabled     => DAC_enabled,
             ADC_enabled     => ADC_enabled,
@@ -401,7 +401,8 @@ begin
             -- ADC control
             ADC_CNV_IO0     => ADC_CNV_signal,
             ADC_SCK_IO1     => ADC_SCK_signal,
-            ADC_SDO_IO2     => ADC_SDO_signal--,
+            ADC_SDO_IO2     => ADC_SDO_signal,
+            ADC_CLKOUT_IO31 => ADC_SCK_signal
 
             --DAC_send_pulse      => DAC_send_pulse,
             --DAC_selector_signal => DAC_selector_signal
