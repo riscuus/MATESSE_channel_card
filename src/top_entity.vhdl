@@ -25,7 +25,7 @@ use concept.utils.all;
 
 entity top_entity is
     port (
-        clk_30                      : in std_logic;
+        clk_12                      : in std_logic;
         sys_rst                     : in std_logic;
         
         -- UART interface
@@ -82,7 +82,7 @@ begin
     clock_distr: entity concept.clock_distribution
         port map(
             rst         => sys_rst,
-            clk_in_30   => clk_30,
+            clk_in_12   => clk_12,
             clk_out_100 => sys_clk_100,
             clk_out_200 => sys_clk_200,
             clk_out_005 => sys_clk_5
