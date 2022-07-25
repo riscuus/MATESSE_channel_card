@@ -25,7 +25,7 @@ use concept.utils.all;
 
 entity test_top_entity is
     port (
-        clk_100                     : in std_logic;
+        clk_12                      : in std_logic;
         sys_rst                     : in std_logic;
         
         -- UART interface
@@ -75,6 +75,7 @@ architecture RTL of test_top_entity is
     -- clk signals
     signal sys_clk_5    : std_logic := '0';
     signal sys_clk_100  : std_logic := '0';
+    signal sys_clk_200  : std_logic := '0';
 
     -- sync_frame signal
     signal sync_frame   : std_logic := '1';
@@ -113,10 +114,11 @@ begin
 
     clock_distr: entity concept.clock_distribution
         port map(
-            clock_in   => clk_100,
-            clock_005  => sys_clk_5,
-            clock_100  => sys_clk_100,
-            locked     => open
+            rst         => sys_rst,
+            clk_in_12   => clk_12,
+            clk_out_100 => sys_clk_100,
+            clk_out_200 => sys_clk_200,
+            clk_out_005 => sys_clk_5
         );
 
 ---------------------------------------------------------------------
@@ -127,6 +129,7 @@ begin
         port map(
             sys_clk_5               => sys_clk_5,
             sys_clk_100             => sys_clk_100,
+            sys_clk_200             => sys_clk_200,
             sys_rst                 => sys_rst,
 
             -- UART interface

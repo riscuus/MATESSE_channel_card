@@ -290,6 +290,18 @@ architecture Behavioral of main_module is
     type t_gain_array is array(0 to MAX_CHANNELS - 1) of t_param_array(0 to PARAM_ID_TO_SIZE(GAIN_0_ID) - 1);
     signal gain_array : t_gain_array := (others => (others => (others => '0')));
 
+    -- Debugging options
+    attribute keep : string;
+    attribute keep of ddr_parallel      : signal is "true";
+    attribute keep of ddr_valid         : signal is "true";
+    attribute keep of parallel_data     : signal is "true";
+    attribute keep of valid_word        : signal is "true";
+    attribute keep of valid_sample      : signal is "true";
+    attribute keep of sample_data       : signal is "true";
+    attribute keep of acc_sample        : signal is "true";
+    attribute keep of fb_sample         : signal is "true";
+    attribute keep of channels_data     : signal is "true";
+
 begin
 
     -- Simple assigments of some outputs that need to be read
@@ -851,51 +863,51 @@ begin
                 y_valid         => filter_output(i).valid
             );
 
-    channels_data_value_multiplexer : entity concept.mux
-        generic map(
-            DATA_SIZE   => WORD_WIDTH,
-            SEL_SIZE    => DATA_SEL_SIZE
-        )
-        port map(
-            selector => channels_data_selector,
-            data_in(1 * WORD_WIDTH - 1 downto 0 * WORD_WIDTH) => (others => '0'), -- error data
-            data_in(2 * WORD_WIDTH - 1 downto 1 * WORD_WIDTH) => std_logic_vector(fb_sample(i).value), -- FB
-            data_in(3 * WORD_WIDTH - 1 downto 2 * WORD_WIDTH) => std_logic_vector(filter_output(i).value), -- Filtered FB
-            data_in(4 * WORD_WIDTH - 1 downto 3 * WORD_WIDTH) => (others => '0'), -- RAW
-            data_out => data_value_vector_array(i)
-        );
+        channels_data_value_multiplexer : entity concept.mux
+            generic map(
+                DATA_SIZE   => WORD_WIDTH,
+                SEL_SIZE    => DATA_SEL_SIZE
+            )
+            port map(
+                selector => channels_data_selector,
+                data_in(1 * WORD_WIDTH - 1 downto 0 * WORD_WIDTH) => (others => '0'), -- error data
+                data_in(2 * WORD_WIDTH - 1 downto 1 * WORD_WIDTH) => std_logic_vector(fb_sample(i).value), -- FB
+                data_in(3 * WORD_WIDTH - 1 downto 2 * WORD_WIDTH) => std_logic_vector(filter_output(i).value), -- Filtered FB
+                data_in(4 * WORD_WIDTH - 1 downto 3 * WORD_WIDTH) => (others => '0'), -- RAW
+                data_out => data_value_vector_array(i)
+            );
 
-    channels_data_row_num_multiplexer : entity concept.mux
-        generic map(
-            DATA_SIZE   => ROW_NUM_WIDTH,
-            SEL_SIZE    => DATA_SEL_SIZE
-        )
-        port map(
-            selector => channels_data_selector,
-            data_in(1 * ROW_NUM_WIDTH - 1 downto 0 * ROW_NUM_WIDTH) => (others => '0'), -- error data
-            data_in(2 * ROW_NUM_WIDTH - 1 downto 1 * ROW_NUM_WIDTH) => std_logic_vector(fb_sample(i).row_num), -- FB
-            data_in(3 * ROW_NUM_WIDTH - 1 downto 2 * ROW_NUM_WIDTH) => std_logic_vector(filter_output(i).row_num), -- Filtered FB
-            data_in(4 * ROW_NUM_WIDTH - 1 downto 3 * ROW_NUM_WIDTH) => (others => '0'), -- RAW
-            data_out => data_row_num_vector_array(i) 
-        );
+        channels_data_row_num_multiplexer : entity concept.mux
+            generic map(
+                DATA_SIZE   => ROW_NUM_WIDTH,
+                SEL_SIZE    => DATA_SEL_SIZE
+            )
+            port map(
+                selector => channels_data_selector,
+                data_in(1 * ROW_NUM_WIDTH - 1 downto 0 * ROW_NUM_WIDTH) => (others => '0'), -- error data
+                data_in(2 * ROW_NUM_WIDTH - 1 downto 1 * ROW_NUM_WIDTH) => std_logic_vector(fb_sample(i).row_num), -- FB
+                data_in(3 * ROW_NUM_WIDTH - 1 downto 2 * ROW_NUM_WIDTH) => std_logic_vector(filter_output(i).row_num), -- Filtered FB
+                data_in(4 * ROW_NUM_WIDTH - 1 downto 3 * ROW_NUM_WIDTH) => (others => '0'), -- RAW
+                data_out => data_row_num_vector_array(i) 
+            );
 
 
-    channels_data_valid_multiplexer : entity concept.mux
-        generic map(
-            DATA_SIZE   => 1, -- it is an std_logic
-            SEL_SIZE    => DATA_SEL_SIZE
-        )
-        port map(
-            selector => channels_data_selector,
-            data_in(0) => '0', -- error data
-            data_in(1) => fb_sample(i).valid, -- FB
-            data_in(2) => filter_output(i).valid, -- Filtered FB
-            data_in(3) => '0', -- RAW
-            data_out(0) => channels_data(i).valid
-        );
+        channels_data_valid_multiplexer : entity concept.mux
+            generic map(
+                DATA_SIZE   => 1, -- it is an std_logic
+                SEL_SIZE    => DATA_SEL_SIZE
+            )
+            port map(
+                selector => channels_data_selector,
+                data_in(0) => '0', -- error data
+                data_in(1) => fb_sample(i).valid, -- FB
+                data_in(2) => filter_output(i).valid, -- Filtered FB
+                data_in(3) => '0', -- RAW
+                data_out(0) => channels_data(i).valid
+            );
 
-    channels_data(i).value <= signed(data_value_vector_array(i));
-    channels_data(i).row_num <= unsigned(data_row_num_vector_array(i));
+        channels_data(i).value <= signed(data_value_vector_array(i));
+        channels_data(i).row_num <= unsigned(data_row_num_vector_array(i));
 
     end generate;
 

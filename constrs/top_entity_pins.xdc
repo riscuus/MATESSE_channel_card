@@ -145,8 +145,8 @@
 ## - rename the used ports (in each line, after get_ports) according to the top level signal names in the project
 
 ## Clock signal
-set_property -dict { PACKAGE_PIN F14   IOSTANDARD LVCMOS33 } [get_ports clk_12]; #IO_L13P_T2_MRCC_15 Sch=uclk
-create_clock -add -name sys_clk_pin -period 83.333 -waveform {0 41.667} [get_ports clk_12];
+set_property -dict {PACKAGE_PIN F14 IOSTANDARD LVCMOS33} [get_ports clk_12]
+create_clock -period 83.333 -name sys_clk_pin -waveform {0.000 41.667} -add [get_ports clk_12]
 #set_property -dict {PACKAGE_PIN R2 IOSTANDARD SSTL135} [get_ports clk_100]
 #create_clock -period 10.000 -name sys_clk_pin -waveform {0.000 5.000} -add [get_ports clk_100]
 
@@ -227,7 +227,7 @@ set_property -dict {PACKAGE_PIN H14 IOSTANDARD LVCMOS33} [get_ports sys_rst]
 
 ## USB-UART Interface
 set_property -dict {PACKAGE_PIN R12 IOSTANDARD LVCMOS33} [get_ports tx_uart_serial]
-set_property -dict {PACKAGE_PIN V12 IOSTANDARD LVCMOS33} [get_ports rx_uart_serial];
+set_property -dict {PACKAGE_PIN V12 IOSTANDARD LVCMOS33} [get_ports rx_uart_serial]
 
 
 # ChipKit Single Ended Analog Inputs
@@ -399,3 +399,79 @@ set_property INTERNAL_VREF 0.675 [get_iobanks 34]
 ##connect_debug_port dbg_hub/clk [get_nets qpcie_clk_out]
 
 
+
+
+create_debug_core u_ila_0 ila
+set_property ALL_PROBE_SAME_MU true [get_debug_cores u_ila_0]
+set_property ALL_PROBE_SAME_MU_CNT 1 [get_debug_cores u_ila_0]
+set_property C_ADV_TRIGGER false [get_debug_cores u_ila_0]
+set_property C_DATA_DEPTH 1024 [get_debug_cores u_ila_0]
+set_property C_EN_STRG_QUAL false [get_debug_cores u_ila_0]
+set_property C_INPUT_PIPE_STAGES 0 [get_debug_cores u_ila_0]
+set_property C_TRIGIN_EN false [get_debug_cores u_ila_0]
+set_property C_TRIGOUT_EN false [get_debug_cores u_ila_0]
+set_property port_width 1 [get_debug_ports u_ila_0/clk]
+connect_debug_port u_ila_0/clk [get_nets [list clock_distr/clk_generator/inst/clk_out1]]
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe0]
+set_property port_width 16 [get_debug_ports u_ila_0/probe0]
+connect_debug_port u_ila_0/probe0 [get_nets [list {main_module/parallel_data[0]_5[0]} {main_module/parallel_data[0]_5[1]} {main_module/parallel_data[0]_5[2]} {main_module/parallel_data[0]_5[3]} {main_module/parallel_data[0]_5[4]} {main_module/parallel_data[0]_5[5]} {main_module/parallel_data[0]_5[6]} {main_module/parallel_data[0]_5[7]} {main_module/parallel_data[0]_5[8]} {main_module/parallel_data[0]_5[9]} {main_module/parallel_data[0]_5[10]} {main_module/parallel_data[0]_5[11]} {main_module/parallel_data[0]_5[12]} {main_module/parallel_data[0]_5[13]} {main_module/parallel_data[0]_5[14]} {main_module/parallel_data[0]_5[15]}]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe1]
+set_property port_width 1 [get_debug_ports u_ila_0/probe1]
+connect_debug_port u_ila_0/probe1 [get_nets [list {main_module/valid_sample[0]}]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe2]
+set_property port_width 1 [get_debug_ports u_ila_0/probe2]
+connect_debug_port u_ila_0/probe2 [get_nets [list {main_module/valid_word[0]}]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe3]
+set_property port_width 16 [get_debug_ports u_ila_0/probe3]
+connect_debug_port u_ila_0/probe3 [get_nets [list {main_module/sample_data[0]_3[0]} {main_module/sample_data[0]_3[1]} {main_module/sample_data[0]_3[2]} {main_module/sample_data[0]_3[3]} {main_module/sample_data[0]_3[4]} {main_module/sample_data[0]_3[5]} {main_module/sample_data[0]_3[6]} {main_module/sample_data[0]_3[7]} {main_module/sample_data[0]_3[8]} {main_module/sample_data[0]_3[9]} {main_module/sample_data[0]_3[10]} {main_module/sample_data[0]_3[11]} {main_module/sample_data[0]_3[12]} {main_module/sample_data[0]_3[13]} {main_module/sample_data[0]_3[14]} {main_module/sample_data[0]_3[15]}]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe4]
+set_property port_width 2 [get_debug_ports u_ila_0/probe4]
+connect_debug_port u_ila_0/probe4 [get_nets [list {main_module/ddr_parallel[0]_7[0]} {main_module/ddr_parallel[0]_7[1]}]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe5]
+set_property port_width 32 [get_debug_ports u_ila_0/probe5]
+connect_debug_port u_ila_0/probe5 [get_nets [list {main_module/channels_data[0][value][0]} {main_module/channels_data[0][value][1]} {main_module/channels_data[0][value][2]} {main_module/channels_data[0][value][3]} {main_module/channels_data[0][value][4]} {main_module/channels_data[0][value][5]} {main_module/channels_data[0][value][6]} {main_module/channels_data[0][value][7]} {main_module/channels_data[0][value][8]} {main_module/channels_data[0][value][9]} {main_module/channels_data[0][value][10]} {main_module/channels_data[0][value][11]} {main_module/channels_data[0][value][12]} {main_module/channels_data[0][value][13]} {main_module/channels_data[0][value][14]} {main_module/channels_data[0][value][15]} {main_module/channels_data[0][value][16]} {main_module/channels_data[0][value][17]} {main_module/channels_data[0][value][18]} {main_module/channels_data[0][value][19]} {main_module/channels_data[0][value][20]} {main_module/channels_data[0][value][21]} {main_module/channels_data[0][value][22]} {main_module/channels_data[0][value][23]} {main_module/channels_data[0][value][24]} {main_module/channels_data[0][value][25]} {main_module/channels_data[0][value][26]} {main_module/channels_data[0][value][27]} {main_module/channels_data[0][value][28]} {main_module/channels_data[0][value][29]} {main_module/channels_data[0][value][30]} {main_module/channels_data[0][value][31]}]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe6]
+set_property port_width 1 [get_debug_ports u_ila_0/probe6]
+connect_debug_port u_ila_0/probe6 [get_nets [list {main_module/ddr_valid[0]}]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe7]
+set_property port_width 32 [get_debug_ports u_ila_0/probe7]
+connect_debug_port u_ila_0/probe7 [get_nets [list {main_module/fb_sample[0][value][0]} {main_module/fb_sample[0][value][1]} {main_module/fb_sample[0][value][2]} {main_module/fb_sample[0][value][3]} {main_module/fb_sample[0][value][4]} {main_module/fb_sample[0][value][5]} {main_module/fb_sample[0][value][6]} {main_module/fb_sample[0][value][7]} {main_module/fb_sample[0][value][8]} {main_module/fb_sample[0][value][9]} {main_module/fb_sample[0][value][10]} {main_module/fb_sample[0][value][11]} {main_module/fb_sample[0][value][12]} {main_module/fb_sample[0][value][13]} {main_module/fb_sample[0][value][14]} {main_module/fb_sample[0][value][15]} {main_module/fb_sample[0][value][16]} {main_module/fb_sample[0][value][17]} {main_module/fb_sample[0][value][18]} {main_module/fb_sample[0][value][19]} {main_module/fb_sample[0][value][20]} {main_module/fb_sample[0][value][21]} {main_module/fb_sample[0][value][22]} {main_module/fb_sample[0][value][23]} {main_module/fb_sample[0][value][24]} {main_module/fb_sample[0][value][25]} {main_module/fb_sample[0][value][26]} {main_module/fb_sample[0][value][27]} {main_module/fb_sample[0][value][28]} {main_module/fb_sample[0][value][29]} {main_module/fb_sample[0][value][30]} {main_module/fb_sample[0][value][31]}]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe8]
+set_property port_width 32 [get_debug_ports u_ila_0/probe8]
+connect_debug_port u_ila_0/probe8 [get_nets [list {main_module/acc_sample[0][value][0]} {main_module/acc_sample[0][value][1]} {main_module/acc_sample[0][value][2]} {main_module/acc_sample[0][value][3]} {main_module/acc_sample[0][value][4]} {main_module/acc_sample[0][value][5]} {main_module/acc_sample[0][value][6]} {main_module/acc_sample[0][value][7]} {main_module/acc_sample[0][value][8]} {main_module/acc_sample[0][value][9]} {main_module/acc_sample[0][value][10]} {main_module/acc_sample[0][value][11]} {main_module/acc_sample[0][value][12]} {main_module/acc_sample[0][value][13]} {main_module/acc_sample[0][value][14]} {main_module/acc_sample[0][value][15]} {main_module/acc_sample[0][value][16]} {main_module/acc_sample[0][value][17]} {main_module/acc_sample[0][value][18]} {main_module/acc_sample[0][value][19]} {main_module/acc_sample[0][value][20]} {main_module/acc_sample[0][value][21]} {main_module/acc_sample[0][value][22]} {main_module/acc_sample[0][value][23]} {main_module/acc_sample[0][value][24]} {main_module/acc_sample[0][value][25]} {main_module/acc_sample[0][value][26]} {main_module/acc_sample[0][value][27]} {main_module/acc_sample[0][value][28]} {main_module/acc_sample[0][value][29]} {main_module/acc_sample[0][value][30]} {main_module/acc_sample[0][value][31]}]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe9]
+set_property port_width 1 [get_debug_ports u_ila_0/probe9]
+connect_debug_port u_ila_0/probe9 [get_nets [list {main_module/acc_sample[0][valid]}]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe10]
+set_property port_width 1 [get_debug_ports u_ila_0/probe10]
+connect_debug_port u_ila_0/probe10 [get_nets [list ADC_CNV_IO0_OBUF]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe11]
+set_property port_width 1 [get_debug_ports u_ila_0/probe11]
+connect_debug_port u_ila_0/probe11 [get_nets [list ADC_SCK_IO1_OBUF]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe12]
+set_property port_width 1 [get_debug_ports u_ila_0/probe12]
+connect_debug_port u_ila_0/probe12 [get_nets [list ADC_SDO_0_IO2_IBUF]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe13]
+set_property port_width 1 [get_debug_ports u_ila_0/probe13]
+connect_debug_port u_ila_0/probe13 [get_nets [list {main_module/channels_data[0][valid]}]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe14]
+set_property port_width 1 [get_debug_ports u_ila_0/probe14]
+connect_debug_port u_ila_0/probe14 [get_nets [list {main_module/fb_sample[0][valid]}]]
+set_property C_CLK_INPUT_FREQ_HZ 300000000 [get_debug_cores dbg_hub]
+set_property C_ENABLE_CLK_DIVIDER false [get_debug_cores dbg_hub]
+set_property C_USER_SCAN_CHAIN 1 [get_debug_cores dbg_hub]
+connect_debug_port dbg_hub/clk [get_nets sys_clk_100]
