@@ -377,34 +377,37 @@ begin
     ram_write_data      <= packet_payload_reg(to_integer(word_count));
     
     -- Conbinational conditional assigments
-    correct_param_id    <= '1' when to_integer(unsigned(param_id_reg(7 downto 0))) = ROW_ORDER_ID    or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ON_BIAS_ID      or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = OFF_BIAS_ID     or 
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SA_BIAS_ID      or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FLTR_RST_ID     or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RET_DATA_ID     or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = DATA_MODE_ID    or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FILTR_COEFF_ID  or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SERVO_MODE_ID   or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_DLY_ID     or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_AMP_ID     or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_STEP_ID    or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = BIAS_ID         or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ROW_LEN_ID      or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = NUM_ROWS_ID     or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SAMPLE_DLY_ID   or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SAMPLE_NUM_ID   or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FB_DLY_ID       or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RET_DATA_S_ID   or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ADC_OFFSET_0_ID or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ADC_OFFSET_1_ID or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = GAIN_0_ID       or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = GAIN_1_ID       or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = DATA_RATE_ID    or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = NUM_COLS_REP_ID or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SA_FB_ID        or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SQ1_BIAS_ID     or
-                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SQ1_FB_ID       else
+    correct_param_id    <= '1' when to_integer(unsigned(param_id_reg(7 downto 0))) = ROW_ORDER_ID       or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ON_BIAS_ID         or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = OFF_BIAS_ID        or 
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SA_BIAS_ID         or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FLTR_RST_ID        or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RET_DATA_ID        or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = DATA_MODE_ID       or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FILTR_COEFF_ID     or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SERVO_MODE_ID      or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_DLY_ID        or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_AMP_ID        or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RAMP_STEP_ID       or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = BIAS_ID            or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ROW_LEN_ID         or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = NUM_ROWS_ID        or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SAMPLE_DLY_ID      or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SAMPLE_NUM_ID      or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = FB_DLY_ID          or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = RET_DATA_S_ID      or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ADC_OFFSET_0_ID    or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = ADC_OFFSET_1_ID    or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = GAIN_0_ID          or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = GAIN_1_ID          or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = DATA_RATE_ID       or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = NUM_COLS_REP_ID    or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SA_FB_ID           or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SQ1_BIAS_ID        or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SQ1_FB_ID          or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = CNV_LEN_ID         or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SCK_DLY_ID         or
+                                    to_integer(unsigned(param_id_reg(7 downto 0))) = SCK_HALF_PERIOD_ID else
                            '0';
 
 end behave;
