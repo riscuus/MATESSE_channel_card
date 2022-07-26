@@ -20,12 +20,10 @@ import packet_fields as pf
 import utils as utils
 
 def wait_data():
-    attempts = 10
-    for i in range(attempts): 
-        p = sp.read_data()
-        if (len(p) != 0):
-            return True, p
-        time.sleep(0.1)
+    time.sleep(1)
+    p = sp.read_data()
+    if (len(p) != 0):
+        return True, p
     print("[ERROR] Wait packet timeout")
     return False, []
 

@@ -21,7 +21,7 @@ import packet_fields as pf
 PORT_NAME = "COM4"
 BAUDRATE = 19200
 PARITY = "even"
-TIMEOUT = 10 # Seconds
+TIMEOUT = 0.1 # Seconds
 
 ser = serial.Serial()
 
@@ -33,7 +33,7 @@ def init_serial_port(port_name = PORT_NAME, baudrate = BAUDRATE, parity = PARITY
     ser.baudrate = baudrate
     ser.port = port_name
     ser.parity = get_parity(parity)
-    #ser.timeout = TIMEOUT
+    ser.timeout = TIMEOUT
     ser.open()
 
 
@@ -57,12 +57,13 @@ def read_data():
     p = []
     pkt_num = 0
     while ser.in_waiting > 0:
+
         w = read_word()
         p.append(w)
         if (w == pf.PREAMBLE_1):
             print("Packet received:", pkt_num)
             pkt_num = pkt_num + 1
-        time.sleep(0.001)
+        time.sleep(0.01)
     return p
 
 def read_word():
