@@ -108,7 +108,7 @@ def parse_data_packet(p : list, packet : pf.Data_packet):
     print_payload(packet.payload)
     packet.checksum = p[4+n]
     if (check_checksum(packet.checksum, packet.payload) == False):
-        return False, Packet
+        return False, packet
     packet.total_words = 4 + n + 1
     return True, packet
 
