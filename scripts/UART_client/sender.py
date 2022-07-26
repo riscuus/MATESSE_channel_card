@@ -29,52 +29,64 @@ def start_read_param():
     payload = ["00000000"] * 58
 
     param_index = ui.get_param(pf.PARAMS_LIST)
-    packet = pf.CMD_packet(preamble, pf.Packet_type.CMD_RB, pf.CARD_ID, pf.PARAMS_LIST[param_index], len(payload), payload, utils.calculate_checksum(payload))
+    packet = pf.CMD_packet(preamble = preamble, packet_type = pf.Packet_type.CMD_RB, card_id = pf.CARD_ID, param_id = pf.PARAMS_LIST[param_index], payload_size = len(payload), payload = payload, checksum = utils.calculate_checksum(payload))
     ui.print_about_to_send_packet(packet)
     send_packet(packet)
 
-    packet_words = receiver.wait_data()
-    received_packet = receiver.parse_packet(packet_words)
+    result, packet_words = receiver.wait_data()
+    if (result == True):
+        received_packet = receiver.parse_packet(packet_words)
 
 def start_write_param():
-    preamble = [pf.PREAMBLE_1, pf.PREAMBLE_2]
-    payload = ["00000000"] * 58
+    packet = pf.CMD_packet()
+    packet.preamble = [pf.PREAMBLE_1, pf.PREAMBLE_2]
+    packet.packet_type = pf.Packet_type.CMD_WB
+    packet.payload = ["00000000"] * 58
     
     # Get the param id to write
-    param_id = pf.PARAMS_LIST[ui.get_param(pf.PARAMS_LIST)]
-    num_words = pf.PARAM_ID_TO_SIZE[param_id]
+    packet.param_id = pf.PARAMS_LIST[ui.get_param(pf.PARAMS_LIST)]
+    packet.payload_size = pf.PARAM_ID_TO_SIZE[packet.param_id]
 
     # Get the data to write
-    payload[0:num_words] = [utils.format_int_to_hex_str(p) for p in ui.get_param_data_to_write(param_id, num_words)]
+    packet.payload[0:packet.payload_size] = [utils.format_int_to_hex_str(p) for p in ui.get_param_data_to_write(packet.param_id, packet.payload_size)]
 
-    packet = pf.CMD_packet(preamble, pf.Packet_type.CMD_WB, pf.CARD_ID, param_id, num_words, payload, utils.calculate_checksum(payload))
+    packet.checksum = utils.calculate_checksum(packet.payload)
 
     ui.print_about_to_send_packet(packet)
     send_packet(packet)
 
-    packet_words = receiver.wait_data()
-    received_packet = receiver.parse_packet(packet_words)
+    result, packet_words = receiver.wait_data()
+    if (result == True):
+        received_packet = receiver.parse_packet(packet_words)
 
 
 def start_acquisition():
-    preamble = [pf.PREAMBLE_1, pf.PREAMBLE_2]
-    payload = ["00000000"] * 58
-    param_id = pf.Param_id.RET_DATA_ID
-    num_words = 1
-    payload[0] = utils.format_int_to_hex_str(1)
-
-    packet = pf.CMD_packet(preamble, pf.Packet_type.CMD_GO, pf.CARD_ID, param_id, num_words, payload, utils.calculate_checksum(payload))
+    packet = pf.CMD_packet()
+    packet.preamble = [pf.PREAMBLE_1, pf.PREAMBLE_2]
+    packet.packet_type = pf.Packet_type.CMD_GO
+    packet.param_id = pf.Param_id.RET_DATA_ID
+    packet.payload_size = 1
+    packet.payload = ["00000000"] * 58
+    packet.payload[0] = utils.format_int_to_hex_str(1)
+    packet.checksum = utils.calculate_checksum(packet.payload)
 
     ui.print_about_to_send_packet(packet)
     send_packet(packet)
 
     # If the acq has been successful we will receive more than one packet (at least 2 [reply + data])
-    words = receiver.wait_data()
-    received_packet, packet_length = receiver.parse_packet(words)
-    words = words[packet_length:]
+    result, words = receiver.wait_data()
+    if (result == False):
+        return
+
+    result, received_packet = receiver.parse_packet(words)
+    if (result == False):
+        return
+    words = words[received_packet.total_words:]
     while len(words) > 0:
-        received_packet, packet_length = receiver.parse_packet(words)
-        words = words[packet_length:]
+        result, received_packet = receiver.parse_packet(words)
+        if (result == False):
+            return
+        words = words[received_packet.total_words:]
 
 
 
@@ -85,37 +97,31 @@ def build_cmd_packet(cmd_type, card_id, param_id, payload_size, payload, checksu
     return 
 
 
-def send_packet(packet):
+def send_packet(packet : pf.CMD_packet):
     send_preamble(packet.preamble)
-    send_cmd_type(packet.cmd_type)
+    send_packet_type(packet.packet_type)
     send_id(packet.card_id, packet.param_id)
     send_payload_size(packet.payload_size)
     send_payload(packet.payload)
     send_checksum(packet.checksum)
 
-def send_preamble(preamble):
+def send_preamble(preamble : list):
     for p in preamble:
         sp.write_word(p)
 
-def send_cmd_type(cmd_type):
-    sp.write_word(cmd_type.value)
+def send_packet_type(packet_type : pf.Packet_type):
+    sp.write_word(packet_type.value)
 
-def send_id(card_id, param_id):
+def send_id(card_id : str, param_id : pf.Param_id):
     sp.write_word(card_id + param_id.value)
 
-def send_payload_size(size):
+def send_payload_size(size : int):
     s = '{:08x}'.format(size)
     sp.write_word(s)
 
-def send_payload(payload):
+def send_payload(payload : list):
     for w in payload:
         sp.write_word(w)
 
-def send_checksum(checksum):
+def send_checksum(checksum : str):
     sp.write_word(checksum)
-
-
-
-
-if __name__ == "__main__" :
-    main()

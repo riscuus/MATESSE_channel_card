@@ -142,20 +142,48 @@ PARAM_ID_TO_SIZE = {
     Param_id.SCK_HALF_PERIOD_ID : 1
 }
 
-class CMD_packet():
-    def __init__(self, preamble, cmd_type, card_id, param_id, payload_size, payload, checksum):
+class Packet():
+    def __init__(self, 
+                    total_words : int = 0, 
+                    preamble    : list = [], 
+                    packet_type : Packet_type = None):
+
+        self.total_words = total_words
         self.preamble = preamble
-        self.cmd_type = cmd_type
+        self.packet_type = packet_type
+
+class CMD_packet(Packet):
+    def __init__(self, 
+                    total_words     : int = 0, 
+                    preamble        : list = [], 
+                    packet_type     : Packet_type = None, 
+                    card_id         : str = CARD_ID, 
+                    param_id        : Param_id = None , 
+                    payload_size    : int = 0, 
+                    payload         : list = [], 
+                    checksum        : str = []):
+
+        Packet.__init__(self, total_words, preamble, packet_type)
         self.card_id = card_id
         self.param_id = param_id
         self.payload_size = payload_size
         self.payload = payload
         self.checksum = checksum
 
-class Reply_packet():
-    def __init__(self, preamble, packet_type, payload_size, cmd_type, err_ok, card_id, param_id, payload, checksum):
-        self.preamble = preamble
-        self.packet_type = packet_type
+class Reply_packet(Packet):
+    def __init__(self, 
+                    total_words     : int = 0, 
+                    preamble        : list = [], 
+                    packet_type     : Packet_type = None, 
+                    payload_size    : int = 0, 
+                    cmd_type        : Packet_type = None, 
+                    err_ok          : Ok_err = None, 
+                    card_id         : str = CARD_ID, 
+                    param_id        : str = '', 
+                    payload         : list = [], 
+                    checksum        : str = ''):
+
+        Packet.__init__(self, total_words, preamble, packet_type)
         self.payload_size = payload_size
         self.cmd_type = cmd_type
         self.err_ok = err_ok
@@ -164,10 +192,16 @@ class Reply_packet():
         self.payload = payload
         self.checksum = checksum
 
-class Data_packet():
-    def __init__(self, preamble, packet_type, payload_size, payload, checksum):
-        self.preamble = preamble
-        self.packet_type = packet_type
+class Data_packet(Packet):
+    def __init__(self, 
+                    total_words     : int = 0, 
+                    preamble        : list = [], 
+                    packet_type     : Packet_type = None, 
+                    payload_size    : int = 0, 
+                    payload         : list = [], 
+                    checksum        : str = ''):
+
+        Packet.__init__(self, total_words, preamble, packet_type)
         self.payload_size = payload_size
         self.payload = payload
         self.checksum = checksum

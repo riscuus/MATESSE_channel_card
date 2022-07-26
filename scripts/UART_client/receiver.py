@@ -13,43 +13,38 @@
 #
 ##############################################################################################
 
+import time
 # Custom imports
 import serial_port as sp
 import packet_fields as pf
 import utils as utils
 
 def wait_data():
-    attempts = 1000000000
+    attempts = 10
     for i in range(attempts): 
         p = sp.read_data()
         if (len(p) != 0):
-            return p
+            return True, p
+        time.sleep(0.1)
     print("[ERROR] Wait packet timeout")
+    return False, []
 
 
-def parse_packet(p):
-    preamble = []
-    packet_type = None
-    payload_size = None
-    cmd_type = None
-    err = None
-    card_id = None
-    param_id = None
-    payload = None
-    checksum = None
+def parse_packet(p : list):
+    packet = pf.Packet()
 
     if (p[0] != pf.PREAMBLE_1):
         print("Preamble_1: NOT OK: 0x" + p[0])
-        return False
+        return False, packet
     else:
-        preamble.append(p[0])
+        packet.preamble.append(p[0])
         print("\nPreamble_1: OK")
 
     if (p[1] != pf.PREAMBLE_2):
         print("Preamble_2: NOT OK: 0x" + p[1])
-        return False
+        return False, packet
     else:
-        preamble.append(p[1])
+        packet.preamble.append(p[1])
         print("Preamble_2: OK")
 
     match p[2]:
@@ -76,17 +71,15 @@ def parse_packet(p):
         case pf.Packet_type.REPLY.value:
             packet_type = pf.Packet_type.REPLY
             print("Packet Type: Reply")
-            payload_size, cmd_type, err, card_id, param_id, payload, checksum, packet_words = parse_reply_packet(p)
-            return pf.Reply_packet(preamble, packet_type, payload_size, cmd_type, err, card_id, param_id, payload, checksum), packet_words
+            return parse_reply_packet(p, pf.Reply_packet(packet))
         case pf.Packet_type.DATA.value:
             packet_type = pf.Packet_type.DATA
             print("Packet Type: DATA")
-            payload_size, payload, checksum, packet_words = parse_data_packet(p)
-            return pf.Data_packet(preamble, packet_type, payload_size, payload, checksum), packet_words
+            return parse_data_packet(p, pf.Data_packet(packet))
         case _:
             print("Packet Type: NOT OK" + p[2])
-            return False
-    return False
+            return False, packet
+    return False, packet
 
 def analyse_cmd_packet(p):
     get_id(p[3])
@@ -95,25 +88,29 @@ def analyse_cmd_packet(p):
     print_payload(payload)
     check_checksum(p[63], payload)
 
-def parse_reply_packet(p):
+def parse_reply_packet(p : list, packet : pf.Reply_packet):
     n = get_payload_size(p[3], pf.Packet_type.REPLY)
-    cmd_type, err = get_type_and_error(p[4])
-    card_id, param_id = get_id(p[5])
-    payload = p[6:6+n]
-    print_payload(payload)
+    packet.payload_size = n
+    packet.cmd_type, packet.err_ok = get_type_and_error(p[4])
+    packet.card_id, packet.param_id = get_id(p[5])
+    packet.payload = p[6:6+n]
+    print_payload(packet.payload)
     checksum = p[6+n]
-    check_checksum(checksum, p[4:6+n])
-    packet_words = 6 + n + 1
-    return n, cmd_type, err, card_id, param_id, payload, checksum, packet_words
+    if(check_checksum(checksum, p[4:6+n]) == False):
+        return False, packet
+    packet.total_words = 6 + n + 1
+    return True, packet
 
-def parse_data_packet(p):
+def parse_data_packet(p : list, packet : pf.Data_packet):
     n = get_payload_size(p[3], pf.Packet_type.DATA)
-    payload = p[4:4+n] 
-    print_payload(payload)
-    checksum = p[4+n]
-    check_checksum(checksum, payload)
-    packet_words = 4 + n + 1
-    return n, payload, checksum, packet_words
+    packet.payload_size = n
+    packet.payload = p[4:4+n] 
+    print_payload(packet.payload)
+    packet.checksum = p[4+n]
+    if (check_checksum(packet.checksum, packet.payload) == False):
+        return False, Packet
+    packet.total_words = 4 + n + 1
+    return True, packet
 
 def get_id(word):
     card_id = word[0:4]
@@ -187,5 +184,7 @@ def check_checksum(checksum, content):
     print("Calculated checksum: ", calculated_checksum)
     if (int(calculated_checksum, 16) != int(checksum, 16)):
         print("Checksum doesn't match, calculated: ", calculated_checksum, " Received: ", checksum)
+        return False
     else:
         print("Checksum OK")
+        return True

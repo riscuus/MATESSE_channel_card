@@ -15,6 +15,8 @@
 import serial
 import time
 import struct
+# Custom imports
+import packet_fields as pf
 
 PORT_NAME = "COM4"
 BAUDRATE = 19200
@@ -53,8 +55,13 @@ def write_word(word):
 
 def read_data():
     p = []
+    pkt_num = 0
     while ser.in_waiting > 0:
-        p.append(read_word())
+        w = read_word()
+        p.append(w)
+        if (w == pf.PREAMBLE_1):
+            print("Packet received:", pkt_num)
+            pkt_num = pkt_num + 1
         time.sleep(0.001)
     return p
 
@@ -63,6 +70,6 @@ def read_word():
     w = bytes_read.hex()
     w = hex(struct.unpack("<I", struct.pack(">I", int(w, 16)))[0]) 
     w = w[2:len(w)]
-    print("Word read: " + w)
+    #print("Word read: " + w)
     return w
 

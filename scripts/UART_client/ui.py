@@ -13,6 +13,8 @@
 #
 ##############################################################################################
 from enum import Enum
+# Custom Imports
+import packet_fields as pf
 
 class User_action(Enum):
     read    = 1
@@ -88,10 +90,10 @@ def get_param_data_to_write(param, num_words):
                 print("\n[ERROR] Please insert a number")
     return data
 
-def print_about_to_send_packet(packet):
+def print_about_to_send_packet(packet : pf.CMD_packet):
     print("\nAbout to send packet with: ")
     print("Preamble: " + str(["0x" + p for p in packet.preamble]))
-    print("Command type: " + packet.cmd_type.name + " (0x" + packet.cmd_type.value + ")")
+    print("Command type: " + packet.packet_type.name + " (0x" + packet.packet_type.value + ")")
     print("Card id: (0x" + packet.card_id + ")")
     print("Param id: "+ packet.param_id.name + " (0x" + packet.param_id.value + ")") 
     print("Payload size: " + str(packet.payload_size))
