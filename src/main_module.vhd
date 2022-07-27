@@ -130,9 +130,11 @@ architecture Behavioral of main_module is
     signal builder_ready    : std_logic := '0';
 
     -- packet builder <-> uart_controller
-    signal tx_busy      : std_logic := '0';
-    signal tx_send_byte    : std_logic := '0';
-    signal tx_byte_data    : t_byte := (others => '0');
+    signal tx_busy              : std_logic := '0';
+    signal tx_send_byte         : std_logic := '0';
+    signal tx_send_byte_flopped : std_logic := '0';
+    signal tx_byte_data         : t_byte := (others => '0');
+    signal tx_byte_data_flopped : t_byte := (others => '0');
 
     -- frame_builder -> command_handler 
     signal last_frame_sent    : std_logic := '0';
@@ -332,8 +334,8 @@ begin
             clk         => sys_clk_100,
             rst         => sys_rst,
 
-            tx_ena      => tx_send_byte,
-            tx_data     => tx_byte_data,
+            tx_ena      => tx_send_byte_flopped,
+            tx_data     => tx_byte_data_flopped,
 
             rx          => rx_uart_serial,
             rx_busy     => rx_busy,
@@ -343,6 +345,27 @@ begin
             tx_busy     => tx_busy,
             tx          => tx_uart_serial
         );
+
+    -- Double flip flops to avoid metastability between uart_controller and packet_builder
+    double_flopper_send_byte : entity concept.double_flopper
+    generic map(
+        DATA_SIZE   => 1
+    )
+    port map(
+        fast_clk    => sys_clk_100,
+        data_in(0)     => tx_send_byte,
+        data_out(0)    => tx_send_byte_flopped
+    );
+
+    double_flopper_byte_data : entity concept.double_flopper
+    generic map(
+        DATA_SIZE   => tx_byte_data'length
+    )
+    port map(
+        fast_clk    => sys_clk_100,
+        data_in     => tx_byte_data,
+        data_out    => tx_byte_data_flopped
+    );
 
     -- Packet parser
     packet_parser : entity concept.packet_parser
