@@ -78,17 +78,29 @@ def start_acquisition():
     if (result == False):
         return
 
+
     result, received_packet = receiver.parse_packet(words)
     if (result == False):
         return
+
     words = words[received_packet.total_words:]
-    while len(words) > 0:
-        result, received_packet = receiver.parse_packet(words)
-        if (result == False):
-            return
-        words = words[received_packet.total_words:]
 
+    f = open("data/raw_data_1.txt", "w")
 
+    try:
+        while len(words) > 0:
+            result, received_packet = receiver.parse_packet(words)
+            if (result == False):
+                print("Current leftover words:", len(words))
+                f.close()
+                return
+            f.write(received_packet.payload[43])
+            words = words[received_packet.total_words:]
+    except IndexError as e:
+        print("Current leftover words:", len(words))
+        print(e)
+    finally:
+        f.close()
 
 def stop_acquisition():
     print("Stop acquisition")

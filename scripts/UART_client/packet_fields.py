@@ -19,6 +19,7 @@ PREAMBLE_1 = "a5a5a5a5"
 PREAMBLE_2 = "5a5a5a5a"
 
 CARD_ID = "ffff"
+HEADER_LENGTH = 43
 
 
 class Packet_type(Enum):

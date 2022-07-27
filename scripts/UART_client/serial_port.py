@@ -19,7 +19,7 @@ import struct
 import packet_fields as pf
 
 PORT_NAME = "COM4"
-BAUDRATE = 19200
+BAUDRATE = 230400 #19200
 PARITY = "even"
 TIMEOUT = 0.1 # Seconds
 
@@ -56,18 +56,28 @@ def write_word(word):
 def read_data():
     p = []
     pkt_num = 0
+    w = read_word()
+    p.append(w)
+    if (w == pf.PREAMBLE_1):
+        print("Packet received:", pkt_num)
+        pkt_num = pkt_num + 1
     while ser.in_waiting > 0:
 
         w = read_word()
         p.append(w)
+
         if (w == pf.PREAMBLE_1):
             print("Packet received:", pkt_num)
             pkt_num = pkt_num + 1
-        time.sleep(0.01)
+
+        if (ser.in_waiting == 0):
+            time.sleep(0.1)
+
     return p
 
 def read_word():
     bytes_read = ser.read(4)
+    #return bytes_read
     w = bytes_read.hex()
     w = hex(struct.unpack("<I", struct.pack(">I", int(w, 16)))[0]) 
     w = w[2:len(w)]

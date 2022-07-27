@@ -20,7 +20,7 @@ import packet_fields as pf
 import utils as utils
 
 def wait_data():
-    time.sleep(1)
+    time.sleep(0.000001)
     p = sp.read_data()
     if (len(p) != 0):
         return True, p
