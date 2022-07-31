@@ -81,7 +81,7 @@ def get_param_data_to_write(param, num_words):
             usr_input = input()
             try:
                 val = int(usr_input)
-                if (val >= 0 and val <= 2**32 - 1):
+                if (val >= -2**31 - 1 and val <= 2**31 - 1):
                     data.append(val)
                     break
                 else:

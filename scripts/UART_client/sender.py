@@ -23,6 +23,7 @@ import packet_fields as pf
 import serial_port as sp
 import utils as utils
 import receiver as receiver
+import exporter as exporter
 
 def start_read_param():
     preamble = [pf.PREAMBLE_1, pf.PREAMBLE_2]
@@ -79,28 +80,17 @@ def start_acquisition():
         return
 
 
+    # Parse reply packet
     result, received_packet = receiver.parse_packet(words)
     if (result == False):
         return
 
     words = words[received_packet.total_words:]
 
-    f = open("data/raw_data_1.txt", "w")
+    result, data_packets = receiver.parse_data_words(words)
 
-    try:
-        while len(words) > 0:
-            result, received_packet = receiver.parse_packet(words)
-            if (result == False):
-                print("Current leftover words:", len(words))
-                f.close()
-                return
-            f.write(received_packet.payload[43])
-            words = words[received_packet.total_words:]
-    except IndexError as e:
-        print("Current leftover words:", len(words))
-        print(e)
-    finally:
-        f.close()
+    if (result == True):
+        exporter.export_data_payloads_to_csv(data_packets)
 
 def stop_acquisition():
     print("Stop acquisition")

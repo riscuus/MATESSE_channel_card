@@ -186,3 +186,38 @@ def check_checksum(checksum, content):
     else:
         print("Checksum OK")
         return True
+
+def parse_data_words(words : list):
+    try:
+        data_packets = []
+        no_errors = True
+        e = 0
+        while len(words) > 0:
+            result, received_packet = parse_packet(words)
+            if (result == False):
+                e = e + 1
+                no_errors = False
+                print("-------------------------")
+                print("ERROR FOUND, leftover words:", len(words))
+                index = search_next_packet(words)
+                if (index == -1):
+                    print("No more packets, leftover words:", len(words))
+                    break
+                words = words[index]
+            else:
+                data_packets.append(received_packet)
+                words = words[received_packet.total_words:]
+    except IndexError as e:
+        print("Current leftover words:", len(words))
+        print(e)
+        no_errors = False
+    finally:
+        print("Errors:", e)
+        return no_errors, data_packets
+
+def search_next_packet(words : list):
+    words = words[1:]
+    for i in range(len(words) - 1):
+        if (words[i] == pf.PREAMBLE_1):
+            return i
+    return -1

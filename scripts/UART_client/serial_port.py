@@ -19,7 +19,7 @@ import struct
 import packet_fields as pf
 
 PORT_NAME = "COM4"
-BAUDRATE = 230400 #19200
+BAUDRATE = 2048400 #230400 #19200
 PARITY = "even"
 TIMEOUT = 0.1 # Seconds
 
@@ -70,8 +70,12 @@ def read_data():
             print("Packet received:", pkt_num)
             pkt_num = pkt_num + 1
 
-        if (ser.in_waiting == 0):
-            time.sleep(0.1)
+        n = 0
+        while (ser.in_waiting == 0):
+            time.sleep(0.001)
+            n = n + 1
+            if (n == 100):
+                break
 
     return p
 
